@@ -1,0 +1,17 @@
+:root {
+  color-scheme: light;
+  --color-background: #DAD7CC;
+  --color-surface: #F6F4EE;
+  --color-text: #1B211D;
+  --color-heading: #1E5A3C;
+  --color-accent: #E8A317;
+  --color-muted: #5A5A52;
+  --font-heading: "Open Sans", sans-serif;
+  --font-body: "Atkinson Hyperlegible", sans-serif;
+  --font-size-title: 42px;
+  --line-height-title: 48px;
+  --font-size-body: 22px;
+  --line-height-body: 1.5;
+  --content-width: 1200px;
+  --page-gutter: 24px;
+}
