@@ -1,0 +1,122 @@
+:root {
+    --verde-oscuro: #1E3A3C;
+    --naranja: #E8A317;
+    --marfil: #F6F4EE;
+    --gris: #5A5A52;
+    --blanco: #FFFFFF;
+}
+
+body {
+    background-color: var(--marfil);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: var(--verde-oscuro);
+    /* Un fondo suave con gradiente para que no se vea tan plano */
+    background-image: linear-gradient(135deg, #F6F4EE 0%, #e8e6e0 100%);
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.oculto { display: none; }
+
+/* --- LOGIN --- */
+.login-card {
+    background: var(--blanco);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    margin: 60px auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-top: 6px solid var(--verde-oscuro);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Aquí hacemos que la imagen grande se ajuste y se centre */
+.logo { 
+    max-width: 180px; 
+    max-height: 100px;
+    object-fit: contain; /* Esto ajusta la imagen sin deformarla */
+    margin: 0 auto 10px auto; 
+    display: block;
+}
+
+.login-header h1 { font-size: 1.3rem; margin: 0; color: var(--verde-oscuro); }
+.login-header p { font-size: 0.9rem; color: var(--gris); margin-top: 5px; }
+
+/* Cuadro de credenciales demo */
+.demo-info {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1.4;
+}
+
+.error-msg {
+    color: #721c24;
+    background-color: #f8d7da;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* --- FORMULARIOS --- */
+.input-group { margin-bottom: 15px; text-align: left; }
+.input-group label { display: block; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+.input-group input, .input-group select {
+    width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box;
+}
+.input-group input:focus { border-color: var(--naranja); outline: none; }
+
+/* --- BOTONES --- */
+.btn-primario, .btn-secundario {
+    padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.3s;
+}
+.btn-primario { background: var(--verde-oscuro); color: var(--blanco); margin-top: 5px; }
+.btn-primario:hover { background: #152a2b; }
+.btn-secundario { background: var(--naranja); color: var(--blanco); width: auto; padding: 10px 20px; }
+.btn-secundario:hover { background: #c98a10; }
+
+/* --- HEADER (Panel de Matrícula) --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--blanco);
+    padding: 10px 20px;
+    border-bottom: 4px solid var(--naranja);
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+.header-logo { display: flex; align-items: center; gap: 15px; }
+.logo-small { width: 50px; height: 50px; object-fit: contain; }
+
+/* --- CARRUSEL --- */
+.carousel { background: var(--verde-oscuro); color: var(--blanco); padding: 25px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+.carousel-slide { display: none; }
+.carousel-slide.active { display: block; }
+.carousel-controls button { background: var(--naranja); border: none; color: var(--blanco); padding: 6px 15px; margin: 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+
+/* --- MÓDULO DE MATRÍCULA --- */
+.matricula-module { background: var(--blanco); padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+fieldset { border: 1px solid #ccc; padding: 20px; border-radius: 6px; margin-bottom: 15px; }
+legend { font-weight: bold; padding: 0 10px; color: var(--verde-oscuro); font-size: 1.1rem; }
+
+#alerta { padding: 12px; text-align: center; font-weight: bold; margin-top: 15px; border-radius: 4px; }
+.exito { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; } 
