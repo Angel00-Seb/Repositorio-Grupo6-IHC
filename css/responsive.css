@@ -1,0 +1,16 @@
+@media (max-width: 600px) {
+  :root {
+    --font-size-title: 32px;
+    --line-height-title: 36px;
+    --font-size-body: 20px;
+    --page-gutter: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
