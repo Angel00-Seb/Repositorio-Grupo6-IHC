@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrícula - I.E. José Carlos Mariátegui</title>
+    <title>I.E. José Carlos Mariátegui</title>
 
     <!-- Fuentes exigidas por la guía visual: Open Sans (títulos) y Atkinson (textos) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -57,64 +57,233 @@
         </div>
     </section>
 
-    <section id="main-section" class="container oculto">
-        <header>
-            <div class="header-logo">
-                <img src="assets/logo.png" alt="Logo" class="logo-small">
-                <h2>Registro de Matrícula</h2>
-            </div>
-            <button id="btn-logout" class="btn-secundario">Cerrar Sesión</button>
-        </header>
+    <section id="main-section" class="dashboard oculto">
+        <div class="dashboard-body">
+            <aside id="sidebar" class="sidebar" aria-label="Menú principal">
+                <div class="sidebar-header">
+                    <img src="assets/logo.png" alt="Logo del colegio" class="logo-small">
+                </div>
 
-        <div class="carousel" role="region" aria-label="Carrusel">
-            <div class="carousel-slide active">
-                <h3>Sistema de Matrícula</h3>
-                <p>Gestione el registro de estudiantes de forma rápida y segura.</p>
-            </div>
-            <div class="carousel-slide">
-                <h3>Accesibilidad Universal</h3>
-                <p>Diseñado para facilitar el trabajo de la Dirección.</p>
-            </div>
-            <div class="carousel-controls">
-                <button id="prevBtn">&#10094;</button>
-                <button id="nextBtn">&#10095;</button>
-            </div>
-        </div>
+                <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-expanded="true" aria-controls="sidebar-nav" aria-label="Contraer menú">
+                    <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M3 6h18M3 12h18M3 18h18" />
+                    </svg>
+                    <span class="sidebar-label">Menú</span>
+                </button>
 
-        <div class="matricula-module">
-            <form id="matricula-form">
-                <fieldset>
-                    <legend>Datos del Estudiante</legend>
-                    <div class="input-group">
-                        <label for="nombres">Nombres y Apellidos:</label>
-                        <input type="text" id="nombres" required>
+                <nav id="sidebar-nav" class="sidebar-nav" aria-label="Navegación principal">
+                    <button class="nav-item activo" type="button" data-vista="matricula" aria-controls="view-matricula" aria-current="page" aria-label="Matrícula">
+                        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span class="sidebar-label">Matrícula</span>
+                    </button>
+
+                    <button class="nav-item" type="button" data-vista="reportes" aria-controls="view-reportes" aria-label="Reportes">
+                        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M3 3v18h18" />
+                            <rect x="7" y="10" width="3" height="8" />
+                            <rect x="12" y="6" width="3" height="12" />
+                            <rect x="17" y="13" width="3" height="5" />
+                        </svg>
+                        <span class="sidebar-label">Reportes</span>
+                    </button>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button id="btn-logout" class="btn-logout" type="button">
+                        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <path d="M16 17l5-5-5-5M21 12H9" />
+                        </svg>
+                        <span class="sidebar-label">Cerrar Sesión</span>
+                    </button>
+                </div>
+            </aside>
+
+            <div class="dashboard-content">
+                <header class="content-header">
+                    <div class="header-inicio">
+                        <button id="btn-volver" class="btn-volver" type="button" disabled aria-label="Regresar a la vista anterior" title="Regresar a la vista anterior">
+                            <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M19 12H5M11 18l-6-6 6-6" />
+                            </svg>
+                            <span class="sr-only">Volver</span>
+                        </button>
+                        <div class="header-logo">
+                            <img src="assets/logo.png" alt="Logo del colegio" class="logo-small">
+                            <div class="header-brand">
+                                <span class="header-brand__name">I.E. José Carlos Mariátegui</span>
+                                <span class="header-brand__system">Sistema de Matrícula</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="dni">DNI (8 dígitos):</label>
-                        <input type="text" id="dni" required>
+                    <span class="header-user" role="img" aria-label="Usuario">
+                        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </span>
+                </header>
+
+                <div class="content-body">
+                    <div class="carousel" role="region" aria-label="Carrusel">
+                        <div class="carousel-slide active">
+                            <h3>Sistema de Matrícula</h3>
+                            <p>Gestione el registro de estudiantes de forma rápida y segura.</p>
+                        </div>
+                        <div class="carousel-slide">
+                            <h3>Accesibilidad Universal</h3>
+                            <p>Diseñado para facilitar el trabajo de la Dirección.</p>
+                        </div>
+                        <div class="carousel-controls">
+                            <button id="prevBtn">&#10094;</button>
+                            <button id="nextBtn">&#10095;</button>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label for="grado">Grado:</label>
-                        <select id="grado" required>
-                            <option value="">Seleccione...</option>
-                            <option value="1">1er Grado</option>
-                            <option value="2">2do Grado</option>
-                            <option value="3">3er Grado</option>
-                            <option value="4">4to Grado</option>
-                            <option value="5">5to Grado</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label for="seccion">Sección:</label>
-                        <select id="seccion" required>
-                            <option value="A">A</option>
-                            <option value="B">B (Solo 2do grado)</option>
-                        </select>
-                    </div>
-                </fieldset>
-                <button type="submit" class="btn-primario">Guardar Matrícula</button>
-            </form>
-            <div id="alerta" class="oculto"></div>
+
+                    <section id="view-matricula" class="view" aria-label="Matrícula">
+                        <div class="matricula-module">
+                            <form id="matricula-form">
+                                <fieldset>
+                                    <legend>Datos del Estudiante</legend>
+                                    <div class="input-group">
+                                        <label for="nombres">Nombres y Apellidos:</label>
+                                        <input type="text" id="nombres" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="dni">DNI (8 dígitos):</label>
+                                        <input type="text" id="dni" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="grado">Grado (secundaria):</label>
+                                        <select id="grado" required>
+                                            <option value="">Seleccione...</option>
+                                            <option value="1">1º de secundaria</option>
+                                            <option value="2">2º de secundaria</option>
+                                            <option value="3">3º de secundaria</option>
+                                            <option value="4">4º de secundaria</option>
+                                            <option value="5">5º de secundaria</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="seccion">Sección:</label>
+                                        <select id="seccion" required>
+                                            <option value="A">A</option>
+                                            <option value="B">B (Solo 2º de secundaria)</option>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                                <button type="submit" class="btn-primario">Guardar Matrícula</button>
+                            </form>
+                            <div id="alerta" class="oculto"></div>
+                        </div>
+                    </section>
+
+                    <section id="view-reportes" class="view oculto" aria-label="Menú reportes" aria-hidden="true">
+                        <h2 class="view-title">Menú reportes</h2>
+                        <p class="view-subtitle">Seleccione el tipo de información que desea consultar.</p>
+
+                        <div class="report-grid">
+                            <button class="report-card" type="button" data-panel="matricula" aria-controls="detalle-matricula" aria-expanded="false" aria-pressed="false">
+                                <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <path d="M14 2v6h6" />
+                                    <path d="M8 13h8M8 17h8" />
+                                </svg>
+                                <span class="report-card__title">Reporte de matrícula</span>
+                                <span class="report-card__desc">Matrículas por grado y sección</span>
+                            </button>
+
+                            <button class="report-card" type="button" data-panel="consolidado" aria-controls="detalle-consolidado" aria-expanded="false" aria-pressed="false">
+                                <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                                    <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                                </svg>
+                                <span class="report-card__title">Consolidado de estudiantes</span>
+                                <span class="report-card__desc">Distribución por sección, edad o sexo</span>
+                            </button>
+
+                            <button class="report-card" type="button" data-panel="asistencia" aria-controls="detalle-asistencia" aria-expanded="false" aria-pressed="false">
+                                <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <path d="M16 2v4M8 2v4M3 10h18" />
+                                </svg>
+                                <span class="report-card__title">Asistencia docente</span>
+                                <span class="report-card__desc">Consulta diaria o semanal</span>
+                            </button>
+                        </div>
+
+                        <section id="detalle-matricula" class="reporte-detalle oculto" aria-label="Reporte de matrícula">
+                            <h3 class="reporte-detalle__titulo">Reporte de matrícula</h3>
+                            <form class="busqueda-form" data-busqueda="matricula" role="search">
+                                <div class="input-group">
+                                    <label for="buscar-nombre-matricula">Buscar por nombre:</label>
+                                    <input type="search" id="buscar-nombre-matricula" placeholder="Ej.: Ana Lucía" autocomplete="off">
+                                </div>
+                                <div class="input-group">
+                                    <label for="buscar-dni-matricula">Buscar por DNI:</label>
+                                    <input type="search" id="buscar-dni-matricula" placeholder="Ej.: 12345678" inputmode="numeric" autocomplete="off">
+                                </div>
+                                <button type="submit" class="btn-primario btn-buscar">Buscar</button>
+                            </form>
+                            <p class="reporte-error oculto" role="alert"></p>
+                            <div class="registros">
+                                <table class="tabla-registros">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section id="detalle-consolidado" class="reporte-detalle oculto" aria-label="Consolidado de estudiantes">
+                            <h3 class="reporte-detalle__titulo">Consolidado de estudiantes</h3>
+                            <form class="busqueda-form" data-busqueda="consolidado" role="search">
+                                <div class="input-group">
+                                    <label for="buscar-nombre-consolidado">Buscar por nombre:</label>
+                                    <input type="search" id="buscar-nombre-consolidado" placeholder="Ej.: Ana Lucía" autocomplete="off">
+                                </div>
+                                <div class="input-group">
+                                    <label for="buscar-grado-seccion-consolidado">Buscar por grado y sección:</label>
+                                    <input type="search" id="buscar-grado-seccion-consolidado" placeholder="Ej.: 2º de secundaria, B" autocomplete="off">
+                                </div>
+                                <button type="submit" class="btn-primario btn-buscar">Buscar</button>
+                            </form>
+                            <p class="reporte-error oculto" role="alert"></p>
+                            <div class="registros">
+                                <table class="tabla-registros">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section id="detalle-asistencia" class="reporte-detalle oculto" aria-label="Asistencia docente">
+                            <h3 class="reporte-detalle__titulo">Asistencia docente</h3>
+                            <div class="busqueda-form" role="search">
+                                <div class="input-group">
+                                    <span class="input-group__label" id="etiqueta-tipo-asistencia">Tipo de búsqueda:</span>
+                                    <div class="grupo-botones" role="group" aria-labelledby="etiqueta-tipo-asistencia">
+                                        <button class="btn-tipo" type="button" data-tipo="diaria" aria-pressed="false">Diario</button>
+                                        <button class="btn-tipo" type="button" data-tipo="semanal" aria-pressed="false">Semanal</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="hint-asistencia" class="reporte-hint">Diario muestra la asistencia por día de la semana; Semanal, por semana del mes.</p>
+                            <p class="reporte-error oculto" role="alert"></p>
+                            <div class="registros">
+                                <table class="tabla-registros">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </section>
+                </div>
+            </div>
         </div>
     </section>
 

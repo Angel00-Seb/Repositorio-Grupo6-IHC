@@ -37,6 +37,8 @@
   --content-width: 1200px;
   --content-narrow: 700px;
   --page-gutter: 24px;
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 76px;
 
   /* Radios y sombras (con colores de la guía) */
   --radius: 8px;
