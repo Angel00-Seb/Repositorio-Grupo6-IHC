@@ -2,8 +2,46 @@
   :root {
     --font-size-title: 32px;
     --line-height-title: 36px;
+    --font-size-h2: 24px;
+    --line-height-h2: 28px;
+    --font-size-h3: 20px;
+    --line-height-h3: 24px;
     --font-size-body: 20px;
+    --font-size-secondary: 18px;
     --page-gutter: 20px;
+  }
+
+  .container {
+    padding-block: 12px;
+  }
+
+  .login-card {
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  header {
+    flex-wrap: wrap;
+  }
+
+  .header-logo {
+    flex-wrap: wrap;
+  }
+
+  .carousel {
+    padding: 16px;
+  }
+
+  .carousel-controls button {
+    padding: 8px 12px;
+  }
+
+  .matricula-module {
+    padding: 16px;
+  }
+
+  fieldset {
+    padding: 14px;
   }
 }
 
@@ -12,5 +50,7 @@
   *::before,
   *::after {
     scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }

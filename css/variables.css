@@ -1,17 +1,46 @@
 :root {
   color-scheme: light;
-  --color-background: #DAD7CC;
-  --color-surface: #F6F4EE;
-  --color-text: #1B211D;
-  --color-heading: #1E5A3C;
-  --color-accent: #E8A317;
-  --color-muted: #5A5A52;
+
+  /* Paleta permitida por la guía visual */
+  --color-background: #DAD7CC; /* arena pálido */
+  --color-surface: #F6F4EE; /* marfil */
+  --color-naranja-claro: #FBF0D2;
+  --color-text: #1B211D; /* underwall */
+  --color-heading: #1E5A3C; /* verde oscuro */
+  --color-accent: #E8A317; /* naranja */
+  --color-muted: #5A5A52; /* gris */
+  --color-pine: #123D27; /* verde pino */
+  --color-warning: #8A5A00; /* ámbar oscuro */
+  --color-success: #00765A; /* turquesa oscuro */
+  --color-error: #B03F00; /* rojo terracota */
+  --color-info: #0B5C99; /* celeste vívido */
+
+  /* Tipografía */
   --font-heading: "Open Sans", sans-serif;
   --font-body: "Atkinson Hyperlegible", sans-serif;
+
   --font-size-title: 42px;
   --line-height-title: 48px;
+  --font-size-h1: 32px;
+  --line-height-h1: 36px;
+  --font-size-h2: 28px;
+  --line-height-h2: 30px;
+  --font-size-h3: 22px;
+  --line-height-h3: 26px;
   --font-size-body: 22px;
+  --font-size-secondary: 20px;
+  --font-size-small: 18px;
+  --font-size-min: 16px;
   --line-height-body: 1.5;
+
+  /* Layout */
   --content-width: 1200px;
+  --content-narrow: 700px;
   --page-gutter: 24px;
+
+  /* Radios y sombras (con colores de la guía) */
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-card: 0 10px 25px rgba(27, 33, 29, 0.12);
+  --shadow-soft: 0 4px 10px rgba(27, 33, 29, 0.08);
 }

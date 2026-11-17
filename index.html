@@ -4,7 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrícula - I.E. José Carlos Mariátegui</title>
-    <link rel="stylesheet" href="style.css">
+
+    <!-- Fuentes exigidas por la guía visual: Open Sans (títulos) y Atkinson (textos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=Open+Sans:wght@400;700&amp;display=swap"
+        rel="stylesheet"
+    />
+
+    <!-- Bootstrap 5.3.8 desde CDN: va antes de los estilos locales para que estos puedan sobrescribirlo -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+
+    <!-- Estilos locales: orden definido por las reglas del repositorio -->
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
 
@@ -99,6 +118,11 @@
         </div>
     </section>
 
-    <script src="script.js"></script>
+    <!-- Bootstrap 5.3.8 con Popper incluido, una sola vez -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        defer
+    ></script>
+    <script src="js/main.js" defer></script>
 </body>
 </html> 
