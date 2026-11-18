@@ -533,24 +533,54 @@ legend {
 /* --- REPORTES --- */
 .report-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
 .report-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 20px;
   background: var(--color-surface);
   border: 1px solid var(--color-muted);
   border-radius: var(--radius);
   color: var(--color-text);
   font-family: var(--font-body);
   text-align: left;
-  cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.report-card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-card .card-title,
+.report-card .card-text {
+  margin-bottom: 0;
+}
+
+/* Botón de acción de cada tarjeta, alineado a la derecha */
+.btn-solid.theme-primary {
+  display: inline-block;
+  align-self: flex-end;
+  margin-top: auto;
+  padding: 10px 20px;
+  border: 1px solid var(--color-heading);
+  border-radius: 6px;
+  background: var(--color-heading);
+  color: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-solid.theme-primary:hover {
+  background: var(--color-pine);
+  border-color: var(--color-pine);
+  color: var(--color-surface);
 }
 
 .report-card:hover {
@@ -560,10 +590,6 @@ legend {
 .report-card.activo {
   border-color: var(--color-accent);
   background: var(--color-naranja-claro);
-}
-
-.report-card .icono {
-  color: var(--color-heading);
 }
 
 .report-card__title {
@@ -656,6 +682,22 @@ legend {
   border-radius: 6px;
   color: var(--color-error);
   font-size: var(--font-size-min);
+}
+
+@keyframes reporte-error-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.reporte-error.animation-shake {
+  animation: reporte-error-shake 0.45s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reporte-error.animation-shake {
+    animation: none;
+  }
 }
 
 .registros {

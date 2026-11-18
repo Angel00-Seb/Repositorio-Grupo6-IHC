@@ -94,15 +94,12 @@ document.addEventListener("DOMContentLoaded", function() {
     var navItems = document.querySelectorAll(".nav-item");
     var vistas = document.querySelectorAll(".view");
     var reportCards = document.querySelectorAll(".report-card");
+    var reportButtons = document.querySelectorAll(".report-card .btn-solid");
     var detalles = document.querySelectorAll(".reporte-detalle");
     var btnVolver = document.getElementById("btn-volver");
     var historialVistas = [];
 
     function pantallaActual() {
-        var detalleAbierto = document.querySelector(".reporte-detalle:not(.oculto)");
-        if (detalleAbierto) {
-            return detalleAbierto.id;
-        }
         var vistaVisible = document.querySelector(".view:not(.oculto)");
         return vistaVisible ? vistaVisible.id.replace("view-", "") : "matricula";
     }
@@ -112,8 +109,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function mostrarPantalla(pantalla) {
-        var esDetalle = pantalla.indexOf("detalle-") === 0;
-        var vistaBase = esDetalle ? "reportes" : pantalla;
+        var esReporte = pantalla.indexOf("reporte-") === 0;
+        var clave = esReporte ? pantalla.replace("reporte-", "") : "";
+        var vistaBase = esReporte ? "reportes" : pantalla;
 
         navItems.forEach(function(nav) {
             var activa = nav.getAttribute("data-vista") === vistaBase;
@@ -126,35 +124,43 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         vistas.forEach(function(vista) {
-            var visible = vista.id === "view-" + vistaBase;
+            var visible = vista.id === "view-" + pantalla;
             vista.classList.toggle("oculto", !visible);
             vista.setAttribute("aria-hidden", visible ? "false" : "true");
         });
 
         reportCards.forEach(function(card) {
             card.classList.remove("activo");
-            card.setAttribute("aria-pressed", "false");
-            card.setAttribute("aria-expanded", "false");
+        });
+
+        reportButtons.forEach(function(boton) {
+            boton.setAttribute("aria-pressed", "false");
+            boton.setAttribute("aria-expanded", "false");
         });
 
         detalles.forEach(function(panel) {
-            panel.classList.toggle("oculto", panel.id !== pantalla);
-            panel.querySelector(".reporte-error").textContent = mensajeSinCoincidencias;
+            var error = panel.querySelector(".reporte-error");
+            error.textContent = mensajeSinCoincidencias;
+            error.classList.add("oculto");
+            error.classList.remove("animation-shake");
             panel.querySelectorAll("input").forEach(function(entrada) {
                 entrada.value = "";
+                entrada.classList.remove("is-invalid");
             });
         });
 
-        if (!esDetalle) {
+        if (!esReporte) {
             return;
         }
 
-        var clave = pantalla.replace("detalle-", "");
         var card = document.querySelector('.report-card[data-panel="' + clave + '"]');
         if (card) {
             card.classList.add("activo");
-            card.setAttribute("aria-pressed", "true");
-            card.setAttribute("aria-expanded", "true");
+            var botonActivo = card.querySelector(".btn-solid");
+            if (botonActivo) {
+                botonActivo.setAttribute("aria-pressed", "true");
+                botonActivo.setAttribute("aria-expanded", "true");
+            }
         }
 
         if (clave === "asistencia") {
@@ -162,8 +168,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 boton.setAttribute("aria-pressed", "false");
             });
             document.getElementById("hint-asistencia").classList.remove("oculto");
-            document.querySelector("#detalle-asistencia .tabla-registros").classList.add("oculto");
-            document.querySelector("#detalle-asistencia .reporte-error").classList.add("oculto");
+            document.querySelector("#view-reporte-asistencia .tabla-registros").classList.add("oculto");
+            document.querySelector("#view-reporte-asistencia .reporte-error").classList.add("oculto");
             return;
         }
 
@@ -250,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function renderizar(clave, filas, vista) {
         var config = vista || configReportes[clave];
-        var panel = document.getElementById("detalle-" + clave);
+        var panel = document.getElementById("view-reporte-" + clave);
         var tabla = panel.querySelector(".tabla-registros");
         var cabecera = tabla.tHead;
         var cuerpo = tabla.tBodies[0];
@@ -280,13 +286,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var sinRegistros = filas.length === 0;
         tabla.classList.toggle("oculto", sinRegistros);
-        error.classList.toggle("oculto", !sinRegistros);
+
+        panel.querySelectorAll("input").forEach(function(entrada) {
+            entrada.classList.toggle("is-invalid", sinRegistros);
+        });
+
+        if (sinRegistros) {
+            error.classList.remove("oculto");
+            error.classList.remove("animation-shake");
+            void error.offsetWidth;
+            error.classList.add("animation-shake");
+        } else {
+            error.classList.add("oculto");
+            error.classList.remove("animation-shake");
+        }
     }
 
-    reportCards.forEach(function(card) {
-        card.addEventListener("click", function() {
-            irA("detalle-" + card.getAttribute("data-panel"));
-        });
+    function abrirReporte(e) {
+        if (e.type === "keydown" && e.key !== " " && e.key !== "Spacebar") {
+            return;
+        }
+        e.preventDefault();
+        irA("reporte-" + e.currentTarget.getAttribute("data-panel"));
+    }
+
+    reportButtons.forEach(function(boton) {
+        boton.addEventListener("click", abrirReporte);
+        boton.addEventListener("keydown", abrirReporte);
     });
 
     document.querySelectorAll(".busqueda-form").forEach(function(form) {
@@ -298,7 +324,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             var config = configReportes[clave];
-            var panel = document.getElementById("detalle-" + clave);
+            var panel = document.getElementById("view-reporte-" + clave);
             var error = panel.querySelector(".reporte-error");
             var filas;
             var nombre;
