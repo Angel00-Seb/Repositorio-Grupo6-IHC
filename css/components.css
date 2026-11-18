@@ -54,6 +54,10 @@ h3 {
   overflow: hidden;
 }
 
+.login-screen.oculto {
+  display: none;
+}
+
 .login-screen .login-background {
   position: absolute;
   z-index: -1;

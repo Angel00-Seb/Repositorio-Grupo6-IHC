@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", function() {
             historialVistas = [];
             mostrarPantalla("matricula");
             actualizarBotonVolver();
+            window.location.hash = mainSec.id;
+            mainSec.scrollIntoView();
         } else {
             loginError.classList.remove("oculto");
         }
@@ -32,6 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
         historialVistas = [];
         mostrarPantalla("matricula");
         actualizarBotonVolver();
+        window.location.hash = "";
+        loginSec.scrollIntoView();
     });
 
     // CARRUSEL
