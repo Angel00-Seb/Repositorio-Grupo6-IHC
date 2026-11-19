@@ -1,3 +1,9 @@
+@media (min-width: 900px) {
+  .home-modules {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 600px) {
   :root {
     --font-size-title: 32px;

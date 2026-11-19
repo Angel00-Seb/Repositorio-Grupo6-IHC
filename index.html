@@ -196,8 +196,20 @@
                 <div class="content-body">
                     <!-- ===== VIEW: INICIO ===== -->
                     <section id="view-inicio" class="view" aria-label="Inicio">
-                        <h2 class="view-title">Inicio</h2>
-                        <p class="view-subtitle">Bienvenida al Sistema de Matrícula de la I.E. José Carlos Mariátegui.</p>
+                        <h2 class="view-title">Página principal</h2>
+                        <p class="view-subtitle">Bienvenida al Sistema de Gestión Educativa. Seleccione el módulo en el que desea trabajar.</p>
+
+                        <div class="home-modules" role="group" aria-label="Módulos del sistema">
+                            <button class="home-module" type="button" data-home-vista="matricula">
+                                <strong>Matrícula</strong><span>Estudiantes y secciones</span><span aria-hidden="true">›</span>
+                            </button>
+                            <button class="home-module" type="button" data-home-vista="docentes">
+                                <strong>Docentes</strong><span>Asistencia y horarios</span><span aria-hidden="true">›</span>
+                            </button>
+                            <button class="home-module" type="button" data-home-vista="reportes">
+                                <strong>Reportes</strong><span>Matrícula y asistencia</span><span aria-hidden="true">›</span>
+                            </button>
+                        </div>
 
                         <div class="carousel" role="region" aria-label="Carrusel">
                             <div class="carousel-slide active">

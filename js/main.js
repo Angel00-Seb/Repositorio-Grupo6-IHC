@@ -240,6 +240,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    document.querySelectorAll("[data-home-vista]").forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            irA(boton.getAttribute("data-home-vista"));
+        });
+    });
+
     btnVolver.addEventListener("click", function() {
         if (historialVistas.length === 0) {
             return;
