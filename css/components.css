@@ -612,6 +612,78 @@ legend {
 }
 
 /* --- REPORTES --- */
+.resumen-dashboard {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.resumen-dashboard__nota {
+  color: var(--color-muted);
+  font-size: var(--font-size-min);
+}
+
+.resumen-dashboard__cifras {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 18px 0 24px;
+}
+
+.resumen-dashboard__cifra {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--color-naranja-claro);
+}
+
+.resumen-dashboard__cifra strong,
+.resumen-dashboard__cifra span {
+  display: block;
+}
+
+.resumen-dashboard__cifra strong {
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+}
+
+.resumen-dashboard__secciones {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.resumen-dashboard__seccion {
+  display: grid;
+  gap: 4px;
+}
+
+.resumen-dashboard__seccion progress {
+  width: 100%;
+  height: 14px;
+  accent-color: var(--color-accent);
+}
+
+.resumen-dashboard__seccion progress::-webkit-progress-bar {
+  background: var(--color-naranja-claro);
+}
+
+.resumen-dashboard__seccion progress::-webkit-progress-value {
+  background: var(--color-accent);
+}
+
+.resumen-dashboard__seccion progress::-moz-progress-bar {
+  background: var(--color-accent);
+}
+
+@media (min-width: 720px) {
+  .resumen-dashboard__cifras {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .report-grid {
   display: grid;
   grid-template-columns: 1fr;

@@ -194,6 +194,10 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
+        if (pantalla === "reportes") {
+            actualizarDashboard();
+        }
+
         if (!esReporte) {
             return;
         }
@@ -291,6 +295,50 @@ document.addEventListener("DOMContentLoaded", function() {
             ]
         }
     };
+
+    function actualizarDashboard() {
+        var matriculas = configReportes.matricula.datos;
+        var aforo = 30;
+        var secciones = new Map();
+
+        matriculas.forEach(function(registro) {
+            var nombre = registro.grado + " · Sección " + registro.seccion;
+            secciones.set(nombre, (secciones.get(nombre) || 0) + 1);
+        });
+
+        var cifras = [
+            [matriculas.length, "Matrículas de ejemplo"],
+            [secciones.size, "Grados y secciones con registros"],
+            [aforo, "Aforo de referencia por sección"]
+        ];
+        var contenedorCifras = document.getElementById("resumen-dashboard-cifras");
+        contenedorCifras.replaceChildren();
+        cifras.forEach(function(cifra) {
+            var tarjeta = document.createElement("div");
+            tarjeta.className = "resumen-dashboard__cifra";
+            var valor = document.createElement("strong");
+            valor.textContent = cifra[0];
+            var descripcion = document.createElement("span");
+            descripcion.textContent = cifra[1];
+            tarjeta.append(valor, descripcion);
+            contenedorCifras.appendChild(tarjeta);
+        });
+
+        var contenedorSecciones = document.getElementById("resumen-dashboard-secciones");
+        contenedorSecciones.replaceChildren();
+        Array.from(secciones).sort(function(a, b) { return a[0].localeCompare(b[0], "es"); }).forEach(function(seccion) {
+            var fila = document.createElement("div");
+            fila.className = "resumen-dashboard__seccion";
+            var etiqueta = document.createElement("span");
+            etiqueta.textContent = seccion[0] + ": " + seccion[1] + " de " + aforo + " estudiantes";
+            var barra = document.createElement("progress");
+            barra.max = aforo;
+            barra.value = seccion[1];
+            barra.setAttribute("aria-label", etiqueta.textContent);
+            fila.append(etiqueta, barra);
+            contenedorSecciones.appendChild(fila);
+        });
+    }
 
     function normalizar(texto) {
         return String(texto)
