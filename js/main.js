@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var mainSec = document.getElementById("main-section");
     var btnLogout = document.getElementById("btn-logout");
     var loginError = document.getElementById("login-error");
+    var confirmarSalida = document.getElementById("confirmar-salida");
 
     loginForm.addEventListener("submit", function(e) {
         e.preventDefault();
@@ -69,6 +70,16 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     btnLogout.addEventListener("click", function() {
+        confirmarSalida.showModal();
+    });
+
+    document.getElementById("cancelar-salida").addEventListener("click", function() {
+        confirmarSalida.close();
+        btnLogout.focus();
+    });
+
+    document.getElementById("aceptar-salida").addEventListener("click", function() {
+        confirmarSalida.close();
         mainSec.classList.add("oculto");
         loginSec.classList.remove("oculto");
         loginForm.reset();
