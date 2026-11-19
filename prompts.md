@@ -1,4 +1,4 @@
-# Documentación de Prompts (Copilot)
+# Documentación de prompts
 
 ## Prompt 1
 **Instrucción a Copilot:** "Genera un formulario HTML para matrícula con validación de DNI y un login básico."
@@ -6,14 +6,26 @@
 ## Prompt 2
 **Instrucción a Copilot:** "Ayúdame a hacer un carrusel de imágenes con JavaScript para el panel principal."
 
-## Prompt 3 — Codex: dashboard de reportes
+## Dashboard de Reportes — Codex
 
-**Instrucción consolidada dada a Codex el 19/11/2026:** "Crea un dashboard sencillo dentro de Reportes. Muestra la cantidad de matrículas de ejemplo, las combinaciones de grado y sección con registros y la ocupación respecto a un aforo de referencia de 30 estudiantes por sección. Calcula las cifras desde los datos que ya existen en `js/main.js` y no escribas los totales a mano ni los presentes como datos reales. Sigue los skills de `skills/reglas` para paleta, tipografía y accesibilidad. Haz que funcione en PC y celular, muestra las cantidades también en texto, verifica el resultado y toma capturas de la pantalla y del código."
+Estos mensajes cortos resumen el trabajo pedido a Codex el 19/11/2026; están redactados para documentarlo y reutilizarlos, no son una transcripción literal del chat.
+
+**Prompt 3.1:** "Agrega un dashboard sencillo en Reportes. Usa los datos de ejemplo que ya están en el proyecto."
+
+**Prompt 3.2:** "Muestra cuántas matrículas hay, qué secciones tienen registros y cuántos estudiantes tiene cada una. Usa 30 estudiantes como aforo de referencia y calcula los números con JavaScript."
+
+**Prompt 3.3:** "Sigue los estilos de `skills/reglas`. Haz que el dashboard se vea bien en celular y computadora, pruébalo y toma capturas de la pantalla y del código."
 
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los reportes siguen usando datos de demostración y el formulario de matrícula todavía no actualiza estas cifras.
 
-## Prompt 4 — Codex: página principal
+## Página principal — Codex
 
-**Instrucción consolidada dada a Codex el 19/11/2026:** "Haz la página principal del prototipo tomando como referencia el mockup M03 de Inicio. Muestra el título Página principal, el saludo Bienvenido/a y la indicación para elegir un módulo. Agrega tarjetas con iconos y textos para Matrícula (estudiantes, apoderados y secciones), Docentes (asistencia y horarios) y Reportes (matrícula y asistencia); cada tarjeta debe abrir la vista que ya existe. Según el mockup M38, pide confirmación antes de cerrar sesión y permite cancelar o confirmar. Respeta la paleta, la tipografía, la accesibilidad y el diseño adaptable definidos en `skills/reglas`. Conserva el login, los carruseles existentes y el dashboard de Reportes. Verifica navegación, cancelación y cierre de sesión en computadora y celular y toma capturas de la interfaz y del código."
+**Prompt 4.1:** "Mejora la página principal usando el mockup M03. Pon el título, el saludo 'Bienvenido/a' y una indicación para elegir un módulo."
+
+**Prompt 4.2:** "Agrega tarjetas con iconos para Matrícula, Docentes y Reportes. Cada tarjeta debe abrir su sección. Conserva los carruseles que ya existen."
+
+**Prompt 4.3:** "Usa el mockup M38 para pedir confirmación antes de cerrar sesión. Debe haber opciones para continuar en el sistema o salir."
+
+**Prompt 4.4:** "Sigue los estilos de `skills/reglas`. Prueba la página en celular y computadora y toma capturas de la pantalla y del código."
 
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.
