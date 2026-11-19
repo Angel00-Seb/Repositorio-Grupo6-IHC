@@ -10,6 +10,38 @@
    ============================================================ */
 document.addEventListener("DOMContentLoaded", function() {
 
+    // --- USUARIO ACTIVO ---
+    // Único lugar donde se define el usuario del prototipo.
+    // Cuando exista sesión real, reemplazar estos dos valores.
+    var usuarioActivo = {
+        nombre: "Dra. Iris Saavedra",
+        rol: "Directora"
+    };
+    document.getElementById("nombre-usuario").textContent = usuarioActivo.nombre;
+    document.getElementById("rol-usuario").textContent = usuarioActivo.rol;
+
+    // --- MODO OSCURO ---
+    // Solo visual y sin persistencia: siempre inicia en modo claro.
+    var themeToggle = document.getElementById("theme-toggle");
+    var iconMoon = themeToggle.querySelector(".icon-moon");
+    var iconSun = themeToggle.querySelector(".icon-sun");
+
+    function aplicarTema(oscuro) {
+        document.documentElement.setAttribute("data-theme", oscuro ? "dark" : "light");
+        themeToggle.setAttribute("aria-pressed", oscuro ? "true" : "false");
+        var etiqueta = oscuro ? "Activar modo claro" : "Activar modo oscuro";
+        themeToggle.setAttribute("aria-label", etiqueta);
+        themeToggle.setAttribute("title", etiqueta);
+        iconMoon.classList.toggle("oculto", oscuro);
+        iconSun.classList.toggle("oculto", !oscuro);
+    }
+
+    aplicarTema(false);
+    themeToggle.addEventListener("click", function() {
+        var oscuro = document.documentElement.getAttribute("data-theme") === "dark";
+        aplicarTema(!oscuro);
+    });
+
     // --- LOGIN ---
     var loginForm = document.getElementById("login-form");
     var loginSec = document.getElementById("login-section");

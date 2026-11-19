@@ -21,7 +21,7 @@
 
   .content-header {
     flex-wrap: wrap;
-    padding: 10px 16px;
+    padding: 6px 16px;
   }
 
   .header-inicio {
@@ -42,9 +42,8 @@
     font-size: var(--font-size-min);
   }
 
-  .header-user {
-    width: 40px;
-    height: 40px;
+  .header-year {
+    gap: 8px;
   }
 
   .carousel {
@@ -109,9 +108,9 @@
     margin-bottom: 8px;
   }
 
-  .sidebar-header .logo-small {
-    width: 44px;
-    height: 44px;
+  .sidebar-user__meta,
+  .sidebar.is-collapsed .sidebar-user__meta {
+    display: none;
   }
 
   .sidebar-footer {

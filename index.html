@@ -82,14 +82,20 @@
         <div class="dashboard-body">
             <aside id="sidebar" class="sidebar" aria-label="Menú principal">
                 <div class="sidebar-header">
-                    <img src="assets/logo.png" alt="Logo del colegio" class="logo-small">
+                    <div class="sidebar-user">
+                        <img src="assets/perfil.jpg" alt="" class="sidebar-user__avatar">
+                        <span class="sidebar-user__meta sidebar-label">
+                            <span class="sidebar-user__name" id="nombre-usuario"></span>
+                            <span class="sidebar-user__role" id="rol-usuario"></span>
+                        </span>
+                    </div>
                 </div>
 
                 <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-expanded="true" aria-controls="sidebar-nav" aria-label="Contraer menú">
                     <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M3 6h18M3 12h18M3 18h18" />
                     </svg>
-                    <span class="sidebar-label">Menú</span>
+                    <span class="sidebar-label">Ocultar</span>
                 </button>
 
                 <nav id="sidebar-nav" class="sidebar-nav" aria-label="Navegación principal">
@@ -160,12 +166,31 @@
                             </div>
                         </div>
                     </div>
-                    <span class="header-user" role="img" aria-label="Usuario">
-                        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </span>
+                    <div class="header-actions">
+                        <button id="theme-toggle" class="btn-theme" type="button" aria-pressed="false" aria-label="Activar modo oscuro" title="Activar modo oscuro">
+                            <svg class="icono icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                            </svg>
+                            <svg class="icono icon-sun oculto" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <circle cx="12" cy="12" r="4" />
+                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                            </svg>
+                        </button>
+                        <div class="header-year">
+                            <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <rect x="3" y="5" width="18" height="16" rx="2" />
+                                <path d="M16 3v4M8 3v4M3 10h18" />
+                            </svg>
+                            <div class="header-year__info">
+                                <label for="anio-academico">Año académico</label>
+                                <select id="anio-academico" name="anio-academico">
+                                    <option value="2026" selected>2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </header>
 
                 <div class="content-body">
@@ -237,30 +262,30 @@
 
                     <!-- ===== VIEW: REPORTES (menú de tarjetas) ===== -->
                     <section id="view-reportes" class="view oculto" aria-label="Menú reportes" aria-hidden="true">
-                        <h2 class="view-title">Menú reportes</h2>
-                        <p class="view-subtitle">Seleccione el tipo de información que desea consultar.</p>
+                        <h2 class="view-title">Panel de Reportes</h2>
+                        <p class="view-subtitle">Consulta y analiza la información institucional.</p>
 
                         <div class="report-grid">
                             <div class="card w-100 mb-3 report-card" data-panel="matricula">
                                 <div class="card-body">
-                                    <h4 class="card-title report-card__title">Reporte de matrícula</h4>
-                                    <p class="card-text report-card__desc">Matrículas por grado y sección</p>
+                                    <h4 class="card-title report-card__title">Reporte de Matrícula</h4>
+                                    <p class="card-text report-card__desc">Consulta la cantidad de estudiantes matriculados en la institución educativa.</p>
                                     <a href="#" class="btn-solid theme-primary" data-panel="matricula" aria-controls="view-reporte-matricula" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
                                 </div>
                             </div>
 
                             <div class="card w-100 mb-3 report-card" data-panel="consolidado">
                                 <div class="card-body">
-                                    <h4 class="card-title report-card__title">Consolidado de estudiantes</h4>
-                                    <p class="card-text report-card__desc">Distribución por sección, edad o sexo</p>
+                                    <h4 class="card-title report-card__title">Consolidado de Estudiantes</h4>
+                                    <p class="card-text report-card__desc">Visualiza la información general y la distribución de los estudiantes de la institución.</p>
                                     <a href="#" class="btn-solid theme-primary" data-panel="consolidado" aria-controls="view-reporte-consolidado" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
                                 </div>
                             </div>
 
                             <div class="card w-100 mb-3 report-card" data-panel="asistencia">
                                 <div class="card-body">
-                                    <h4 class="card-title report-card__title">Asistencia docente</h4>
-                                    <p class="card-text report-card__desc">Consulta diaria o semanal</p>
+                                    <h4 class="card-title report-card__title">Asistencia Docente</h4>
+                                    <p class="card-text report-card__desc">Consulta y supervisa el registro de asistencia del personal docente.</p>
                                     <a href="#" class="btn-solid theme-primary" data-panel="asistencia" aria-controls="view-reporte-asistencia" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
                                 </div>
                             </div>
