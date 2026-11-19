@@ -1,6 +1,16 @@
+/* ============================================================
+   main.js - Orquestador de vistas
+
+   Convención para el equipo:
+   - Cada módulo tiene su bloque marcado con // --- NOMBRE ---
+   - Vista nueva = <section id="view-<nombre>" class="view ..."> en index.html
+   - El nav usa data-vista="<nombre>"; no hay que registrar nada en JS
+   - Si un módulo crece, mover su bloque a js/components/<modulo>.js
+     y cargarlo con <script defer> en index.html
+   ============================================================ */
 document.addEventListener("DOMContentLoaded", function() {
-     
-    // LOGIN
+
+    // --- LOGIN ---
     var loginForm = document.getElementById("login-form");
     var loginSec = document.getElementById("login-section");
     var mainSec = document.getElementById("main-section");
@@ -17,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
             mainSec.classList.remove("oculto");
             loginError.classList.add("oculto");
             historialVistas = [];
-            mostrarPantalla("matricula");
+            mostrarPantalla("inicio");
             actualizarBotonVolver();
             window.location.hash = mainSec.id;
             mainSec.scrollIntoView();
@@ -32,13 +42,13 @@ document.addEventListener("DOMContentLoaded", function() {
         loginForm.reset();
         loginError.classList.add("oculto");
         historialVistas = [];
-        mostrarPantalla("matricula");
+        mostrarPantalla("inicio");
         actualizarBotonVolver();
         window.location.hash = "";
         loginSec.scrollIntoView();
     });
 
-    // CARRUSEL
+    // --- CARRUSEL ---
     var slideIndex = 0;
     var slides = document.querySelectorAll(".carousel-slide");
     
@@ -58,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
         slideIndex--; mostrarSlide(slideIndex);
     });
 
-    // MATRÍCULA
+    // --- MATRÍCULA ---
     var formMatricula = document.getElementById("matricula-form");
     var alerta = document.getElementById("alerta");
 
@@ -80,7 +90,10 @@ document.addEventListener("DOMContentLoaded", function() {
         alerta.className = "exito"; alerta.classList.remove("oculto"); formMatricula.reset();
     });
 
-    // BARRA LATERAL
+    // --- DOCENTES (placeholder: el equipo implementará aquí su lógica) ---
+    // La vista #view-docentes ya existe en index.html y ya es navegable.
+
+    // --- BARRA LATERAL ---
     var sidebar = document.getElementById("sidebar");
     var sidebarToggle = document.getElementById("sidebar-toggle");
 
@@ -90,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
         sidebarToggle.setAttribute("aria-label", collapsed ? "Expandir menú" : "Contraer menú");
     });
 
-    // NAVEGACIÓN ENTRE VISTAS Y BOTÓN VOLVER
+    // --- NAVEGACIÓN ENTRE VISTAS Y BOTÓN VOLVER ---
     var navItems = document.querySelectorAll(".nav-item");
     var vistas = document.querySelectorAll(".view");
     var reportCards = document.querySelectorAll(".report-card");
@@ -200,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
         actualizarBotonVolver();
     });
 
-    // REPORTES: búsqueda y registros
+    // --- REPORTES: búsqueda y registros ---
     var mensajeSinCoincidencias = "No se encontraron reportes que coincidan con la búsqueda.";
 
     var configReportes = {
@@ -358,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Asistencia docente: solo dos botones, Diario y Semanal
+    // --- ASISTENCIA DOCENTE: solo dos botones, Diario y Semanal ---
     document.querySelectorAll(".btn-tipo").forEach(function(boton) {
         boton.addEventListener("click", function() {
             document.querySelectorAll(".btn-tipo").forEach(function(other) {
