@@ -254,54 +254,54 @@ document.addEventListener("DOMContentLoaded", function() {
     var configReportes = {
         matricula: {
             datos: [
-                { nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026" },
-                { nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026" },
-                { nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026" },
-                { nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026" },
-                { nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026" },
-                { nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026" }
+                { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026" },
+                { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026" },
+                { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026" },
+                { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026" },
+                { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026" },
+                { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026" }
             ],
-            campos: ["nombres", "dni", "grado", "seccion", "fecha"],
-            columnas: ["Estudiante", "DNI", "Grado", "Sección", "Fecha"]
+            campos: ["id", "nombres", "dni", "grado", "seccion", "fecha"],
+            columnas: ["ID", "Estudiante", "DNI", "Grado", "Sección", "Fecha"]
         },
         consolidado: {
             datos: [
-                { estudiante: "Ana Lucía Quispe", grado: "2º de secundaria", edad: "13 años", seccion: "B", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
-                { estudiante: "Carlos Daniel Rojas", grado: "4º de secundaria", edad: "15 años", seccion: "A", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
-                { estudiante: "María Fernanda Vargas", grado: "1º de secundaria", edad: "11 años", seccion: "A", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
-                { estudiante: "Jorge Alberto Mendoza", grado: "2º de secundaria", edad: "12 años", seccion: "B", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
-                { estudiante: "Sofía Isabel Campos", grado: "5º de secundaria", edad: "17 años", seccion: "A", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
-                { estudiante: "Luis Enrique Paredes", grado: "3º de secundaria", edad: "14 años", seccion: "A", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
+                { id: "E-001", estudiante: "Ana Lucía Quispe", grado: "2º de secundaria", edad: "13 años", seccion: "B", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
+                { id: "E-002", estudiante: "Carlos Daniel Rojas", grado: "4º de secundaria", edad: "15 años", seccion: "A", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
+                { id: "E-003", estudiante: "María Fernanda Vargas", grado: "1º de secundaria", edad: "11 años", seccion: "A", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
+                { id: "E-004", estudiante: "Jorge Alberto Mendoza", grado: "2º de secundaria", edad: "12 años", seccion: "B", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
+                { id: "E-005", estudiante: "Sofía Isabel Campos", grado: "5º de secundaria", edad: "17 años", seccion: "A", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
+                { id: "E-006", estudiante: "Luis Enrique Paredes", grado: "3º de secundaria", edad: "14 años", seccion: "A", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
             ],
-            campos: ["estudiante", "grado", "edad", "seccion", "periodo", "promedio", "asistencia", "conducta"],
-            columnas: ["Estudiante", "Grado", "Edad", "Sección", "Periodo", "Promedio", "Asistencia", "Conducta"]
+            campos: ["id", "estudiante", "grado", "edad", "seccion", "periodo", "promedio", "asistencia", "conducta"],
+            columnas: ["ID", "Estudiante", "Grado", "Edad", "Sección", "Periodo", "Promedio", "Asistencia", "Conducta"]
         },
         asistencia: {
             vistas: {
                 diaria: {
-                    columnas: ["Docente", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Asistencia total"],
-                    campos: ["docente", "lunes", "martes", "miercoles", "jueves", "viernes", "porcentaje"]
+                    columnas: ["ID", "Docente", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Asistencia total"],
+                    campos: ["id", "docente", "lunes", "martes", "miercoles", "jueves", "viernes", "porcentaje"]
                 },
                 semanal: {
-                    columnas: ["Docente", "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Asistencia total"],
-                    campos: ["docente", "semana1", "semana2", "semana3", "semana4", "total"]
+                    columnas: ["ID", "Docente", "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Asistencia total"],
+                    campos: ["id", "docente", "semana1", "semana2", "semana3", "semana4", "total"]
                 }
             },
             datosPorMes: {
                 "Marzo": [
-                    { docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 80, semana3: 60, semana4: 100 },
-                    { docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Falta", miercoles: "Asistió", jueves: "Asistió", viernes: "Tardanza", semana1: 100, semana2: 80, semana3: 100, semana4: 100 },
-                    { docente: "Prof. Elena Torres", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: 60, semana2: 100, semana3: 80, semana4: 100 }
+                    { id: "D-01", docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 80, semana3: 60, semana4: 100 },
+                    { id: "D-02", docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Falta", miercoles: "Asistió", jueves: "Asistió", viernes: "Tardanza", semana1: 100, semana2: 80, semana3: 100, semana4: 100 },
+                    { id: "D-03", docente: "Prof. Elena Torres", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: 60, semana2: 100, semana3: 80, semana4: 100 }
                 ],
                 "Abril": [
-                    { docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Asistió", jueves: "Asistió", viernes: "Falta", semana1: 100, semana2: 100, semana3: 100, semana4: 80 },
-                    { docente: "Prof. Javier Ríos", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: 80, semana2: 100, semana3: 60, semana4: 100 },
-                    { docente: "Prof. Elena Torres", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 80, semana3: 100, semana4: 80 }
+                    { id: "D-01", docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Asistió", jueves: "Asistió", viernes: "Falta", semana1: 100, semana2: 100, semana3: 100, semana4: 80 },
+                    { id: "D-02", docente: "Prof. Javier Ríos", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: 80, semana2: 100, semana3: 60, semana4: 100 },
+                    { id: "D-03", docente: "Prof. Elena Torres", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 80, semana3: 100, semana4: 80 }
                 ],
                 "Mayo": [
-                    { docente: "Prof. Rosa Mendoza", lunes: "Falta", martes: "Asistió", miercoles: "Asistió", jueves: "Tardanza", viernes: "Asistió", semana1: 80, semana2: 60, semana3: 100, semana4: 80 },
-                    { docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Asistió", miercoles: "Asistió", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 100, semana3: 100, semana4: 80 },
-                    { docente: "Prof. Elena Torres", lunes: "Asistió", martes: "Falta", miercoles: "Falta", jueves: "Asistió", viernes: "Tardanza", semana1: 60, semana2: 80, semana3: 100, semana4: 100 }
+                    { id: "D-01", docente: "Prof. Rosa Mendoza", lunes: "Falta", martes: "Asistió", miercoles: "Asistió", jueves: "Tardanza", viernes: "Asistió", semana1: 80, semana2: 60, semana3: 100, semana4: 80 },
+                    { id: "D-02", docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Asistió", miercoles: "Asistió", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 100, semana3: 100, semana4: 80 },
+                    { id: "D-03", docente: "Prof. Elena Torres", lunes: "Asistió", martes: "Falta", miercoles: "Falta", jueves: "Asistió", viernes: "Tardanza", semana1: 60, semana2: 80, semana3: 100, semana4: 100 }
                 ]
             }
         }
@@ -345,6 +345,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }, 0) / semanas.length;
 
             return {
+                id: dato.id,
                 docente: dato.docente,
                 semana1: dato.semana1 + "%",
                 semana2: dato.semana2 + "%",
