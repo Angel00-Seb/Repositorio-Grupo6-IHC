@@ -430,6 +430,10 @@ h3 {
   background: var(--color-naranja-claro);
 }
 
+.home-logout {
+  display: none;
+}
+
 /* --- CONFIRMACIÓN DE CIERRE DE SESIÓN --- */
 .logout-dialog {
   width: min(100% - 32px, 440px);

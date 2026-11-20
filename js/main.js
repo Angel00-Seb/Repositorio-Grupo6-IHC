@@ -47,8 +47,10 @@ document.addEventListener("DOMContentLoaded", function() {
     var loginSec = document.getElementById("login-section");
     var mainSec = document.getElementById("main-section");
     var btnLogout = document.getElementById("btn-logout");
+    var homeLogout = document.getElementById("home-logout");
     var loginError = document.getElementById("login-error");
     var confirmarSalida = document.getElementById("confirmar-salida");
+    var ultimoBotonSalida = btnLogout;
 
     loginForm.addEventListener("submit", function(e) {
         e.preventDefault();
@@ -69,13 +71,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    btnLogout.addEventListener("click", function() {
-        confirmarSalida.showModal();
+    [btnLogout, homeLogout].forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            ultimoBotonSalida = boton;
+            confirmarSalida.showModal();
+        });
     });
 
     document.getElementById("cancelar-salida").addEventListener("click", function() {
         confirmarSalida.close();
-        btnLogout.focus();
+        ultimoBotonSalida.focus();
     });
 
     document.getElementById("aceptar-salida").addEventListener("click", function() {
