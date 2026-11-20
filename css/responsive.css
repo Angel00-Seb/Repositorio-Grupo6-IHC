@@ -126,17 +126,17 @@
     grid-template-columns: 1fr;
   }
 
-  .reporte-detalle {
-    padding: 16px;
+  .reporte-detalle__encabezado {
+    align-items: flex-start;
+  }
+
+  .btn-descargar {
+    width: 100%;
+    justify-content: center;
   }
 
   .btn-buscar {
     width: 100%;
-  }
-
-  .btn-tipo {
-    width: 100%;
-    min-width: 0;
   }
 
   .tabla-registros {

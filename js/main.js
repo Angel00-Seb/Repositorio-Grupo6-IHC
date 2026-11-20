@@ -209,12 +209,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (clave === "asistencia") {
-            document.querySelectorAll(".btn-tipo").forEach(function(boton) {
-                boton.setAttribute("aria-pressed", "false");
-            });
-            document.getElementById("hint-asistencia").classList.remove("oculto");
-            document.querySelector("#view-reporte-asistencia .tabla-registros").classList.add("oculto");
-            document.querySelector("#view-reporte-asistencia .reporte-error").classList.add("oculto");
+            var selectTipo = document.getElementById("tipo-asistencia");
+            var selectMes = document.getElementById("mes-asistencia");
+            if (selectTipo) {
+                selectTipo.value = "diaria";
+            }
+            if (selectMes) {
+                selectMes.value = "Marzo";
+            }
+            renderizarAsistenciaActual();
             return;
         }
 
@@ -276,20 +279,39 @@ document.addEventListener("DOMContentLoaded", function() {
         asistencia: {
             vistas: {
                 diaria: {
-                    columnas: ["Docente", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-                    campos: ["docente", "lunes", "martes", "miercoles", "jueves", "viernes"]
+                    columnas: ["Docente", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Asistencia total"],
+                    campos: ["docente", "lunes", "martes", "miercoles", "jueves", "viernes", "porcentaje"]
                 },
                 semanal: {
-                    columnas: ["Docente", "Semana 1", "Semana 2", "Semana 3", "Semana 4"],
-                    campos: ["docente", "semana1", "semana2", "semana3", "semana4"]
+                    columnas: ["Docente", "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Asistencia total"],
+                    campos: ["docente", "semana1", "semana2", "semana3", "semana4", "total"]
                 }
             },
-            datos: [
-                { docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: "Asistió", semana2: "Asistió", semana3: "Falta", semana4: "Asistió" },
-                { docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Falta", miercoles: "Asistió", jueves: "Asistió", viernes: "Tardanza", semana1: "Asistió", semana2: "Tardanza", semana3: "Asistió", semana4: "Asistió" },
-                { docente: "Prof. Elena Torres", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: "Falta", semana2: "Asistió", semana3: "Asistió", semana4: "Tardanza" }
-            ]
+            datosPorMes: {
+                "Marzo": [
+                    { docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 80, semana3: 60, semana4: 100 },
+                    { docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Falta", miercoles: "Asistió", jueves: "Asistió", viernes: "Tardanza", semana1: 100, semana2: 80, semana3: 100, semana4: 100 },
+                    { docente: "Prof. Elena Torres", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: 60, semana2: 100, semana3: 80, semana4: 100 }
+                ],
+                "Abril": [
+                    { docente: "Prof. Rosa Mendoza", lunes: "Asistió", martes: "Asistió", miercoles: "Asistió", jueves: "Asistió", viernes: "Falta", semana1: 100, semana2: 100, semana3: 100, semana4: 80 },
+                    { docente: "Prof. Javier Ríos", lunes: "Tardanza", martes: "Asistió", miercoles: "Asistió", jueves: "Falta", viernes: "Asistió", semana1: 80, semana2: 100, semana3: 60, semana4: 100 },
+                    { docente: "Prof. Elena Torres", lunes: "Asistió", martes: "Asistió", miercoles: "Tardanza", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 80, semana3: 100, semana4: 80 }
+                ],
+                "Mayo": [
+                    { docente: "Prof. Rosa Mendoza", lunes: "Falta", martes: "Asistió", miercoles: "Asistió", jueves: "Tardanza", viernes: "Asistió", semana1: 80, semana2: 60, semana3: 100, semana4: 80 },
+                    { docente: "Prof. Javier Ríos", lunes: "Asistió", martes: "Asistió", miercoles: "Asistió", jueves: "Asistió", viernes: "Asistió", semana1: 100, semana2: 100, semana3: 100, semana4: 80 },
+                    { docente: "Prof. Elena Torres", lunes: "Asistió", martes: "Falta", miercoles: "Falta", jueves: "Asistió", viernes: "Tardanza", semana1: 60, semana2: 80, semana3: 100, semana4: 100 }
+                ]
+            }
         }
+    };
+
+    // Datos visibles actualmente en cada reporte (para la descarga).
+    var datosActualesReporte = {
+        matricula: { filas: [], columnas: [], campos: [] },
+        consolidado: { filas: [], columnas: [], campos: [] },
+        asistencia: { filas: [], columnas: [], campos: [] }
     };
 
     function normalizar(texto) {
@@ -299,6 +321,46 @@ document.addEventListener("DOMContentLoaded", function() {
             .toLowerCase();
     }
 
+    function datosAsistenciaMes() {
+        var selectMes = document.getElementById("mes-asistencia");
+        var mes = selectMes ? selectMes.value : "Marzo";
+        return configReportes.asistencia.datosPorMes[mes] || [];
+    }
+
+    function filasAsistencia(tipo) {
+        return datosAsistenciaMes().map(function(dato) {
+            if (tipo === "diaria") {
+                var camposDias = ["lunes", "martes", "miercoles", "jueves", "viernes"];
+                var fila = Object.assign({}, dato);
+                var asistidas = camposDias.filter(function(campo) {
+                    return normalizar(dato[campo]) !== "falta";
+                }).length;
+                fila.porcentaje = Math.round((asistidas / camposDias.length) * 100) + "%";
+                return fila;
+            }
+
+            var semanas = [dato.semana1, dato.semana2, dato.semana3, dato.semana4];
+            var total = semanas.reduce(function(suma, valor) {
+                return suma + valor;
+            }, 0) / semanas.length;
+
+            return {
+                docente: dato.docente,
+                semana1: dato.semana1 + "%",
+                semana2: dato.semana2 + "%",
+                semana3: dato.semana3 + "%",
+                semana4: dato.semana4 + "%",
+                total: Math.round(total) + "%"
+            };
+        });
+    }
+
+    function renderizarAsistenciaActual() {
+        var selectTipo = document.getElementById("tipo-asistencia");
+        var tipo = selectTipo ? selectTipo.value : "diaria";
+        renderizar("asistencia", filasAsistencia(tipo), configReportes.asistencia.vistas[tipo]);
+    }
+
     function renderizar(clave, filas, vista) {
         var config = vista || configReportes[clave];
         var panel = document.getElementById("view-reporte-" + clave);
@@ -306,6 +368,8 @@ document.addEventListener("DOMContentLoaded", function() {
         var cabecera = tabla.tHead;
         var cuerpo = tabla.tBodies[0];
         var error = panel.querySelector(".reporte-error");
+
+        datosActualesReporte[clave] = { filas: filas, columnas: config.columnas, campos: config.campos };
 
         cabecera.textContent = "";
         cuerpo.textContent = "";
@@ -403,19 +467,66 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // --- ASISTENCIA DOCENTE: solo dos botones, Diario y Semanal ---
-    document.querySelectorAll(".btn-tipo").forEach(function(boton) {
+    // --- ASISTENCIA DOCENTE: tipo y mes ---
+    var selectTipoAsistencia = document.getElementById("tipo-asistencia");
+    var selectMesAsistencia = document.getElementById("mes-asistencia");
+    if (selectTipoAsistencia) {
+        selectTipoAsistencia.addEventListener("change", function() {
+            renderizarAsistenciaActual();
+        });
+    }
+    if (selectMesAsistencia) {
+        selectMesAsistencia.addEventListener("change", function() {
+            renderizarAsistenciaActual();
+        });
+    }
+
+    // --- REPORTES: descarga de datos ---
+    function valorCSV(valor) {
+        var texto = String(valor == null ? "" : valor);
+        if (/[",\n\r]/.test(texto)) {
+            return '"' + texto.replace(/"/g, '""') + '"';
+        }
+        return texto;
+    }
+
+    function descargarCSV(nombreArchivo, columnas, campos, filas) {
+        var lineas = [];
+        lineas.push(columnas.map(valorCSV).join(","));
+        filas.forEach(function(fila) {
+            lineas.push(campos.map(function(campo) {
+                return valorCSV(fila[campo]);
+            }).join(","));
+        });
+        var contenido = "\uFEFF" + lineas.join("\r\n");
+        var blob = new Blob([contenido], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+        var enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = nombreArchivo;
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+        URL.revokeObjectURL(url);
+    }
+
+    document.querySelectorAll(".btn-descargar").forEach(function(boton) {
         boton.addEventListener("click", function() {
-            document.querySelectorAll(".btn-tipo").forEach(function(other) {
-                other.setAttribute("aria-pressed", "false");
-            });
-            boton.setAttribute("aria-pressed", "true");
+            var clave = boton.getAttribute("data-reporte");
+            var actual = datosActualesReporte[clave];
+            var panel = document.getElementById("view-reporte-" + clave);
 
-            var tipo = boton.getAttribute("data-tipo");
-            var vista = configReportes.asistencia.vistas[tipo];
+            if (!actual || actual.columnas.length === 0) {
+                var error = panel.querySelector(".reporte-error");
+                error.textContent = "Seleccione Diario o Semanal antes de descargar los datos.";
+                error.classList.remove("oculto");
+                error.classList.remove("animation-shake");
+                void error.offsetWidth;
+                error.classList.add("animation-shake");
+                return;
+            }
 
-            document.getElementById("hint-asistencia").classList.add("oculto");
-            renderizar("asistencia", configReportes.asistencia.datos, vista);
+            descargarCSV("reporte-" + clave + ".csv", actual.columnas, actual.campos, actual.filas);
         });
     });
 });

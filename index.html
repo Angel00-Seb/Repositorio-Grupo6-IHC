@@ -268,24 +268,52 @@
                         <div class="report-grid">
                             <div class="card w-100 mb-3 report-card" data-panel="matricula">
                                 <div class="card-body">
-                                    <h4 class="card-title report-card__title">Reporte de Matrícula</h4>
-                                    <p class="card-text report-card__desc">Consulta la cantidad de estudiantes matriculados en la institución educativa.</p>
+                                    <div class="report-card__content">
+                                        <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                                            <rect x="9" y="3" width="6" height="4" rx="1" />
+                                            <path d="M9 12h6M9 16h6" />
+                                        </svg>
+                                        <div class="report-card__text">
+                                            <h4 class="card-title report-card__title">Reporte de Matrícula</h4>
+                                            <p class="card-text report-card__desc">Consulta la cantidad de estudiantes matriculados en la institución educativa.</p>
+                                        </div>
+                                    </div>
                                     <a href="#" class="btn-solid theme-primary" data-panel="matricula" aria-controls="view-reporte-matricula" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
                                 </div>
                             </div>
 
                             <div class="card w-100 mb-3 report-card" data-panel="consolidado">
                                 <div class="card-body">
-                                    <h4 class="card-title report-card__title">Consolidado de Estudiantes</h4>
-                                    <p class="card-text report-card__desc">Visualiza la información general y la distribución de los estudiantes de la institución.</p>
+                                    <div class="report-card__content">
+                                        <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M3 3v18h18" />
+                                            <rect x="7" y="13" width="3" height="5" />
+                                            <rect x="12" y="9" width="3" height="9" />
+                                            <rect x="17" y="5" width="3" height="13" />
+                                        </svg>
+                                        <div class="report-card__text">
+                                            <h4 class="card-title report-card__title">Consolidado de Estudiantes</h4>
+                                            <p class="card-text report-card__desc">Visualiza la información general y la distribución de los estudiantes de la institución.</p>
+                                        </div>
+                                    </div>
                                     <a href="#" class="btn-solid theme-primary" data-panel="consolidado" aria-controls="view-reporte-consolidado" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
                                 </div>
                             </div>
 
                             <div class="card w-100 mb-3 report-card" data-panel="asistencia">
                                 <div class="card-body">
-                                    <h4 class="card-title report-card__title">Asistencia Docente</h4>
-                                    <p class="card-text report-card__desc">Consulta y supervisa el registro de asistencia del personal docente.</p>
+                                    <div class="report-card__content">
+                                        <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                                            <path d="M16 2v4M8 2v4M3 10h18" />
+                                            <path d="M9 16l2 2 4-4" />
+                                        </svg>
+                                        <div class="report-card__text">
+                                            <h4 class="card-title report-card__title">Asistencia Docente</h4>
+                                            <p class="card-text report-card__desc">Consulta y supervisa el registro de asistencia del personal docente.</p>
+                                        </div>
+                                    </div>
                                     <a href="#" class="btn-solid theme-primary" data-panel="asistencia" aria-controls="view-reporte-asistencia" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
                                 </div>
                             </div>
@@ -294,7 +322,17 @@
 
                     <!-- ===== VISTAS DE DETALLE DE REPORTES ===== -->
                     <section id="view-reporte-matricula" class="view oculto reporte-detalle" aria-label="Reporte de matrícula" aria-hidden="true">
-                        <h3 class="reporte-detalle__titulo">Reporte de matrícula</h3>
+                        <div class="reporte-detalle__encabezado">
+                            <h3 class="reporte-detalle__titulo">Reporte de matrícula</h3>
+                            <button type="button" class="btn-descargar" data-reporte="matricula">
+                                <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <path d="M7 10l5 5 5-5" />
+                                    <path d="M12 15V3" />
+                                </svg>
+                                <span>Descargar datos</span>
+                            </button>
+                        </div>
                         <form class="busqueda-form" data-busqueda="matricula" role="search">
                             <div class="input-group">
                                 <label for="buscar-nombre-matricula">Buscar por nombre:</label>
@@ -316,7 +354,17 @@
                     </section>
 
                     <section id="view-reporte-consolidado" class="view oculto reporte-detalle" aria-label="Consolidado de estudiantes" aria-hidden="true">
-                        <h3 class="reporte-detalle__titulo">Consolidado de estudiantes</h3>
+                        <div class="reporte-detalle__encabezado">
+                            <h3 class="reporte-detalle__titulo">Consolidado de estudiantes</h3>
+                            <button type="button" class="btn-descargar" data-reporte="consolidado">
+                                <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <path d="M7 10l5 5 5-5" />
+                                    <path d="M12 15V3" />
+                                </svg>
+                                <span>Descargar datos</span>
+                            </button>
+                        </div>
                         <form class="busqueda-form" data-busqueda="consolidado" role="search">
                             <div class="input-group">
                                 <label for="buscar-nombre-consolidado">Buscar por nombre:</label>
@@ -338,17 +386,34 @@
                     </section>
 
                     <section id="view-reporte-asistencia" class="view oculto reporte-detalle" aria-label="Asistencia docente" aria-hidden="true">
-                        <h3 class="reporte-detalle__titulo">Asistencia docente</h3>
+                        <div class="reporte-detalle__encabezado">
+                            <h3 class="reporte-detalle__titulo">Asistencia docente</h3>
+                            <button type="button" class="btn-descargar" data-reporte="asistencia">
+                                <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <path d="M7 10l5 5 5-5" />
+                                    <path d="M12 15V3" />
+                                </svg>
+                                <span>Descargar datos</span>
+                            </button>
+                        </div>
                         <div class="busqueda-form" role="search">
                             <div class="input-group">
-                                <span class="input-group__label" id="etiqueta-tipo-asistencia">Tipo de búsqueda:</span>
-                                <div class="grupo-botones" role="group" aria-labelledby="etiqueta-tipo-asistencia">
-                                    <button class="btn-tipo" type="button" data-tipo="diaria" aria-pressed="false">Diario</button>
-                                    <button class="btn-tipo" type="button" data-tipo="semanal" aria-pressed="false">Semanal</button>
-                                </div>
+                                <label for="tipo-asistencia">Tipo de asistencia:</label>
+                                <select id="tipo-asistencia" name="tipo-asistencia">
+                                    <option value="diaria" selected>Diario</option>
+                                    <option value="semanal">Semanal</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="mes-asistencia">Mes:</label>
+                                <select id="mes-asistencia" name="mes-asistencia">
+                                    <option value="Marzo" selected>Marzo</option>
+                                    <option value="Abril">Abril</option>
+                                    <option value="Mayo">Mayo</option>
+                                </select>
                             </div>
                         </div>
-                        <p id="hint-asistencia" class="reporte-hint">Diario muestra la asistencia por día de la semana; Semanal, por semana del mes.</p>
                         <p class="reporte-error oculto" role="alert"></p>
                         <div class="registros">
                             <table class="tabla-registros">
