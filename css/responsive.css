@@ -58,6 +58,38 @@
     padding: 16px;
   }
 
+  .docentes-contenido {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .docentes-panel,
+  .docentes-listado {
+    padding: 16px;
+  }
+
+  .docentes-panel .docentes-listado {
+    padding: 0;
+  }
+
+  .docentes-form {
+    grid-template-columns: 1fr;
+  }
+
+  .docentes-form .btn-primario,
+  .docentes-campo-completo,
+  .docentes-mensaje {
+    grid-column: 1;
+  }
+
+  .docentes-busqueda__controles {
+    flex-direction: column;
+  }
+
+  .docentes-busqueda__controles .btn-primario {
+    width: 100%;
+  }
+
   fieldset {
     padding: 14px;
   }
@@ -142,6 +174,11 @@
   .tabla-registros {
     min-width: 860px;
   }
+
+  .docentes-tabla {
+    min-width: 640px;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -393,6 +393,118 @@ h3 {
   box-shadow: var(--shadow-soft);
 }
 
+/* --- CONTROL DE ASISTENCIA DOCENTE --- */
+.docentes-contenido {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+}
+
+.docentes-panel,
+.docentes-listado {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.docentes-panel h3,
+.docentes-listado h3 {
+  margin-bottom: 16px;
+  color: var(--color-heading);
+}
+
+.docentes-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+}
+
+.docentes-form .btn-primario,
+.docentes-campo-completo,
+.docentes-mensaje {
+  grid-column: 1 / -1;
+}
+
+.docentes-busqueda {
+  margin-bottom: 12px;
+}
+
+.docentes-busqueda__controles {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.docentes-busqueda__controles input {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.docentes-busqueda__controles .btn-primario {
+  width: auto;
+  flex: 0 0 auto;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.docentes-busqueda small {
+  display: block;
+  margin-top: 6px;
+  color: var(--color-muted);
+  font-size: var(--font-size-min);
+}
+
+.docentes-form textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-muted);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.docentes-form textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.docentes-mensaje {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: var(--font-size-min);
+}
+
+.docentes-panel .docentes-listado {
+  margin-top: 24px;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.docentes-tabla {
+  min-width: 100%;
+}
+
+.docentes-asistencias .docentes-tabla {
+  min-width: 780px;
+}
+
+.docentes-tabla th,
+.docentes-tabla td {
+  vertical-align: top;
+}
+
+.docentes-asistencias {
+  margin-top: 20px;
+}
+
 fieldset {
   border: 1px solid var(--color-muted);
   padding: 20px;
