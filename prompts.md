@@ -8,25 +8,40 @@
 
 ## Dashboard de Reportes — Codex
 
+**Prompt 3.1**
 
-**Prompt 3.1:** "Agrega un dashboard sencillo en Reportes Usa los datos de ejemplo que ya están en el proyecto."
+Oye puedes poner un dashboard simple en reportes usando los datos de ejemplo que ya tenemos
 
-**Prompt 3.2:** "Muestra cuántas matrículas hay, qué secciones tienen registros y cuántos estudiantes tiene cada una. Usa 30 estudiantes como aforo de referencia y calcula los números con JavaScript."
+**Prompt 3.2**
 
-**Prompt 3.3:** "Sigue los estilos de skills/reglas. Haz que el dashboard se vea bien en celular y computadora, pruébalo y toma capturas de la pantalla y del código."
+Que se vea cuántas matrículas hay y cuántos alumnos hay por sección usa 30 como referencia para cada sección y calcula todo con JavaScript
+
+**Prompt 3.3**
+
+Usa los estilos que ya tenemos en skills/reglas y haz que se vea bien en celular y en compu después pruébalo y saca capturas de la pantalla y del código
 
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los reportes siguen usando datos de demostración y el formulario de matrícula todavía no actualiza estas cifras.
 
 ## Página principal — Codex
 
-**Prompt 4.1:** "Mejora la página principal usando el mockup M03. Pon el título, el saludo 'Bienvenido/a' y una indicación para elegir un módulo."
+**Prompt 4.1**
 
-**Prompt 4.2:** "Agrega tarjetas con iconos para Matrícula, Docentes y Reportes. Cada tarjeta debe abrir su sección. Conserva los carruseles que ya existen."
+Puedes mejorar la página principal basándote en el mockup M03 pon el título y el saludo Bienvenido/a con un texto para elegir el módulo
 
-**Prompt 4.3:** "Usa el mockup M38 para pedir confirmación antes de cerrar sesión. Debe haber opciones para continuar en el sistema o salir."
+**Prompt 4.2**
 
-**Prompt 4.4:** "En celular, pon la navegación de Inicio, Matrícula, Docentes y Reportes fija abajo, como en el mockup M03. Coloca el botón Cerrar sesión dentro de la página principal."
+Pon las tarjetas de matrícula docentes y reportes con sus iconos y que al tocarlas abran su sección deja los carruseles que ya estaban
 
-**Prompt 4.5:** "Sigue los estilos de `skills/reglas`. Prueba la página en celular y computadora y toma capturas de la pantalla y del código."
+**Prompt 4.3**
+
+Al cerrar sesión que pregunte si de verdad quiero salir como en el mockup M38 y que se pueda cancelar
+
+**Prompt 4.4**
+
+En celular pon el menú de inicio matrícula docentes y reportes abajo como en el mockup M03 y el botón de cerrar sesión dentro de la página principal
+
+**Prompt 4.5**
+
+Respeta los estilos de skills/reglas prueba la página en celular y compu y saca capturas de cómo quedó y de la parte del código
 
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.
