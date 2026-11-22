@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // --- CONTROL DE ASISTENCIA DOCENTE ---
     var formularioDocente = document.getElementById("form-docente");
-    var formularioAsistencia = document.getElementById("form-asistencia");
+    var dniDocente = document.getElementById("dni-docente");
     var listaDocentes = document.getElementById("lista-docentes");
     var listaAsistencias = document.getElementById("lista-asistencias");
     var buscarDocente = document.getElementById("buscar-docente");
@@ -133,17 +133,14 @@ document.addEventListener("DOMContentLoaded", function() {
     var fechaAsistencia = document.getElementById("fecha-asistencia");
     var horaAsistencia = document.getElementById("hora-asistencia");
     var estadoAsistencia = document.getElementById("estado-asistencia");
+    var grupoJustificacion = document.getElementById("grupo-justificacion");
+    var justificacionAsistencia = document.getElementById("justificacion-asistencia");
+    var formularioAsistencia = document.getElementById("form-asistencia");
     var mensajeDocente = document.getElementById("mensaje-docente");
     var mensajeAsistencia = document.getElementById("mensaje-asistencia");
     var mensajeBusquedaDocente = document.getElementById("mensaje-busqueda-docente");
     var docentes = [];
     var asistencias = [];
-    var estadosAsistencia = [
-        "Asistencia",
-        "Tardanza",
-        "Falta justificada",
-        "Falta injustificada"
-    ];
 
     function mostrarMensaje(elemento, mensaje, tipo) {
         elemento.textContent = mensaje;
@@ -183,12 +180,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function actualizarOpcionesDocentes() {
+    function buscarDocentePorDni(dni) {
+        for (var i = 0; i < docentes.length; i++) {
+            if (docentes[i].dni === dni) {
+                return docentes[i];
+            }
+        }
+        return null;
+    }
+
+    function buscarDocentesRegistrados() {
         var termino = normalizarBusquedaDocente(buscarDocente.value.trim());
-        var dniSeleccionado = seleccionDocente.value;
         var docentesFiltrados = docentes.filter(function(docente) {
-            var nombreCompleto = normalizarBusquedaDocente(docente.nombres + " " + docente.apellidos);
-            return nombreCompleto.indexOf(termino) !== -1 || docente.dni.indexOf(termino) !== -1;
+            var nombres = normalizarBusquedaDocente(docente.nombres);
+            var apellidos = normalizarBusquedaDocente(docente.apellidos);
+            var nombreCompleto = nombres + " " + apellidos;
+            return nombreCompleto.indexOf(termino) !== -1 ||
+                nombres.indexOf(termino) !== -1 ||
+                apellidos.indexOf(termino) !== -1 ||
+                docente.dni.indexOf(termino) !== -1;
         });
 
         seleccionDocente.textContent = "";
@@ -208,27 +218,13 @@ document.addEventListener("DOMContentLoaded", function() {
             seleccionDocente.appendChild(opcion);
         });
 
-        seleccionDocente.value = dniSeleccionado;
-        if (seleccionDocente.value !== dniSeleccionado) {
-            seleccionDocente.value = "";
-        }
-    }
-
-    function buscarDocentesRegistrados() {
-        actualizarOpcionesDocentes();
-
         if (docentes.length === 0) {
-            mostrarMensaje(mensajeBusquedaDocente, "Aún no hay docentes registrados para buscar.", "error");
-            return;
+            mostrarMensaje(mensajeBusquedaDocente, "Aún no hay docentes registrados. Registre uno en el catálogo para comenzar.", "error");
+        } else if (docentesFiltrados.length === 0) {
+            mostrarMensaje(mensajeBusquedaDocente, "No se encontraron docentes que coincidan con el nombre, apellido o DNI.", "error");
+        } else {
+            mostrarMensaje(mensajeBusquedaDocente, docentesFiltrados.length + " docente(s) encontrado(s). Seleccione uno de la lista.", "exito");
         }
-
-        var coincidencias = seleccionDocente.options.length - 1;
-        if (coincidencias === 0) {
-            mostrarMensaje(mensajeBusquedaDocente, "No se encontraron docentes. Revise el nombre, apellido o DNI.", "error");
-            return;
-        }
-
-        limpiarMensaje(mensajeBusquedaDocente);
     }
 
     function fechaLocal(fecha) {
@@ -238,16 +234,11 @@ document.addEventListener("DOMContentLoaded", function() {
         return anio + "-" + mes + "-" + dia;
     }
 
-    function horaLocal(fecha) {
-        var horas = ("0" + fecha.getHours()).slice(-2);
-        var minutos = ("0" + fecha.getMinutes()).slice(-2);
-        return horas + ":" + minutos;
-    }
-
     function establecerFechaHoraActual() {
         var ahora = new Date();
         fechaAsistencia.value = fechaLocal(ahora);
-        horaAsistencia.value = horaLocal(ahora);
+        horaAsistencia.value = ("0" + ahora.getHours()).slice(-2) + ":" +
+            ("0" + ahora.getMinutes()).slice(-2);
     }
 
     function formatearFecha(fecha) {
@@ -261,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (asistencias.length === 0) {
             var filaVacia = document.createElement("tr");
             var celdaVacia = document.createElement("td");
-            celdaVacia.colSpan = 5;
+            celdaVacia.colSpan = 6;
             celdaVacia.textContent = "Aún no hay asistencias registradas.";
             filaVacia.appendChild(celdaVacia);
             listaAsistencias.appendChild(filaVacia);
@@ -276,7 +267,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 asistencia.dni,
                 formatearFecha(asistencia.fecha),
                 asistencia.hora,
-                asistencia.estado
+                asistencia.estado,
+                asistencia.justificacion || "—"
             ].forEach(function(valor) {
                 var celda = document.createElement("td");
                 celda.textContent = valor;
@@ -286,30 +278,79 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function buscarDocentePorDni(dni) {
-        for (var i = 0; i < docentes.length; i++) {
-            if (docentes[i].dni === dni) {
-                return docentes[i];
-            }
+    function actualizarCampoJustificacion() {
+        var requiereJustificacion = estadoAsistencia.value === "Falta justificada";
+        grupoJustificacion.classList.toggle("oculto", !requiereJustificacion);
+        justificacionAsistencia.required = requiereJustificacion;
+        if (!requiereJustificacion) {
+            justificacionAsistencia.value = "";
         }
-        return null;
     }
+
+    function registrarAsistencia(event) {
+        event.preventDefault();
+        limpiarMensaje(mensajeAsistencia);
+
+        var docente = buscarDocentePorDni(seleccionDocente.value);
+        var fecha = fechaAsistencia.value;
+        var hora = horaAsistencia.value;
+        var estado = estadoAsistencia.value;
+        var justificacion = justificacionAsistencia.value.trim();
+
+        if (!docente || !fecha || !hora || !estado) {
+            mostrarMensaje(mensajeAsistencia, "Seleccione un docente y complete la fecha, la hora y el estado.", "error");
+            return;
+        }
+        if (estado === "Falta justificada" && !justificacion) {
+            mostrarMensaje(mensajeAsistencia, "Ingrese el motivo para justificar la falta.", "error");
+            return;
+        }
+        if (["Asistencia", "Tardanza", "Falta justificada", "Falta injustificada"].indexOf(estado) === -1) {
+            mostrarMensaje(mensajeAsistencia, "Seleccione un estado válido para la asistencia.", "error");
+            return;
+        }
+
+        asistencias.push({
+            docente: docente.nombres + " " + docente.apellidos,
+            dni: docente.dni,
+            fecha: fecha,
+            hora: hora,
+            estado: estado,
+            justificacion: estado === "Falta justificada" ? justificacion : ""
+        });
+        mostrarAsistencias();
+        formularioAsistencia.reset();
+        establecerFechaHoraActual();
+        actualizarCampoJustificacion();
+        buscarDocente.value = "";
+        seleccionDocente.textContent = "";
+        var opcionInicial = document.createElement("option");
+        opcionInicial.value = "";
+        opcionInicial.textContent = docentes.length === 0 ? "Primero registre un docente." : "Busque y seleccione un docente.";
+        seleccionDocente.appendChild(opcionInicial);
+        limpiarMensaje(mensajeBusquedaDocente);
+        mostrarMensaje(mensajeAsistencia, "Asistencia registrada correctamente.", "exito");
+    }
+
+    dniDocente.addEventListener("input", function() {
+        dniDocente.value = dniDocente.value.replace(/\D/g, "").slice(0, 8);
+    });
 
     formularioDocente.addEventListener("submit", function(event) {
         event.preventDefault();
         limpiarMensaje(mensajeDocente);
 
-        var dni = document.getElementById("dni-docente").value.trim();
+        var dni = dniDocente.value.trim();
         var nombres = document.getElementById("nombre-docente").value.trim();
         var apellidos = document.getElementById("apellido-docente").value.trim();
         var especialidad = document.getElementById("especialidad-docente").value.trim();
 
-        if (!dni || !nombres || !apellidos || !especialidad) {
-            mostrarMensaje(mensajeDocente, "Complete todos los campos para registrar al docente.", "error");
+        if (!/^\d{8}$/.test(dni)) {
+            mostrarMensaje(mensajeDocente, "El DNI debe tener exactamente 8 dígitos numéricos. Complete los 8 dígitos.", "error");
             return;
         }
-        if (!/^\d{8}$/.test(dni)) {
-            mostrarMensaje(mensajeDocente, "El DNI debe tener exactamente 8 dígitos numéricos.", "error");
+        if (!nombres || !apellidos || !especialidad) {
+            mostrarMensaje(mensajeDocente, "Complete los nombres, apellidos y especialidad para registrar al docente.", "error");
             return;
         }
         if (buscarDocentePorDni(dni)) {
@@ -326,7 +367,11 @@ document.addEventListener("DOMContentLoaded", function() {
         mostrarDocentes();
         formularioDocente.reset();
         buscarDocente.value = "";
-        actualizarOpcionesDocentes();
+        seleccionDocente.textContent = "";
+        var opcionInicial = document.createElement("option");
+        opcionInicial.value = "";
+        opcionInicial.textContent = "Busque y seleccione un docente.";
+        seleccionDocente.appendChild(opcionInicial);
         limpiarMensaje(mensajeBusquedaDocente);
         mostrarMensaje(mensajeDocente, "Docente registrado correctamente.", "exito");
     });
@@ -338,39 +383,12 @@ document.addEventListener("DOMContentLoaded", function() {
             buscarDocentesRegistrados();
         }
     });
+    estadoAsistencia.addEventListener("change", actualizarCampoJustificacion);
+    formularioAsistencia.addEventListener("submit", registrarAsistencia);
 
-    formularioAsistencia.addEventListener("submit", function(event) {
-        event.preventDefault();
-        limpiarMensaje(mensajeAsistencia);
-
-        var docente = buscarDocentePorDni(seleccionDocente.value);
-        var fecha = fechaAsistencia.value;
-        var hora = horaAsistencia.value;
-        var estado = estadoAsistencia.value;
-
-        if (!docente || !fecha || !hora || estadosAsistencia.indexOf(estado) === -1) {
-            mostrarMensaje(mensajeAsistencia, "Seleccione un docente y complete la fecha, la hora y el estado.", "error");
-            return;
-        }
-
-        asistencias.push({
-            docente: docente.nombres + " " + docente.apellidos,
-            dni: docente.dni,
-            fecha: fecha,
-            hora: hora,
-            estado: estado
-        });
-        mostrarAsistencias();
-        formularioAsistencia.reset();
-        buscarDocente.value = "";
-        actualizarOpcionesDocentes();
-        establecerFechaHoraActual();
-        mostrarMensaje(mensajeAsistencia, "Asistencia registrada correctamente.", "exito");
-    });
-
-    establecerFechaHoraActual();
     mostrarDocentes();
-    actualizarOpcionesDocentes();
+    establecerFechaHoraActual();
+    actualizarCampoJustificacion();
     mostrarAsistencias();
 
     // --- BARRA LATERAL ---

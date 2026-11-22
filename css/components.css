@@ -431,21 +431,48 @@ h3 {
 }
 
 .docentes-busqueda {
+  margin-bottom: 12px;
+}
+
+.docentes-busqueda__controles {
   display: flex;
   align-items: stretch;
   gap: 8px;
 }
 
-.docentes-busqueda input {
+.docentes-busqueda__controles input {
   min-width: 0;
   flex: 1 1 auto;
 }
 
-.docentes-busqueda .btn-primario {
+.docentes-busqueda__controles .btn-primario {
   width: auto;
   flex: 0 0 auto;
   margin: 0;
   white-space: nowrap;
+}
+
+.docentes-busqueda small {
+  display: block;
+  margin-top: 6px;
+  color: var(--color-muted);
+  font-size: var(--font-size-min);
+}
+
+.docentes-form textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-muted);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.docentes-form textarea:focus {
+  border-color: var(--color-accent);
 }
 
 .docentes-mensaje {
@@ -464,6 +491,10 @@ h3 {
 
 .docentes-tabla {
   min-width: 100%;
+}
+
+.docentes-asistencias .docentes-tabla {
+  min-width: 780px;
 }
 
 .docentes-tabla th,

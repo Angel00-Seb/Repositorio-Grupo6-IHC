@@ -267,7 +267,7 @@
                                 <form id="form-docente" class="docentes-form" novalidate>
                                     <div class="input-group">
                                         <label for="dni-docente">DNI (8 dígitos):</label>
-                                        <input type="text" id="dni-docente" maxlength="8" inputmode="numeric" autocomplete="off" required>
+                                        <input type="text" id="dni-docente" pattern="[0-9]{8}" inputmode="numeric" autocomplete="off" required>
                                     </div>
                                     <div class="input-group">
                                         <label for="nombre-docente">Nombres:</label>
@@ -310,38 +310,42 @@
                             <div class="docentes-panel">
                                 <h3>Registrar asistencia</h3>
                                 <form id="form-asistencia" class="docentes-form" novalidate>
-                                    <div class="input-group docentes-campo-completo">
-                                        <label for="buscar-docente">Buscar docente por nombre o DNI:</label>
-                                        <div class="docentes-busqueda">
-                                            <input type="search" id="buscar-docente" autocomplete="off" aria-describedby="ayuda-buscar-docente" placeholder="Escriba un nombre, apellido o DNI">
-                                            <button id="buscar-docente-btn" class="btn-primario" type="button">Buscar docente</button>
-                                        </div>
-                                        <small id="ayuda-buscar-docente">Presione «Buscar docente» para mostrar las coincidencias.</small>
-                                        <p id="mensaje-busqueda-docente" class="docentes-mensaje oculto" role="status" aria-live="polite"></p>
+                                    <div class="input-group docentes-busqueda docentes-campo-completo">
+                                    <label for="buscar-docente">Buscar docente por nombre o DNI:</label>
+                                    <div class="docentes-busqueda__controles">
+                                        <input type="search" id="buscar-docente" autocomplete="off" aria-describedby="ayuda-buscar-docente" placeholder="Escriba un nombre o DNI">
+                                        <button id="buscar-docente-btn" class="btn-primario" type="button">Buscar docente</button>
+                                    </div>
+                                    <small id="ayuda-buscar-docente">Presione Buscar docente para mostrar las coincidencias</small>
+                                    <p id="mensaje-busqueda-docente" class="docentes-mensaje oculto" role="status" aria-live="polite"></p>
                                     </div>
                                     <div class="input-group docentes-campo-completo">
-                                        <label for="docente-asistencia">Docente:</label>
-                                        <select id="docente-asistencia" required>
-                                            <option value="" selected>Primero registre un docente.</option>
-                                        </select>
+                                    <label for="docente-asistencia">Docente:</label>
+                                    <select id="docente-asistencia" required>
+                                        <option value="" selected>Busque y seleccione un docente.</option>
+                                    </select>
                                     </div>
                                     <div class="input-group">
-                                        <label for="fecha-asistencia">Fecha:</label>
-                                        <input type="date" id="fecha-asistencia" required>
+                                    <label for="fecha-asistencia">Fecha:</label>
+                                    <input type="date" id="fecha-asistencia" required>
                                     </div>
                                     <div class="input-group">
-                                        <label for="hora-asistencia">Hora:</label>
-                                        <input type="time" id="hora-asistencia" required>
+                                    <label for="hora-asistencia">Hora:</label>
+                                    <input type="time" id="hora-asistencia" required>
                                     </div>
                                     <div class="input-group docentes-campo-completo">
-                                        <label for="estado-asistencia">Estado:</label>
-                                        <select id="estado-asistencia" required>
-                                            <option value="" selected disabled>Seleccione un estado...</option>
-                                            <option value="Asistencia">Asistencia</option>
-                                            <option value="Tardanza">Tardanza</option>
-                                            <option value="Falta justificada">Falta justificada</option>
-                                            <option value="Falta injustificada">Falta injustificada</option>
-                                        </select>
+                                    <label for="estado-asistencia">Estado:</label>
+                                    <select id="estado-asistencia" required>
+                                        <option value="" selected>Seleccione un estado...</option>
+                                        <option value="Asistencia">Asistencia</option>
+                                        <option value="Tardanza">Tardanza</option>
+                                        <option value="Falta justificada">Falta justificada</option>
+                                        <option value="Falta injustificada">Falta injustificada</option>
+                                    </select>
+                                    </div>
+                                    <div id="grupo-justificacion" class="input-group docentes-campo-completo oculto">
+                                    <label for="justificacion-asistencia">Justificación:</label>
+                                    <textarea id="justificacion-asistencia" rows="3" placeholder="Indique el motivo de la falta"></textarea>
                                     </div>
                                     <button type="submit" class="btn-primario">Registrar asistencia</button>
                                     <p id="mensaje-asistencia" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
@@ -360,11 +364,12 @@
                                             <th scope="col">Fecha</th>
                                             <th scope="col">Hora</th>
                                             <th scope="col">Estado</th>
+                                            <th scope="col">Justificación</th>
                                         </tr>
                                     </thead>
                                     <tbody id="lista-asistencias">
                                         <tr>
-                                            <td colspan="5">Aún no hay asistencias registradas.</td>
+                                            <td colspan="6">Aún no hay asistencias registradas.</td>
                                         </tr>
                                     </tbody>
                                 </table>

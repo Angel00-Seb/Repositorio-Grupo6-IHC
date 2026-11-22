@@ -82,11 +82,11 @@
     grid-column: 1;
   }
 
-  .docentes-busqueda {
+  .docentes-busqueda__controles {
     flex-direction: column;
   }
 
-  .docentes-busqueda .btn-primario {
+  .docentes-busqueda__controles .btn-primario {
     width: 100%;
   }
 
@@ -178,6 +178,7 @@
   .docentes-tabla {
     min-width: 640px;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
