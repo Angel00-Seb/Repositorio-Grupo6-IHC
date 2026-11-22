@@ -346,6 +346,141 @@ h3 {
   object-fit: contain;
 }
 
+/* --- PÁGINA PRINCIPAL --- */
+.home-welcome {
+  margin: 16px 0 4px;
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+}
+
+.home-modules {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.home-module {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-background);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+}
+
+.home-module__icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--color-naranja-claro);
+  color: var(--color-heading);
+}
+
+.home-module__icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.home-module__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.home-module__text strong {
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+}
+
+.home-module__text small {
+  color: var(--color-muted);
+  font-size: var(--font-size-min);
+}
+
+.home-module__arrow {
+  color: var(--color-heading);
+  font-size: var(--font-size-h2);
+}
+
+.home-module:hover {
+  border-color: var(--color-accent);
+  background: var(--color-naranja-claro);
+}
+
+.home-module:active {
+  background: var(--color-naranja-claro);
+}
+
+.home-logout {
+  display: none;
+}
+
+/* --- CONFIRMACIÓN DE CIERRE DE SESIÓN --- */
+.logout-dialog {
+  width: min(100% - 32px, 440px);
+  margin: auto;
+  padding: 24px;
+  border: 1px solid var(--color-background);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  box-shadow: var(--shadow-card);
+}
+
+.logout-dialog::backdrop {
+  background: rgba(27, 33, 29, 0.65);
+}
+
+.logout-dialog h2 {
+  margin-bottom: 12px;
+}
+
+.logout-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.logout-dialog__actions button {
+  flex: 1 1 150px;
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  cursor: pointer;
+}
+
+.logout-dialog__actions .btn-primario {
+  margin: 0;
+}
+
+.logout-dialog__cancel {
+  border: 1px solid var(--color-heading);
+  border-radius: 6px;
+  background: var(--color-surface);
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
 /* --- CARRUSEL --- */
 .carousel {
   background: var(--color-pine);
@@ -723,6 +858,78 @@ legend {
 }
 
 /* --- REPORTES --- */
+.resumen-dashboard {
+  margin-bottom: 24px;
+  padding: 20px;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.resumen-dashboard__nota {
+  color: var(--color-muted);
+  font-size: var(--font-size-min);
+}
+
+.resumen-dashboard__cifras {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 18px 0 24px;
+}
+
+.resumen-dashboard__cifra {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--color-naranja-claro);
+}
+
+.resumen-dashboard__cifra strong,
+.resumen-dashboard__cifra span {
+  display: block;
+}
+
+.resumen-dashboard__cifra strong {
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+}
+
+.resumen-dashboard__secciones {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.resumen-dashboard__seccion {
+  display: grid;
+  gap: 4px;
+}
+
+.resumen-dashboard__seccion progress {
+  width: 100%;
+  height: 14px;
+  accent-color: var(--color-accent);
+}
+
+.resumen-dashboard__seccion progress::-webkit-progress-bar {
+  background: var(--color-naranja-claro);
+}
+
+.resumen-dashboard__seccion progress::-webkit-progress-value {
+  background: var(--color-accent);
+}
+
+.resumen-dashboard__seccion progress::-moz-progress-bar {
+  background: var(--color-accent);
+}
+
+@media (min-width: 720px) {
+  .resumen-dashboard__cifras {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .report-grid {
   display: grid;
   grid-template-columns: 1fr;

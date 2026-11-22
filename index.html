@@ -196,8 +196,29 @@
                 <div class="content-body">
                     <!-- ===== VIEW: INICIO ===== -->
                     <section id="view-inicio" class="view" aria-label="Inicio">
-                        <h2 class="view-title">Inicio</h2>
-                        <p class="view-subtitle">Bienvenida al Sistema de Matrícula de la I.E. José Carlos Mariátegui.</p>
+                        <h2 class="view-title">Página principal</h2>
+                        <p class="home-welcome">Bienvenido/a</p>
+                        <p class="view-subtitle">Seleccione el módulo en el que desea trabajar.</p>
+
+                        <div class="home-modules" role="group" aria-label="Módulos del sistema">
+                            <button class="home-module" type="button" data-home-vista="matricula">
+                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" /></svg></span>
+                                <span class="home-module__text"><strong>Matrícula</strong><small>Estudiantes, apoderados y secciones</small></span>
+                                <span class="home-module__arrow" aria-hidden="true">›</span>
+                            </button>
+                            <button class="home-module" type="button" data-home-vista="docentes">
+                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg></span>
+                                <span class="home-module__text"><strong>Docentes</strong><small>Asistencia y horarios</small></span>
+                                <span class="home-module__arrow" aria-hidden="true">›</span>
+                            </button>
+                            <button class="home-module" type="button" data-home-vista="reportes">
+                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 4v16h16M8 16v-5M13 16V7M18 16v-8" /></svg></span>
+                                <span class="home-module__text"><strong>Reportes</strong><small>Matrícula y asistencia</small></span>
+                                <span class="home-module__arrow" aria-hidden="true">›</span>
+                            </button>
+                        </div>
+
+                        <button id="home-logout" class="home-logout" type="button">Cerrar sesión</button>
 
                         <div class="carousel" role="region" aria-label="Carrusel">
                             <div class="carousel-slide active">
@@ -383,6 +404,14 @@
                         <h2 class="view-title">Panel de Reportes</h2>
                         <p class="view-subtitle">Consulta y analiza la información institucional.</p>
 
+                        <section class="resumen-dashboard" aria-labelledby="resumen-dashboard-titulo">
+                            <h3 id="resumen-dashboard-titulo">Resumen de matrículas</h3>
+                            <p class="resumen-dashboard__nota">Datos de demostración. El límite de 30 estudiantes por sección es una referencia visual.</p>
+                            <div id="resumen-dashboard-cifras" class="resumen-dashboard__cifras"></div>
+                            <h4>Ocupación por grado y sección</h4>
+                            <div id="resumen-dashboard-secciones" class="resumen-dashboard__secciones"></div>
+                        </section>
+
                         <div class="report-grid">
                             <div class="card w-100 mb-3 report-card" data-panel="matricula">
                                 <div class="card-body">
@@ -545,6 +574,15 @@
         </div>
     </section>
 
+    <dialog id="confirmar-salida" class="logout-dialog" aria-labelledby="confirmar-salida-titulo" aria-describedby="confirmar-salida-texto">
+        <h2 id="confirmar-salida-titulo">¿Desea salir?</h2>
+        <p id="confirmar-salida-texto">Para volver a ingresar tendrá que introducir sus credenciales institucionales.</p>
+        <div class="logout-dialog__actions">
+            <button id="cancelar-salida" class="logout-dialog__cancel" type="button">No, continuar</button>
+            <button id="aceptar-salida" class="btn-primario" type="button">Sí, cerrar sesión</button>
+        </div>
+    </dialog>
+
     <!-- Bootstrap 5.3.8 con Popper incluido -->
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
@@ -552,4 +590,4 @@
     ></script>
     <script src="js/main.js" defer></script>
 </body>
-</html> 
+</html>
