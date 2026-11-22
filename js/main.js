@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Único lugar donde se define el usuario del prototipo.
     // Cuando exista sesión real, reemplazar estos dos valores.
     var usuarioActivo = {
-        nombre: "Dra. Iris Saavedra",
+        nombre: "Dir.a Iris Saavedra",
         rol: "Directora"
     };
     document.getElementById("nombre-usuario").textContent = usuarioActivo.nombre;
