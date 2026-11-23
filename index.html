@@ -119,8 +119,31 @@
                 <div class="content-body">
                     <!-- VIEW: INICIO -->
                     <section id="view-inicio" class="view" aria-label="Inicio">
-                        <h2 class="view-title">Inicio</h2>
-                        <p class="view-subtitle">Bienvenida al Sistema de Matrícula de la I.E. José Carlos Mariátegui.</p>
+
+                        <h2 class="view-title">Página principal</h2>
+                        <p class="home-welcome">Bienvenido/a</p>
+                        <p class="view-subtitle">Seleccione el módulo en el que desea trabajar.</p>
+
+                        <div class="home-modules" role="group" aria-label="Módulos del sistema">
+                            <button class="home-module" type="button" data-home-vista="matricula">
+                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" /></svg></span>
+                                <span class="home-module__text"><strong>Matrícula</strong><small>Estudiantes, apoderados y secciones</small></span>
+                                <span class="home-module__arrow" aria-hidden="true">›</span>
+                            </button>
+                            <button class="home-module" type="button" data-home-vista="docentes">
+                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg></span>
+                                <span class="home-module__text"><strong>Docentes</strong><small>Asistencia y horarios</small></span>
+                                <span class="home-module__arrow" aria-hidden="true">›</span>
+                            </button>
+                            <button class="home-module" type="button" data-home-vista="reportes">
+                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 4v16h16M8 16v-5M13 16V7M18 16v-8" /></svg></span>
+                                <span class="home-module__text"><strong>Reportes</strong><small>Matrícula y asistencia</small></span>
+                                <span class="home-module__arrow" aria-hidden="true">›</span>
+                            </button>
+                        </div>
+
+                        <button id="home-logout" class="home-logout" type="button">Cerrar sesión</button>
+
                         <div class="carousel" role="region" aria-label="Carrusel">
                             <div class="carousel-slide active"><h3>Sistema de Matrícula</h3><p>Gestione el registro de estudiantes de forma rápida y segura.</p></div>
                             <div class="carousel-slide"><h3>Accesibilidad Universal</h3><p>Diseñado para facilitar el trabajo de la Dirección.</p></div>
@@ -220,16 +243,144 @@
                         </div>
                     </section>
 
-                    <!-- VIEW: DOCENTES -->
-                    <section id="view-docentes" class="view oculto" aria-label="Docentes" aria-hidden="true">
-                        <h2 class="view-title">Docentes</h2>
-                        <p class="view-subtitle">Módulo en construcción. Aquí va el contenido del equipo de Docentes.</p>
+
+                    <!-- ===== VIEW: CONTROL DE ASISTENCIA DOCENTE ===== -->
+                    <section id="view-docentes" class="view oculto" aria-label="Control de asistencia docente" aria-hidden="true">
+                        <div class="view-header">
+                            <h2 class="view-title">Control de Asistencia Docente</h2>
+                            <p class="view-subtitle">Registre docentes y controle su asistencia.</p>
+                        </div>
+
+                        <div class="docentes-contenido">
+                            <div class="docentes-panel">
+                                <h3>Registrar docente</h3>
+                                <form id="form-docente" class="docentes-form" novalidate>
+                                    <div class="input-group">
+                                        <label for="dni-docente">DNI (8 dígitos):</label>
+                                        <input type="text" id="dni-docente" pattern="[0-9]{8}" inputmode="numeric" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="nombre-docente">Nombres:</label>
+                                        <input type="text" id="nombre-docente" autocomplete="given-name" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="apellido-docente">Apellidos:</label>
+                                        <input type="text" id="apellido-docente" autocomplete="family-name" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="especialidad-docente">Especialidad:</label>
+                                        <input type="text" id="especialidad-docente" required>
+                                    </div>
+                                    <button type="submit" class="btn-primario">Registrar docente</button>
+                                    <p id="mensaje-docente" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
+                                </form>
+
+                                <div class="docentes-listado">
+                                    <h3>Catálogo de docentes</h3>
+                                    <div class="registros">
+                                        <table class="tabla-registros docentes-tabla">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">DNI</th>
+                                                    <th scope="col">Nombres</th>
+                                                    <th scope="col">Apellidos</th>
+                                                    <th scope="col">Especialidad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="lista-docentes">
+                                                <tr>
+                                                    <td colspan="4">Aún no hay docentes registrados.</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="docentes-panel">
+                                <h3>Registrar asistencia</h3>
+                                <form id="form-asistencia" class="docentes-form" novalidate>
+                                    <div class="input-group docentes-busqueda docentes-campo-completo">
+                                    <label for="buscar-docente">Buscar docente por nombre o DNI:</label>
+                                    <div class="docentes-busqueda__controles">
+                                        <input type="search" id="buscar-docente" autocomplete="off" aria-describedby="ayuda-buscar-docente" placeholder="Escriba un nombre o DNI">
+                                        <button id="buscar-docente-btn" class="btn-primario" type="button">Buscar docente</button>
+                                    </div>
+                                    <small id="ayuda-buscar-docente">Presione Buscar docente para mostrar las coincidencias</small>
+                                    <p id="mensaje-busqueda-docente" class="docentes-mensaje oculto" role="status" aria-live="polite"></p>
+                                    </div>
+                                    <div class="input-group docentes-campo-completo">
+                                    <label for="docente-asistencia">Docente:</label>
+                                    <select id="docente-asistencia" required>
+                                        <option value="" selected>Busque y seleccione un docente.</option>
+                                    </select>
+                                    </div>
+                                    <div class="input-group">
+                                    <label for="fecha-asistencia">Fecha:</label>
+                                    <input type="date" id="fecha-asistencia" required>
+                                    </div>
+                                    <div class="input-group">
+                                    <label for="hora-asistencia">Hora:</label>
+                                    <input type="time" id="hora-asistencia" required>
+                                    </div>
+                                    <div class="input-group docentes-campo-completo">
+                                    <label for="estado-asistencia">Estado:</label>
+                                    <select id="estado-asistencia" required>
+                                        <option value="" selected>Seleccione un estado...</option>
+                                        <option value="Asistencia">Asistencia</option>
+                                        <option value="Tardanza">Tardanza</option>
+                                        <option value="Falta justificada">Falta justificada</option>
+                                        <option value="Falta injustificada">Falta injustificada</option>
+                                    </select>
+                                    </div>
+                                    <div id="grupo-justificacion" class="input-group docentes-campo-completo oculto">
+                                    <label for="justificacion-asistencia">Justificación:</label>
+                                    <textarea id="justificacion-asistencia" rows="3" placeholder="Indique el motivo de la falta"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-primario">Registrar asistencia</button>
+                                    <p id="mensaje-asistencia" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="docentes-listado docentes-asistencias">
+                            <h3>Asistencias registradas</h3>
+                            <div class="registros">
+                                <table class="tabla-registros docentes-tabla">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Docente</th>
+                                            <th scope="col">DNI</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Hora</th>
+                                            <th scope="col">Estado</th>
+                                            <th scope="col">Justificación</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lista-asistencias">
+                                        <tr>
+                                            <td colspan="6">Aún no hay asistencias registradas.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </section>
 
-                    <!-- VIEW: REPORTES -->
+
+                    <!-- ===== VIEW: REPORTES (menú de tarjetas) ===== -->
                     <section id="view-reportes" class="view oculto" aria-label="Menú reportes" aria-hidden="true">
                         <h2 class="view-title">Panel de Reportes</h2>
                         <p class="view-subtitle">Consulta y analiza la información institucional.</p>
+
+                        <section class="resumen-dashboard" aria-labelledby="resumen-dashboard-titulo">
+                            <h3 id="resumen-dashboard-titulo">Resumen de matrículas</h3>
+                            <p class="resumen-dashboard__nota">Datos de demostración. El límite de 30 estudiantes por sección es una referencia visual.</p>
+                            <div id="resumen-dashboard-cifras" class="resumen-dashboard__cifras"></div>
+                            <h4>Ocupación por grado y sección</h4>
+                            <div id="resumen-dashboard-secciones" class="resumen-dashboard__secciones"></div>
+                        </section>
+
                         <div class="report-grid">
                             <div class="card w-100 mb-3 report-card" data-panel="matricula">
                                 <div class="card-body">
@@ -307,7 +458,21 @@
         </div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+    <dialog id="confirmar-salida" class="logout-dialog" aria-labelledby="confirmar-salida-titulo" aria-describedby="confirmar-salida-texto">
+        <h2 id="confirmar-salida-titulo">¿Desea salir?</h2>
+        <p id="confirmar-salida-texto">Para volver a ingresar tendrá que introducir sus credenciales institucionales.</p>
+        <div class="logout-dialog__actions">
+            <button id="cancelar-salida" class="logout-dialog__cancel" type="button">No, continuar</button>
+            <button id="aceptar-salida" class="btn-primario" type="button">Sí, cerrar sesión</button>
+        </div>
+    </dialog>
+
+    <!-- Bootstrap 5.3.8 con Popper incluido -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        defer
+    ></script>
+
     <script src="js/main.js" defer></script>
 </body>
-</html> 
+</html>
