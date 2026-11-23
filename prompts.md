@@ -48,4 +48,8 @@ Respeta los estilos de skills/reglas prueba la página en celular y compu y saca
 
 La página principal se ve muy simple puedes hacerla más visual como en la referencia usa una foto del colegio en el carrusel y haz más grandes los títulos y las tarjetas siguiendo la guía de estilos que ya tenemos deja funcionando el modo oscuro y el menú del celular
 
+**Prompt 4.7**
+
+Ahora mejora la versión de celular haz el encabezado más compacto y el menú de abajo como una barra fácil de tocar que se vea moderna y no tape el contenido usa la guía de estilos y comprueba que funcione también con teclado
+
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.
