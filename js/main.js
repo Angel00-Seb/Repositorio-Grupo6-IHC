@@ -11,8 +11,6 @@
 document.addEventListener("DOMContentLoaded", function() {
 
     // --- USUARIO ACTIVO ---
-    // Único lugar donde se define el usuario del prototipo.
-    // Cuando exista sesión real, reemplazar estos dos valores.
     var usuarioActivo = {
         nombre: "Dir.a Iris Saavedra",
         rol: "Directora"
@@ -21,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("rol-usuario").textContent = usuarioActivo.rol;
 
     // --- MODO OSCURO ---
-    // Solo visual y sin persistencia: siempre inicia en modo claro.
     var themeToggle = document.getElementById("theme-toggle");
     var iconMoon = themeToggle.querySelector(".icon-moon");
     var iconSun = themeToggle.querySelector(".icon-sun");
@@ -114,28 +111,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     document.getElementById("prevBtn").addEventListener("click", function() {
         slideIndex--; mostrarSlide(slideIndex);
-    });
-
-    // --- MATRÍCULA ---
-    var formMatricula = document.getElementById("matricula-form");
-    var alerta = document.getElementById("alerta");
-
-    formMatricula.addEventListener("submit", function(e) {
-        e.preventDefault();
-        var dniInput = document.getElementById("dni").value;
-        var gradoInput = document.getElementById("grado").value;
-        var seccionInput = document.getElementById("seccion").value;
-
-        if (seccionInput === "B" && gradoInput !== "2") {
-            alerta.innerHTML = "Error: La sección B solo es para 2º de secundaria.";
-            alerta.className = "error"; alerta.classList.remove("oculto"); return;
-        }
-        if (dniInput.length !== 8) {
-            alerta.innerHTML = "Error: El DNI debe tener exactamente 8 números.";
-            alerta.className = "error"; alerta.classList.remove("oculto"); return;
-        }
-        alerta.innerHTML = "¡Matrícula guardada correctamente!";
-        alerta.className = "exito"; alerta.classList.remove("oculto"); formMatricula.reset();
     });
 
     // --- CONTROL DE ASISTENCIA DOCENTE ---
@@ -407,6 +382,7 @@ document.addEventListener("DOMContentLoaded", function() {
     actualizarCampoJustificacion();
     mostrarAsistencias();
 
+
     // --- BARRA LATERAL ---
     var sidebar = document.getElementById("sidebar");
     var sidebarToggle = document.getElementById("sidebar-toggle");
@@ -497,12 +473,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (clave === "asistencia") {
             var selectTipo = document.getElementById("tipo-asistencia");
             var selectMes = document.getElementById("mes-asistencia");
-            if (selectTipo) {
-                selectTipo.value = "diaria";
-            }
-            if (selectMes) {
-                selectMes.value = "Marzo";
-            }
+            if (selectTipo) { selectTipo.value = "diaria"; }
+            if (selectMes) { selectMes.value = "Marzo"; }
             renderizarAsistenciaActual();
             return;
         }
@@ -570,14 +542,8 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         asistencia: {
             vistas: {
-                diaria: {
-                    columnas: ["ID", "Docente", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Asistencia total"],
-                    campos: ["id", "docente", "lunes", "martes", "miercoles", "jueves", "viernes", "porcentaje"]
-                },
-                semanal: {
-                    columnas: ["ID", "Docente", "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Asistencia total"],
-                    campos: ["id", "docente", "semana1", "semana2", "semana3", "semana4", "total"]
-                }
+                diaria: { columnas: ["ID", "Docente", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Asistencia total"], campos: ["id", "docente", "lunes", "martes", "miercoles", "jueves", "viernes", "porcentaje"] },
+                semanal: { columnas: ["ID", "Docente", "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Asistencia total"], campos: ["id", "docente", "semana1", "semana2", "semana3", "semana4", "total"] }
             },
             datosPorMes: {
                 "Marzo": [
@@ -599,7 +565,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Datos visibles actualmente en cada reporte (para la descarga).
     var datosActualesReporte = {
         matricula: { filas: [], columnas: [], campos: [] },
         consolidado: { filas: [], columnas: [], campos: [] },
@@ -650,10 +615,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function normalizar(texto) {
-        return String(texto)
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase();
+        return String(texto).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
     function datosAsistenciaMes() {
@@ -675,18 +637,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             var semanas = [dato.semana1, dato.semana2, dato.semana3, dato.semana4];
-            var total = semanas.reduce(function(suma, valor) {
-                return suma + valor;
-            }, 0) / semanas.length;
+            var total = semanas.reduce(function(suma, valor) { return suma + valor; }, 0) / semanas.length;
 
             return {
-                id: dato.id,
-                docente: dato.docente,
-                semana1: dato.semana1 + "%",
-                semana2: dato.semana2 + "%",
-                semana3: dato.semana3 + "%",
-                semana4: dato.semana4 + "%",
-                total: Math.round(total) + "%"
+                id: dato.id, docente: dato.docente, semana1: dato.semana1 + "%", semana2: dato.semana2 + "%", semana3: dato.semana3 + "%", semana4: dato.semana4 + "%", total: Math.round(total) + "%"
             };
         });
     }
@@ -748,9 +702,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function abrirReporte(e) {
-        if (e.type === "keydown" && e.key !== " " && e.key !== "Spacebar") {
-            return;
-        }
+        if (e.type === "keydown" && e.key !== " " && e.key !== "Spacebar") { return; }
         e.preventDefault();
         irA("reporte-" + e.currentTarget.getAttribute("data-panel"));
     }
@@ -764,17 +716,12 @@ document.addEventListener("DOMContentLoaded", function() {
         form.addEventListener("submit", function(e) {
             e.preventDefault();
             var clave = form.getAttribute("data-busqueda");
-            if (!clave || clave === "asistencia") {
-                return;
-            }
+            if (!clave || clave === "asistencia") { return; }
 
             var config = configReportes[clave];
             var panel = document.getElementById("view-reporte-" + clave);
             var error = panel.querySelector(".reporte-error");
-            var filas;
-            var nombre;
-            var dni;
-            var gradoSeccion;
+            var filas, nombre, dni, gradoSeccion;
 
             error.textContent = mensajeSinCoincidencias;
 
@@ -791,14 +738,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 gradoSeccion = normalizar(document.getElementById("buscar-grado-seccion-consolidado").value.trim());
                 filas = config.datos.filter(function(fila) {
                     var coincideNombre = nombre === "" || normalizar(fila.estudiante).indexOf(nombre) !== -1;
-                    var coincideGradoSeccion = gradoSeccion === "" ||
-                        normalizar(fila.grado + " " + fila.seccion).indexOf(gradoSeccion) !== -1 ||
-                        normalizar(fila.grado).indexOf(gradoSeccion) !== -1 ||
-                        normalizar(fila.seccion).indexOf(gradoSeccion) !== -1;
+                    var coincideGradoSeccion = gradoSeccion === "" || normalizar(fila.grado + " " + fila.seccion).indexOf(gradoSeccion) !== -1 || normalizar(fila.grado).indexOf(gradoSeccion) !== -1 || normalizar(fila.seccion).indexOf(gradoSeccion) !== -1;
                     return coincideNombre && coincideGradoSeccion;
                 });
             }
-
             renderizar(clave, filas);
         });
     });
@@ -807,22 +750,16 @@ document.addEventListener("DOMContentLoaded", function() {
     var selectTipoAsistencia = document.getElementById("tipo-asistencia");
     var selectMesAsistencia = document.getElementById("mes-asistencia");
     if (selectTipoAsistencia) {
-        selectTipoAsistencia.addEventListener("change", function() {
-            renderizarAsistenciaActual();
-        });
+        selectTipoAsistencia.addEventListener("change", function() { renderizarAsistenciaActual(); });
     }
     if (selectMesAsistencia) {
-        selectMesAsistencia.addEventListener("change", function() {
-            renderizarAsistenciaActual();
-        });
+        selectMesAsistencia.addEventListener("change", function() { renderizarAsistenciaActual(); });
     }
 
     // --- REPORTES: descarga de datos ---
     function valorCSV(valor) {
         var texto = String(valor == null ? "" : valor);
-        if (/[",\n\r]/.test(texto)) {
-            return '"' + texto.replace(/"/g, '""') + '"';
-        }
+        if (/[",\n\r]/.test(texto)) { return '"' + texto.replace(/"/g, '""') + '"'; }
         return texto;
     }
 
@@ -830,9 +767,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var lineas = [];
         lineas.push(columnas.map(valorCSV).join(","));
         filas.forEach(function(fila) {
-            lineas.push(campos.map(function(campo) {
-                return valorCSV(fila[campo]);
-            }).join(","));
+            lineas.push(campos.map(function(campo) { return valorCSV(fila[campo]); }).join(","));
         });
         var contenido = "\uFEFF" + lineas.join("\r\n");
         var blob = new Blob([contenido], { type: "text/csv;charset=utf-8;" });
@@ -861,8 +796,111 @@ document.addEventListener("DOMContentLoaded", function() {
                 error.classList.add("animation-shake");
                 return;
             }
-
             descargarCSV("reporte-" + clave + ".csv", actual.columnas, actual.campos, actual.filas);
         });
     });
+
+    // ==========================================
+    // --- LÓGICA FINAL DE MATRÍCULA Y APODERADOS ---
+    // ==========================================
+    
+    // 1. Habilitar Sección B solo para 2do grado
+    const selectGrado = document.getElementById("grado");
+    const selectSeccion = document.getElementById("seccion");
+
+    if (selectGrado && selectSeccion) {
+        selectGrado.addEventListener("change", function() {
+            if (this.value === "2") {
+                selectSeccion.disabled = false;
+                selectSeccion.value = "B"; 
+            } else {
+                selectSeccion.value = "A"; 
+                selectSeccion.disabled = true; 
+            }
+        });
+    }
+
+    // 2. Validaciones del formulario de matrícula (Estudiantes)
+    const formMatriculaValidacion = document.getElementById("matricula-form");
+    const cajaAlertaValidacion = document.getElementById("alerta");
+
+    if (formMatriculaValidacion) {
+        formMatriculaValidacion.addEventListener("submit", function(evento) {
+            evento.preventDefault();
+            
+            let dni = document.getElementById("dni").value;
+            let grado = document.getElementById("grado").value;
+            let seccion = document.getElementById("seccion").value;
+
+            if (dni.length !== 8) {
+                cajaAlertaValidacion.innerHTML = "Error: El DNI debe tener exactamente 8 números.";
+                cajaAlertaValidacion.className = "error"; 
+                cajaAlertaValidacion.classList.remove("oculto"); 
+                return;
+            }
+
+            if (seccion === "B" && grado !== "2") {
+                cajaAlertaValidacion.innerHTML = "Error: La sección B solo está disponible para 2º de secundaria.";
+                cajaAlertaValidacion.className = "error"; 
+                cajaAlertaValidacion.classList.remove("oculto"); 
+                return;
+            }
+            
+            cajaAlertaValidacion.innerHTML = "¡Estudiante matriculado correctamente!";
+            cajaAlertaValidacion.className = "exito"; 
+            cajaAlertaValidacion.classList.remove("oculto"); 
+            
+            formMatriculaValidacion.reset();
+            selectSeccion.value = "A";
+            selectSeccion.disabled = true; 
+
+            setTimeout(() => {
+                cajaAlertaValidacion.classList.add("oculto");
+            }, 3000);
+        });
+    }
+
+    // 3. Lógica para el Formulario de Apoderados y Tabla
+    const formApoderado = document.getElementById("apoderado-form");
+    const alertaApoderado = document.getElementById("alerta-apoderado");
+    const tablaRelaciones = document.getElementById("tabla-relaciones");
+
+    if (formApoderado) {
+        formApoderado.addEventListener("submit", function(evento) {
+            evento.preventDefault();
+            
+            let apNombres = document.getElementById("ap_nombres").value;
+            let apDni = document.getElementById("ap_dni").value;
+            let apEstudiante = document.getElementById("ap_estudiante").value;
+
+            if (apDni.length !== 8 || apEstudiante.length !== 8) {
+                alertaApoderado.innerHTML = "Error: Los DNI deben tener 8 números.";
+                alertaApoderado.className = "error";
+                alertaApoderado.classList.remove("oculto");
+                return;
+            }
+
+            if (tablaRelaciones.querySelector("td[colspan]")) {
+                tablaRelaciones.innerHTML = ""; 
+            }
+
+            let fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${apNombres}</td>
+                <td>${apDni}</td>
+                <td>${apEstudiante}</td>
+            `;
+            tablaRelaciones.appendChild(fila);
+
+            alertaApoderado.innerHTML = "¡Apoderado registrado y asociado correctamente!";
+            alertaApoderado.className = "exito";
+            alertaApoderado.classList.remove("oculto");
+
+            formApoderado.reset();
+
+            setTimeout(() => {
+                alertaApoderado.classList.add("oculto");
+            }, 3000);
+        });
+    }
 });
