@@ -60,6 +60,42 @@
     padding: 8px 12px;
   }
 
+  .home-hero,
+  .home-hero .carousel-slide {
+    min-height: 210px;
+  }
+
+  .home-hero {
+    padding: 0;
+  }
+
+  .home-hero__copy {
+    max-width: 100%;
+    padding: 18px;
+  }
+
+  .home-hero .carousel-controls {
+    top: 8px;
+    right: 8px;
+    bottom: auto;
+  }
+
+  .home-hero__copy p {
+    font-size: var(--font-size-min);
+  }
+
+  .home-module {
+    grid-template-columns: 52px minmax(0, 1fr) 30px;
+    justify-items: stretch;
+    min-height: 96px;
+    padding: 14px;
+    text-align: left;
+  }
+
+  .home-module__text strong {
+    font-size: var(--font-size-h3);
+  }
+
   .matricula-module {
     padding: 16px;
   }

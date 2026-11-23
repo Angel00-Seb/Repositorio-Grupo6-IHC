@@ -44,4 +44,8 @@ En celular pon el menú de inicio matrícula docentes y reportes abajo como en e
 
 Respeta los estilos de skills/reglas prueba la página en celular y compu y saca capturas de cómo quedó y de la parte del código
 
+**Prompt 4.6**
+
+La página principal se ve muy simple puedes hacerla más visual como en la referencia usa una foto del colegio en el carrusel y haz más grandes los títulos y las tarjetas siguiendo la guía de estilos que ya tenemos deja funcionando el modo oscuro y el menú del celular
+
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.
