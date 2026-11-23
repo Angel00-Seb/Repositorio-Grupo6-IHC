@@ -58,9 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
             loginSec.classList.add("oculto");
             mainSec.classList.remove("oculto");
             loginError.classList.add("oculto");
-            historialVistas = [];
             mostrarPantalla("inicio");
-            actualizarBotonVolver();
             window.location.hash = mainSec.id;
             mainSec.scrollIntoView();
         } else {
@@ -86,9 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
         loginSec.classList.remove("oculto");
         loginForm.reset();
         loginError.classList.add("oculto");
-        historialVistas = [];
         mostrarPantalla("inicio");
-        actualizarBotonVolver();
         window.location.hash = "";
         loginSec.scrollIntoView();
     });
@@ -393,22 +389,16 @@ document.addEventListener("DOMContentLoaded", function() {
         sidebarToggle.setAttribute("aria-label", collapsed ? "Expandir menú" : "Contraer menú");
     });
 
-    // --- NAVEGACIÓN ENTRE VISTAS Y BOTÓN VOLVER ---
+    // --- NAVEGACIÓN ENTRE VISTAS ---
     var navItems = document.querySelectorAll(".nav-item");
     var vistas = document.querySelectorAll(".view");
     var reportCards = document.querySelectorAll(".report-card");
     var reportButtons = document.querySelectorAll(".report-card .btn-solid");
     var detalles = document.querySelectorAll(".reporte-detalle");
-    var btnVolver = document.getElementById("btn-volver");
-    var historialVistas = [];
 
     function pantallaActual() {
         var vistaVisible = document.querySelector(".view:not(.oculto)");
         return vistaVisible ? vistaVisible.id.replace("view-", "") : "matricula";
-    }
-
-    function actualizarBotonVolver() {
-        btnVolver.disabled = historialVistas.length === 0;
     }
 
     function mostrarPantalla(pantalla) {
@@ -486,9 +476,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (pantalla === pantallaActual()) {
             return;
         }
-        historialVistas.push(pantallaActual());
         mostrarPantalla(pantalla);
-        actualizarBotonVolver();
     }
 
     navItems.forEach(function(item) {
@@ -501,15 +489,6 @@ document.addEventListener("DOMContentLoaded", function() {
         boton.addEventListener("click", function() {
             irA(boton.getAttribute("data-home-vista"));
         });
-    });
-
-    btnVolver.addEventListener("click", function() {
-        if (historialVistas.length === 0) {
-            return;
-        }
-        var anterior = historialVistas.pop();
-        mostrarPantalla(anterior);
-        actualizarBotonVolver();
     });
 
     // --- REPORTES: búsqueda y registros ---

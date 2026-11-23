@@ -56,4 +56,8 @@ Ahora mejora la versión de celular haz el encabezado más compacto y el menú d
 
 La cabecera del celular todavía se ve rara porque el botón de modo oscuro queda muy separado del año académico júntalos en un mismo bloque y mejora también la cabecera de computadora quita el botón de volver cuando no se pueda usar y usa las iniciales de la directora en lugar de la foto del gato
 
+**Prompt 4.9**
+
+Quita del todo la flecha para volver porque se ve anticuada en la versión web deja el logo y nombre del colegio con el año académico y el botón de modo oscuro al lado y revisa que el menú siga dejando entrar y salir de cada sección
+
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.

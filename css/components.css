@@ -199,9 +199,9 @@ h3 {
 /* --- CABECERA DEL PANEL --- */
 .content-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 12px;
+  gap: 24px;
   flex: 0 0 auto;
   background: var(--color-surface);
   padding: 8px 20px;
@@ -213,39 +213,6 @@ h3 {
   align-items: center;
   gap: 16px;
   min-width: 0;
-}
-
-.btn-volver {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 auto;
-  padding: 0;
-  border: 2px solid var(--color-heading);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  color: var(--color-heading);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-min);
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.btn-volver .icono {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.btn-volver:hover:not(:disabled) {
-  background: var(--color-action);
-  color: var(--color-on-dark);
-}
-
-.btn-volver:disabled {
-  display: none;
 }
 
 .header-logo {

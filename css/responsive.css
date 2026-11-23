@@ -41,15 +41,6 @@
     gap: 8px;
   }
 
-  .btn-volver {
-    width: 44px;
-    height: 44px;
-  }
-
-  .btn-volver:disabled {
-    display: none;
-  }
-
   .header-logo {
     min-width: 0;
     gap: 8px;
