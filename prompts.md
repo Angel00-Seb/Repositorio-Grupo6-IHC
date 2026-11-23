@@ -52,4 +52,8 @@ La página principal se ve muy simple puedes hacerla más visual como en la refe
 
 Ahora mejora la versión de celular haz el encabezado más compacto y el menú de abajo como una barra fácil de tocar que se vea moderna y no tape el contenido usa la guía de estilos y comprueba que funcione también con teclado
 
+**Prompt 4.8**
+
+La cabecera del celular todavía se ve rara porque el botón de modo oscuro queda muy separado del año académico júntalos en un mismo bloque y mejora también la cabecera de computadora quita el botón de volver cuando no se pueda usar y usa las iniciales de la directora en lugar de la foto del gato
+
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.

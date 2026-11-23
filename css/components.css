@@ -245,10 +245,7 @@ h3 {
 }
 
 .btn-volver:disabled {
-  border-color: var(--color-muted);
-  color: var(--color-muted);
-  opacity: 0.55;
-  cursor: not-allowed;
+  display: none;
 }
 
 .header-logo {
@@ -279,6 +276,9 @@ h3 {
   align-items: center;
   gap: 12px;
   flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
 }
 
 .btn-theme {
@@ -831,9 +831,15 @@ legend {
   width: 2.75rem;
   height: 2.75rem;
   flex: 0 0 auto;
-  object-fit: cover;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
   border: 2px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-min);
+  font-weight: 700;
 }
 
 .sidebar-user__meta {

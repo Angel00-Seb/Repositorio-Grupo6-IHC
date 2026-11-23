@@ -78,8 +78,12 @@
   }
 
   .header-actions {
-    justify-content: space-between;
-    width: 100%;
+    justify-self: end;
+    justify-content: flex-end;
+    width: auto;
+    max-width: 100%;
+    gap: 8px;
+    padding: 4px 8px;
   }
 
   .btn-theme {
@@ -99,6 +103,10 @@
     flex-direction: row;
     align-items: center;
     gap: 6px;
+  }
+
+  .header-year label {
+    white-space: nowrap;
   }
 
   .header-year select {
