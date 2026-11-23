@@ -31,9 +31,10 @@
 
   .content-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 6px;
-    padding: 8px 16px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
   }
 
   .header-inicio {
@@ -43,12 +44,13 @@
 
   .header-logo {
     min-width: 0;
-    gap: 8px;
+    gap: 6px;
   }
 
   .logo-small {
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
   }
 
   .header-brand {
@@ -56,16 +58,13 @@
   }
 
   .header-brand__name {
-    font-size: var(--font-size-min);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 13px;
+    line-height: 1.15;
+    white-space: normal;
   }
 
   .header-brand__system {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: none;
   }
 
   .header-actions {
@@ -73,21 +72,22 @@
     justify-content: flex-end;
     width: auto;
     max-width: 100%;
-    gap: 8px;
-    padding: 4px 8px;
+    gap: 6px;
+    padding: 4px 6px;
   }
 
   .btn-theme {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 
   .header-year {
-    gap: 0;
+    gap: 4px;
   }
 
   .header-year > .icono {
-    display: none;
+    width: 20px;
+    height: 20px;
   }
 
   .header-year__info {
@@ -97,12 +97,20 @@
   }
 
   .header-year label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
+    border: 0;
   }
 
   .header-year select {
-    min-height: 44px;
-    padding-inline: 8px;
+    min-height: 40px;
+    padding-inline: 4px;
   }
 
   .carousel {
