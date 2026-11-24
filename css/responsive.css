@@ -76,7 +76,17 @@
     grid-template-columns: 1fr;
   }
 
+  .docentes-horarios__filtros {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .docentes-horarios__docente {
+    grid-template-columns: 1fr;
+  }
+
   .docentes-form .btn-primario,
+  .docentes-form .btn-secundario,
   .docentes-campo-completo,
   .docentes-mensaje {
     grid-column: 1;
@@ -84,10 +94,17 @@
 
   .docentes-busqueda__controles {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .docentes-busqueda__controles .btn-primario {
     width: 100%;
+    min-width: 0;
+  }
+
+  .docentes-docente-seleccionado-fila {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 
   fieldset {
