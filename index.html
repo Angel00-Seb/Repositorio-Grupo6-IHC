@@ -45,7 +45,7 @@
             <aside id="sidebar" class="sidebar" aria-label="Menú principal">
                 <div class="sidebar-header">
                     <div class="sidebar-user">
-                        <span class="sidebar-user__avatar" aria-hidden="true">IS</span>
+                        <img src="assets/perfil.jpg" alt="" class="sidebar-user__avatar" width="44" height="44">
                         <span class="sidebar-user__meta sidebar-label">
                             <span class="sidebar-user__name" id="nombre-usuario"></span>
                             <span class="sidebar-user__role" id="rol-usuario"></span>
@@ -175,7 +175,7 @@
                                     </div>
                                     <div class="input-group">
                                         <label for="dni">DNI (8 dígitos):</label>
-                                        <input type="text" id="dni" required maxlength="8">
+                                        <input type="text" id="dni" required pattern="[0-9]{8}" maxlength="8" inputmode="numeric" autocomplete="off" title="Ingrese 8 dígitos numéricos">
                                     </div>
                                     <div class="input-group">
                                         <label for="grado">Grado (secundaria):</label>
@@ -202,8 +202,8 @@
                             <div id="alerta" class="oculto"></div>
 
                             <!-- NUEVO MÓDULO: REGISTRO DE APODERADOS Y ASOCIACIÓN -->
-                            <div class="matricula-module" style="margin-top: 20px;">
-                                <h3 class="view-title" style="font-size: 20px;">Registro de Apoderados</h3>
+                            <div class="matricula-module matricula-bloque">
+                                <h3 class="view-title matricula-subtitulo">Registro de Apoderados</h3>
                                 <form id="apoderado-form">
                                     <fieldset>
                                         <legend>Datos del Apoderado</legend>
@@ -213,35 +213,35 @@
                                         </div>
                                         <div class="input-group">
                                             <label for="ap_dni">DNI del Apoderado (8 dígitos):</label>
-                                            <input type="text" id="ap_dni" required pattern="\d{8}" maxlength="8" title="Solo 8 números">
+                                            <input type="text" id="ap_dni" required pattern="\d{8}" maxlength="8" inputmode="numeric" autocomplete="off" title="Solo 8 números">
                                         </div>
                                         <div class="input-group">
                                             <label for="ap_telefono">Teléfono:</label>
-                                            <input type="tel" id="ap_telefono" required pattern="\d{9}" maxlength="9" title="9 números">
+                                            <input type="tel" id="ap_telefono" required pattern="\d{9}" maxlength="9" inputmode="numeric" autocomplete="off" title="9 números">
                                         </div>
                                         <div class="input-group">
                                             <label for="ap_estudiante">Asociar con Estudiante (DNI):</label>
-                                            <input type="text" id="ap_estudiante" required pattern="\d{8}" maxlength="8" placeholder="Ingrese DNI del estudiante">
+                                            <input type="text" id="ap_estudiante" required pattern="\d{8}" maxlength="8" inputmode="numeric" autocomplete="off" placeholder="Ingrese DNI del estudiante">
                                         </div>
                                     </fieldset>
                                     <button type="submit" class="btn-primario">Registrar Apoderado</button>
                                 </form>
-                                <div id="alerta-apoderado" class="oculto" style="margin-top: 10px;"></div>
+                                <div id="alerta-apoderado" class="alerta-matricula oculto"></div>
                             </div>
 
                             <!-- NUEVA TABLA DE RELACIÓN -->
-                            <div class="matricula-module" style="margin-top: 20px;">
-                                <h3 class="view-title" style="font-size: 20px;">Lista de Apoderados y Estudiantes Asociados</h3>
-                                <table class="tabla-registros" style="width: 100%; border-collapse: collapse;">
+                            <div class="matricula-module matricula-bloque">
+                                <h3 class="view-title matricula-subtitulo">Lista de Apoderados y Estudiantes Asociados</h3>
+                                <table class="tabla-registros">
                                     <thead>
                                         <tr>
-                                            <th>Apoderado</th>
-                                            <th>DNI Apoderado</th>
-                                            <th>DNI Estudiante Asociado</th>
+                                            <th scope="col">Apoderado</th>
+                                            <th scope="col">DNI Apoderado</th>
+                                            <th scope="col">DNI Estudiante Asociado</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabla-relaciones">
-                                        <tr><td colspan="3" style="text-align: center;">No hay registros aún.</td></tr>
+                                        <tr><td colspan="3" class="tabla-registros__vacio">No hay registros aún.</td></tr>
                                     </tbody>
                                 </table>
                             </div>

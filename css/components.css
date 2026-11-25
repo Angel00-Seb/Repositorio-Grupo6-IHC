@@ -869,13 +869,30 @@ legend {
   font-size: var(--font-size-secondary);
 }
 
-#alerta {
+#alerta,
+.alerta-matricula {
   padding: 12px;
   text-align: center;
   font-weight: 700;
   margin-top: 15px;
   border-radius: 4px;
   font-size: var(--font-size-min);
+}
+
+#alerta-apoderado {
+  margin-top: 10px;
+}
+
+.matricula-bloque {
+  margin-top: 20px;
+}
+
+.matricula-subtitulo {
+  font-size: 20px;
+}
+
+.tabla-registros__vacio {
+  text-align: center;
 }
 
 .exito {
@@ -957,15 +974,11 @@ legend {
   width: 2.75rem;
   height: 2.75rem;
   flex: 0 0 auto;
-  display: grid;
-  place-items: center;
+  display: block;
   border-radius: 50%;
   border: 2px solid var(--color-accent);
   background: var(--color-accent);
-  color: var(--color-on-accent);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-min);
-  font-weight: 700;
+  object-fit: cover;
 }
 
 .sidebar-user__meta {

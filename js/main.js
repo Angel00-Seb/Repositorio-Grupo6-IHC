@@ -215,9 +215,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function normalizarBusquedaDocente(texto) {
-        return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    }
 
     function mostrarDocentes() {
         listaDocentes.textContent = "";
@@ -393,7 +390,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function buscarDocentesRegistrados() {
-        var termino = normalizarBusquedaDocente(buscarDocente.value.trim());
+        var termino = normalizar(buscarDocente.value.trim());
         resultadosBusquedaDocente.textContent = "";
         seleccionDocente.value = "";
         docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
@@ -403,8 +400,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         var docentesFiltrados = docentes.filter(function(docente) {
-            var nombres = normalizarBusquedaDocente(docente.nombres);
-            var apellidos = normalizarBusquedaDocente(docente.apellidos);
+            var nombres = normalizar(docente.nombres);
+            var apellidos = normalizar(docente.apellidos);
             var nombreCompleto = nombres + " " + apellidos;
             return nombreCompleto.indexOf(termino) !== -1 ||
                 nombres.indexOf(termino) !== -1 ||
@@ -874,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function() {
             boton.setAttribute("aria-expanded", "false");
         });
 
-        detalles.forEach(function(panel) {
+        function limpiarDetalleReporte(panel) {
             var error = panel.querySelector(".reporte-error");
             error.textContent = mensajeSinCoincidencias;
             error.classList.add("oculto");
@@ -883,14 +880,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 entrada.value = "";
                 entrada.classList.remove("is-invalid");
             });
-        });
+        }
 
         if (pantalla === "reportes") {
+            detalles.forEach(limpiarDetalleReporte);
             actualizarDashboard();
+            return;
         }
 
         if (!esReporte) {
             return;
+        }
+
+        var panelDetalle = document.getElementById("view-reporte-" + clave);
+        if (panelDetalle) {
+            limpiarDetalleReporte(panelDetalle);
         }
 
         var card = document.querySelector('.report-card[data-panel="' + clave + '"]');
@@ -904,10 +908,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (clave === "asistencia") {
-            var selectTipo = document.getElementById("tipo-asistencia");
-            var selectMes = document.getElementById("mes-asistencia");
-            if (selectTipo) { selectTipo.value = "diaria"; }
-            if (selectMes) { selectMes.value = "Marzo"; }
             renderizarAsistenciaActual();
             return;
         }
@@ -937,28 +937,44 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- REPORTES: búsqueda y registros ---
     var mensajeSinCoincidencias = "No se encontraron reportes que coincidan con la búsqueda.";
 
+    var estudiantesDemoBase = [
+        { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026", edad: "13 años", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
+        { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026", edad: "15 años", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
+        { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026", edad: "11 años", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
+        { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026", edad: "12 años", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
+        { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026", edad: "17 años", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
+        { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026", edad: "14 años", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
+    ];
+
     var configReportes = {
         matricula: {
-            datos: [
-                { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026" },
-                { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026" },
-                { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026" },
-                { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026" },
-                { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026" },
-                { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026" }
-            ],
+            datos: estudiantesDemoBase.map(function(estudiante) {
+                return {
+                    id: estudiante.id,
+                    nombres: estudiante.nombres,
+                    dni: estudiante.dni,
+                    grado: estudiante.grado,
+                    seccion: estudiante.seccion,
+                    fecha: estudiante.fecha
+                };
+            }),
             campos: ["id", "nombres", "dni", "grado", "seccion", "fecha"],
             columnas: ["ID", "Estudiante", "DNI", "Grado", "Sección", "Fecha"]
         },
         consolidado: {
-            datos: [
-                { id: "E-001", estudiante: "Ana Lucía Quispe", grado: "2º de secundaria", edad: "13 años", seccion: "B", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
-                { id: "E-002", estudiante: "Carlos Daniel Rojas", grado: "4º de secundaria", edad: "15 años", seccion: "A", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
-                { id: "E-003", estudiante: "María Fernanda Vargas", grado: "1º de secundaria", edad: "11 años", seccion: "A", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
-                { id: "E-004", estudiante: "Jorge Alberto Mendoza", grado: "2º de secundaria", edad: "12 años", seccion: "B", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
-                { id: "E-005", estudiante: "Sofía Isabel Campos", grado: "5º de secundaria", edad: "17 años", seccion: "A", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
-                { id: "E-006", estudiante: "Luis Enrique Paredes", grado: "3º de secundaria", edad: "14 años", seccion: "A", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
-            ],
+            datos: estudiantesDemoBase.map(function(estudiante) {
+                return {
+                    id: estudiante.id,
+                    estudiante: estudiante.nombres,
+                    grado: estudiante.grado,
+                    edad: estudiante.edad,
+                    seccion: estudiante.seccion,
+                    periodo: estudiante.periodo,
+                    promedio: estudiante.promedio,
+                    asistencia: estudiante.asistencia,
+                    conducta: estudiante.conducta
+                };
+            }),
             campos: ["id", "estudiante", "grado", "edad", "seccion", "periodo", "promedio", "asistencia", "conducta"],
             columnas: ["ID", "Estudiante", "Grado", "Edad", "Sección", "Periodo", "Promedio", "Asistencia", "Conducta"]
         },
@@ -1218,7 +1234,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 error.classList.add("animation-shake");
                 return;
             }
-            descargarCSV("reporte-" + clave + ".csv", actual.columnas, actual.campos, actual.filas);
+            var fechaDescarga = new Date().toISOString().slice(0, 10);
+            descargarCSV("reporte-" + clave + "-" + fechaDescarga + ".csv", actual.columnas, actual.campos, actual.filas);
         });
     });
 
@@ -1243,85 +1260,116 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // 2. Validaciones del formulario de matrícula (Estudiantes)
-    const formMatriculaValidacion = document.getElementById("matricula-form");
-    const cajaAlertaValidacion = document.getElementById("alerta");
+    var formMatriculaValidacion = document.getElementById("matricula-form");
+    var cajaAlertaValidacion = document.getElementById("alerta");
+    var dniEstudianteInput = document.getElementById("dni");
+
+    function mostrarAlertaMatricula(elemento, mensaje, tipo) {
+        if (!elemento) {
+            return;
+        }
+        elemento.textContent = mensaje;
+        elemento.classList.remove("oculto", "error", "exito");
+        elemento.classList.add(tipo);
+    }
+
+    function ocultarAlertaMatricula(elemento) {
+        if (!elemento) {
+            return;
+        }
+        elemento.classList.add("oculto");
+        elemento.classList.remove("error", "exito");
+    }
+
+    function limitarEntradaNumerica(elemento, maximo) {
+        if (!elemento) {
+            return;
+        }
+        elemento.addEventListener("input", function() {
+            elemento.value = elemento.value.replace(/\D/g, "").slice(0, maximo);
+        });
+    }
+
+    limitarEntradaNumerica(dniEstudianteInput, 8);
 
     if (formMatriculaValidacion) {
         formMatriculaValidacion.addEventListener("submit", function(evento) {
             evento.preventDefault();
-            
-            let dni = document.getElementById("dni").value;
-            let grado = document.getElementById("grado").value;
-            let seccion = document.getElementById("seccion").value;
+
+            var dni = document.getElementById("dni").value;
+            var grado = document.getElementById("grado").value;
+            var seccion = document.getElementById("seccion").value;
 
             if (dni.length !== 8) {
-                cajaAlertaValidacion.innerHTML = "Error: El DNI debe tener exactamente 8 números.";
-                cajaAlertaValidacion.className = "error"; 
-                cajaAlertaValidacion.classList.remove("oculto"); 
+                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: El DNI debe tener exactamente 8 números.", "error");
                 return;
             }
 
             if (seccion === "B" && grado !== "2") {
-                cajaAlertaValidacion.innerHTML = "Error: La sección B solo está disponible para 2º de secundaria.";
-                cajaAlertaValidacion.className = "error"; 
-                cajaAlertaValidacion.classList.remove("oculto"); 
+                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: La sección B solo está disponible para 2º de secundaria.", "error");
                 return;
             }
-            
-            cajaAlertaValidacion.innerHTML = "¡Estudiante matriculado correctamente!";
-            cajaAlertaValidacion.className = "exito"; 
-            cajaAlertaValidacion.classList.remove("oculto"); 
-            
+
+            mostrarAlertaMatricula(cajaAlertaValidacion, "¡Estudiante matriculado correctamente!", "exito");
+
             formMatriculaValidacion.reset();
             selectSeccion.value = "A";
-            selectSeccion.disabled = true; 
+            selectSeccion.disabled = true;
 
-            setTimeout(() => {
-                cajaAlertaValidacion.classList.add("oculto");
+            setTimeout(function() {
+                ocultarAlertaMatricula(cajaAlertaValidacion);
             }, 3000);
         });
     }
 
     // 3. Lógica para el Formulario de Apoderados y Tabla
-    const formApoderado = document.getElementById("apoderado-form");
-    const alertaApoderado = document.getElementById("alerta-apoderado");
-    const tablaRelaciones = document.getElementById("tabla-relaciones");
+    var formApoderado = document.getElementById("apoderado-form");
+    var alertaApoderado = document.getElementById("alerta-apoderado");
+    var tablaRelaciones = document.getElementById("tabla-relaciones");
+    var apoderados = [];
+
+    limitarEntradaNumerica(document.getElementById("ap_dni"), 8);
+    limitarEntradaNumerica(document.getElementById("ap_telefono"), 9);
+    limitarEntradaNumerica(document.getElementById("ap_estudiante"), 8);
 
     if (formApoderado) {
         formApoderado.addEventListener("submit", function(evento) {
             evento.preventDefault();
-            
-            let apNombres = document.getElementById("ap_nombres").value;
-            let apDni = document.getElementById("ap_dni").value;
-            let apEstudiante = document.getElementById("ap_estudiante").value;
+
+            var apNombres = document.getElementById("ap_nombres").value.trim();
+            var apDni = document.getElementById("ap_dni").value.trim();
+            var apEstudiante = document.getElementById("ap_estudiante").value.trim();
 
             if (apDni.length !== 8 || apEstudiante.length !== 8) {
-                alertaApoderado.innerHTML = "Error: Los DNI deben tener 8 números.";
-                alertaApoderado.className = "error";
-                alertaApoderado.classList.remove("oculto");
+                mostrarAlertaMatricula(alertaApoderado, "Error: Los DNI deben tener 8 números.", "error");
                 return;
             }
 
             if (tablaRelaciones.querySelector("td[colspan]")) {
-                tablaRelaciones.innerHTML = ""; 
+                tablaRelaciones.innerHTML = "";
             }
 
-            let fila = document.createElement("tr");
-            fila.innerHTML = `
-                <td>${apNombres}</td>
-                <td>${apDni}</td>
-                <td>${apEstudiante}</td>
-            `;
+            var apoderado = {
+                nombres: apNombres,
+                dni: apDni,
+                dniEstudiante: apEstudiante
+            };
+            apoderados.push(apoderado);
+
+            var fila = document.createElement("tr");
+            [apoderado.nombres, apoderado.dni, apoderado.dniEstudiante].forEach(function(valor) {
+                var celda = document.createElement("td");
+                celda.textContent = valor;
+                fila.appendChild(celda);
+            });
             tablaRelaciones.appendChild(fila);
 
-            alertaApoderado.innerHTML = "¡Apoderado registrado y asociado correctamente!";
-            alertaApoderado.className = "exito";
-            alertaApoderado.classList.remove("oculto");
+            mostrarAlertaMatricula(alertaApoderado, "¡Apoderado registrado y asociado correctamente!", "exito");
 
             formApoderado.reset();
 
-            setTimeout(() => {
-                alertaApoderado.classList.add("oculto");
+            setTimeout(function() {
+                ocultarAlertaMatricula(alertaApoderado);
             }, 3000);
         });
     }
