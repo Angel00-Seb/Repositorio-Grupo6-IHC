@@ -45,7 +45,7 @@
             <aside id="sidebar" class="sidebar" aria-label="Menú principal">
                 <div class="sidebar-header">
                     <div class="sidebar-user">
-                        <img src="assets/perfil.jpg" alt="" class="sidebar-user__avatar">
+                        <span class="sidebar-user__avatar" aria-hidden="true">IS</span>
                         <span class="sidebar-user__meta sidebar-label">
                             <span class="sidebar-user__name" id="nombre-usuario"></span>
                             <span class="sidebar-user__role" id="rol-usuario"></span>
@@ -85,10 +85,6 @@
             <div class="dashboard-content">
                 <header class="content-header">
                     <div class="header-inicio">
-                        <button id="btn-volver" class="btn-volver" type="button" disabled aria-label="Regresar a la vista anterior" title="Regresar a la vista anterior">
-                            <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
-                            <span class="sr-only">Volver</span>
-                        </button>
                         <div class="header-logo">
                             <img src="assets/logo.png" alt="Logo del colegio" class="logo-small">
                             <div class="header-brand">
@@ -98,10 +94,6 @@
                         </div>
                     </div>
                     <div class="header-actions">
-                        <button id="theme-toggle" class="btn-theme" type="button" aria-pressed="false" aria-label="Activar modo oscuro" title="Activar modo oscuro">
-                            <svg class="icono icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
-                            <svg class="icono icon-sun oculto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
-                        </button>
                         <div class="header-year">
                             <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></svg>
                             <div class="header-year__info">
@@ -113,6 +105,10 @@
                                 </select>
                             </div>
                         </div>
+                        <button id="theme-toggle" class="btn-theme" type="button" aria-pressed="false" aria-label="Activar modo oscuro" title="Activar modo oscuro">
+                            <svg class="icono icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+                            <svg class="icono icon-sun oculto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+                        </button>
                     </div>
                 </header>
 
@@ -123,6 +119,23 @@
                         <h2 class="view-title">Página principal</h2>
                         <p class="home-welcome">Bienvenido/a</p>
                         <p class="view-subtitle">Seleccione el módulo en el que desea trabajar.</p>
+
+                        <div class="carousel home-hero" role="region" aria-label="Carrusel de la institución">
+                            <div class="carousel-slide active">
+                                <img src="assets/i1.jpg" alt="Fachada de la I.E. José Carlos Mariátegui" class="home-hero__image">
+                                <div class="home-hero__copy"><h3>I.E. José Carlos Mariátegui</h3><p>Gestión de matrícula y asistencia docente</p></div>
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="assets/ie2.jpg" alt="Comunidad educativa reunida en el patio de la institución" class="home-hero__image">
+                                <div class="home-hero__copy"><h3>Sistema de Matrícula</h3><p>Consulte los módulos desde un solo lugar</p></div>
+                            </div>
+                            <div class="carousel-controls">
+                                <button id="prevBtn" type="button" aria-label="Diapositiva anterior">&#10094;</button>
+                                <button id="nextBtn" type="button" aria-label="Diapositiva siguiente">&#10095;</button>
+                            </div>
+                        </div>
+
+                        <h3 class="home-modules__title">Módulos del sistema</h3>
 
                         <div class="home-modules" role="group" aria-label="Módulos del sistema">
                             <button class="home-module" type="button" data-home-vista="matricula">
@@ -144,14 +157,6 @@
 
                         <button id="home-logout" class="home-logout" type="button">Cerrar sesión</button>
 
-                        <div class="carousel" role="region" aria-label="Carrusel">
-                            <div class="carousel-slide active"><h3>Sistema de Matrícula</h3><p>Gestione el registro de estudiantes de forma rápida y segura.</p></div>
-                            <div class="carousel-slide"><h3>Accesibilidad Universal</h3><p>Diseñado para facilitar el trabajo de la Dirección.</p></div>
-                            <div class="carousel-controls">
-                                <button id="prevBtn" type="button" aria-label="Diapositiva anterior">&#10094;</button>
-                                <button id="nextBtn" type="button" aria-label="Diapositiva siguiente">&#10095;</button>
-                            </div>
-                        </div>
                     </section>
 
                     <!-- VIEW: MATRÍCULA -->

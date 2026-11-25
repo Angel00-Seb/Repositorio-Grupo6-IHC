@@ -201,7 +201,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   flex: 0 0 auto;
   background: var(--color-surface);
   padding: 8px 20px;
@@ -213,42 +213,6 @@ h3 {
   align-items: center;
   gap: 16px;
   min-width: 0;
-}
-
-.btn-volver {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 auto;
-  padding: 0;
-  border: 2px solid var(--color-heading);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  color: var(--color-heading);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-min);
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.btn-volver .icono {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.btn-volver:hover:not(:disabled) {
-  background: var(--color-action);
-  color: var(--color-on-dark);
-}
-
-.btn-volver:disabled {
-  border-color: var(--color-muted);
-  color: var(--color-muted);
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 
 .header-logo {
@@ -279,6 +243,9 @@ h3 {
   align-items: center;
   gap: 12px;
   flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
 }
 
 .btn-theme {
@@ -354,6 +321,13 @@ h3 {
   font-size: var(--font-size-h3);
 }
 
+.home-modules__title {
+  margin-bottom: 16px;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  color: var(--color-heading);
+}
+
 .home-modules {
   display: grid;
   grid-template-columns: 1fr;
@@ -363,26 +337,40 @@ h3 {
 
 .home-module {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
+  justify-items: center;
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 16px;
+  min-height: 164px;
+  padding: 20px;
   border: 1px solid var(--color-background);
   border-radius: var(--radius);
   background: var(--color-surface);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--font-size-min);
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   box-shadow: var(--shadow-soft);
 }
 
+.home-module:nth-child(1) {
+  background: var(--color-naranja-claro);
+}
+
+.home-module:nth-child(2) {
+  background: #E3EFE7;
+}
+
+[data-theme="dark"] .home-module:nth-child(2) {
+  background: var(--color-surface);
+}
+
 .home-module__icon {
   display: grid;
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   place-items: center;
   border-radius: var(--radius);
   background: var(--color-naranja-claro);
@@ -390,8 +378,8 @@ h3 {
 }
 
 .home-module__icon svg {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -408,6 +396,7 @@ h3 {
 .home-module__text strong {
   color: var(--color-heading);
   font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
 }
 
 .home-module__text small {
@@ -416,8 +405,15 @@ h3 {
 }
 
 .home-module__arrow {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-accent);
   color: var(--color-heading);
-  font-size: var(--font-size-h2);
+  font-size: var(--font-size-h3);
+  line-height: 1;
 }
 
 .home-module:hover {
@@ -518,6 +514,65 @@ h3 {
   border-radius: 4px;
   font-weight: 700;
   font-size: var(--font-size-min);
+}
+
+/* Fotografía institucional en el carrusel de Inicio */
+.home-hero {
+  position: relative;
+  min-height: 280px;
+  margin: 24px 0;
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: var(--shadow-card);
+}
+
+.home-hero .carousel-slide {
+  position: relative;
+  min-height: 280px;
+}
+
+.home-hero .carousel-slide.active {
+  display: flex;
+  align-items: flex-end;
+}
+
+.home-hero .carousel-slide::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 5%, rgba(18, 61, 39, 0.5) 45%, rgba(18, 61, 39, 0.96));
+  content: "";
+}
+
+.home-hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero__copy {
+  position: relative;
+  z-index: 1;
+  max-width: 75%;
+  padding: 24px 28px 28px;
+}
+
+.home-hero__copy h3 {
+  color: var(--color-on-dark);
+  font-weight: 700;
+}
+
+.home-hero__copy p {
+  font-size: var(--font-size-secondary);
+}
+
+.home-hero .carousel-controls {
+  position: absolute;
+  z-index: 2;
+  right: 12px;
+  bottom: 12px;
 }
 
 /* --- MÓDULO DE MATRÍCULA --- */
@@ -902,9 +957,15 @@ legend {
   width: 2.75rem;
   height: 2.75rem;
   flex: 0 0 auto;
-  object-fit: cover;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
   border: 2px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-min);
+  font-weight: 700;
 }
 
 .sidebar-user__meta {
