@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // --- USUARIO ACTIVO ---
     var usuarioActivo = {
-        nombre: "Dr.a Iris Saavedra",
+        nombre: "Dir.a Iris Saavedra",
         rol: "Directora"
     };
     document.getElementById("nombre-usuario").textContent = usuarioActivo.nombre;
@@ -58,9 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
             loginSec.classList.add("oculto");
             mainSec.classList.remove("oculto");
             loginError.classList.add("oculto");
-            historialVistas = [];
             mostrarPantalla("inicio");
-            actualizarBotonVolver();
             window.location.hash = mainSec.id;
             mainSec.scrollIntoView();
         } else {
@@ -86,9 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
         loginSec.classList.remove("oculto");
         loginForm.reset();
         loginError.classList.add("oculto");
-        historialVistas = [];
         mostrarPantalla("inicio");
-        actualizarBotonVolver();
         window.location.hash = "";
         loginSec.scrollIntoView();
     });
@@ -120,18 +116,67 @@ document.addEventListener("DOMContentLoaded", function() {
     var listaAsistencias = document.getElementById("lista-asistencias");
     var buscarDocente = document.getElementById("buscar-docente");
     var botonBuscarDocente = document.getElementById("buscar-docente-btn");
+    var resultadosBusquedaDocente = document.getElementById("resultados-busqueda-docente");
     var seleccionDocente = document.getElementById("docente-asistencia");
+    var docenteAsistenciaSeleccionado = document.getElementById("docente-asistencia-seleccionado");
     var fechaAsistencia = document.getElementById("fecha-asistencia");
     var horaAsistencia = document.getElementById("hora-asistencia");
+    var periodoAsistencia = document.getElementById("periodo-asistencia");
+    var horaSalida = document.getElementById("hora-salida");
+    var periodoSalida = document.getElementById("periodo-salida");
     var estadoAsistencia = document.getElementById("estado-asistencia");
     var grupoJustificacion = document.getElementById("grupo-justificacion");
     var justificacionAsistencia = document.getElementById("justificacion-asistencia");
+    var grupoArchivoJustificacion = document.getElementById("grupo-archivo-justificacion");
+    var archivoJustificacion = document.getElementById("archivo-justificacion");
+    var nombreArchivoJustificacion = document.getElementById("nombre-archivo-justificacion");
     var formularioAsistencia = document.getElementById("form-asistencia");
+    var botonGuardarAsistencia = document.getElementById("guardar-asistencia");
+    var botonCancelarEdicionAsistencia = document.getElementById("cancelar-edicion-asistencia");
     var mensajeDocente = document.getElementById("mensaje-docente");
     var mensajeAsistencia = document.getElementById("mensaje-asistencia");
-    var mensajeBusquedaDocente = document.getElementById("mensaje-busqueda-docente");
+    var botonSeleccionarArchivo = document.getElementById("seleccionar-archivo-justificacion");
+    var seleccionHorario = document.getElementById("docente-horario");
+    var gradoHorario = document.getElementById("grado-horario");
+    var seccionHorario = document.getElementById("seccion-horario");
+    var mensajeHorarioDocente = document.getElementById("mensaje-horario-docente");
+    var contenedorTablaHorario = document.getElementById("tabla-horario-docente-contenedor");
+    var tituloHorarioDocente = document.getElementById("titulo-horario-docente");
+    var tablaHorarioDocente = document.getElementById("tabla-horario-docente");
+    var datosDocenteHorario = document.getElementById("datos-docente-horario");
+    var nombreDocenteHorario = document.getElementById("nombre-docente-horario");
+    var dniDocenteHorario = document.getElementById("dni-docente-horario");
+    var areaDocenteHorario = document.getElementById("area-docente-horario");
+    var camposTextoDocente = [
+        { elemento: document.getElementById("nombre-docente"), etiqueta: "Nombres" },
+        { elemento: document.getElementById("apellido-docente"), etiqueta: "Apellidos" },
+        { elemento: document.getElementById("especialidad-docente"), etiqueta: "Especialidad" }
+    ];
+    var patronTextoDocente = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/;
+    var errorTextoDocenteVisible = false;
     var docentes = [];
     var asistencias = [];
+    var indiceAsistenciaEnEdicion = null;
+    var archivoOriginalEnEdicion = null;
+    var urlArchivoOriginalEnEdicion = "";
+    var diasHorario = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+    var horasHorario = ["08:00 - 09:30", "10:00 - 11:30"];
+    var asignaturasHorario = [
+        { asignatura: "Comunicación", docente: "Ana María Torres", dni: "70000001", area: "Comunicación" },
+        { asignatura: "Matemática", docente: "Carlos Mendoza", dni: "70000002", area: "Matemática" },
+        { asignatura: "Ciencia y Tecnología", docente: "Rosa Sánchez", dni: "70000003", area: "Ciencia y Tecnología" },
+        { asignatura: "Ciencias Sociales", docente: "Luis Paredes", dni: "70000004", area: "Ciencias Sociales" },
+        { asignatura: "Inglés", docente: "Marta Ríos", dni: "70000005", area: "Inglés" },
+        { asignatura: "Educación Física", docente: "Jorge Salazar", dni: "70000006", area: "Educación Física" }
+    ];
+    var aulasHorario = [
+        { grado: "1", seccion: "A", indice: 0 },
+        { grado: "2", seccion: "A", indice: 1 },
+        { grado: "2", seccion: "B", indice: 2 },
+        { grado: "3", seccion: "A", indice: 3 },
+        { grado: "4", seccion: "A", indice: 4 },
+        { grado: "5", seccion: "A", indice: 5 }
+    ];
 
     function mostrarMensaje(elemento, mensaje, tipo) {
         elemento.textContent = mensaje;
@@ -143,9 +188,33 @@ document.addEventListener("DOMContentLoaded", function() {
         elemento.className = "docentes-mensaje oculto";
     }
 
-    function normalizarBusquedaDocente(texto) {
-        return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    function validarTextoDocenteEnEntrada(event) {
+        var campo = event.currentTarget;
+        var campoConfig = camposTextoDocente.filter(function(config) {
+            return config.elemento === campo;
+        })[0];
+
+        if (campo.value && !patronTextoDocente.test(campo.value)) {
+            campo.setAttribute("aria-invalid", "true");
+            errorTextoDocenteVisible = true;
+            mostrarMensaje(
+                mensajeDocente,
+                campoConfig.etiqueta + " solo permite letras, tildes, ñ y espacios. Quite los números y otros caracteres.",
+                "error"
+            );
+            return;
+        }
+
+        campo.removeAttribute("aria-invalid");
+        var hayTextoInvalido = camposTextoDocente.some(function(config) {
+            return config.elemento.value && !patronTextoDocente.test(config.elemento.value);
+        });
+        if (errorTextoDocenteVisible && !hayTextoInvalido) {
+            errorTextoDocenteVisible = false;
+            limpiarMensaje(mensajeDocente);
+        }
     }
+
 
     function mostrarDocentes() {
         listaDocentes.textContent = "";
@@ -171,6 +240,146 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    function obtenerHorarioAula(aula) {
+        var registros = [];
+        diasHorario.forEach(function(dia, indiceDia) {
+            horasHorario.forEach(function(hora, indiceBloque) {
+                var indiceAsignatura = (aula.indice + indiceDia + indiceBloque) % asignaturasHorario.length;
+                var clase = asignaturasHorario[indiceAsignatura];
+                registros.push({
+                    dia: dia,
+                    hora: hora,
+                    grado: aula.grado,
+                    seccion: aula.seccion,
+                    asignatura: clase.asignatura,
+                    docente: clase.docente,
+                    dni: clase.dni,
+                    area: clase.area
+                });
+            });
+        });
+        return registros;
+    }
+
+    function renderizarHorario(registros, titulo, docenteSeleccionadoHorario) {
+        tablaHorarioDocente.textContent = "";
+        tituloHorarioDocente.textContent = titulo;
+        datosDocenteHorario.classList.toggle("oculto", !docenteSeleccionadoHorario);
+        if (docenteSeleccionadoHorario) {
+            nombreDocenteHorario.textContent = docenteSeleccionadoHorario.docente;
+            dniDocenteHorario.textContent = docenteSeleccionadoHorario.dni;
+            areaDocenteHorario.textContent = docenteSeleccionadoHorario.area;
+        }
+        registros.forEach(function(clase) {
+            var fila = document.createElement("tr");
+            [
+                clase.dia,
+                clase.hora,
+                clase.grado,
+                clase.seccion,
+                clase.asignatura,
+                clase.docente,
+                clase.dni,
+                clase.area
+            ].forEach(function(valor) {
+                var celda = document.createElement("td");
+                celda.textContent = valor;
+                fila.appendChild(celda);
+            });
+            tablaHorarioDocente.appendChild(fila);
+        });
+        mensajeHorarioDocente.textContent = "";
+        contenedorTablaHorario.classList.remove("oculto");
+    }
+
+    function mostrarOpcionesDocenteHorario() {
+        asignaturasHorario.forEach(function(clase) {
+            var opcion = document.createElement("option");
+            opcion.value = clase.docente;
+            opcion.textContent = clase.docente + " — " + clase.area;
+            seleccionHorario.appendChild(opcion);
+        });
+    }
+
+    function actualizarSeccionesHorario() {
+        var seccionesPorGrado = {
+            "1": ["A"],
+            "2": ["A", "B"],
+            "3": ["A"],
+            "4": ["A"],
+            "5": ["A"]
+        };
+        seccionHorario.textContent = "";
+        var opcionInicial = document.createElement("option");
+        opcionInicial.value = "";
+        opcionInicial.textContent = gradoHorario.value
+            ? "Seleccione una sección..."
+            : "Seleccione primero un grado...";
+        seccionHorario.appendChild(opcionInicial);
+        seccionHorario.disabled = !gradoHorario.value;
+
+        (seccionesPorGrado[gradoHorario.value] || []).forEach(function(seccion) {
+            var opcion = document.createElement("option");
+            opcion.value = seccion;
+            opcion.textContent = seccion;
+            seccionHorario.appendChild(opcion);
+        });
+    }
+
+    function consultarHorarioPorAula() {
+        seleccionHorario.value = "";
+        contenedorTablaHorario.classList.add("oculto");
+        datosDocenteHorario.classList.add("oculto");
+        if (!gradoHorario.value || !seccionHorario.value) {
+            mensajeHorarioDocente.textContent = "Seleccione un grado y sección o un docente.";
+            return;
+        }
+
+        var aula = aulasHorario.filter(function(item) {
+            return item.grado === gradoHorario.value && item.seccion === seccionHorario.value;
+        })[0];
+        if (!aula) {
+            mensajeHorarioDocente.textContent = "No hay un horario disponible para esta aula.";
+            return;
+        }
+        renderizarHorario(
+            obtenerHorarioAula(aula),
+            "Horario semanal — " + gradoHorario.options[gradoHorario.selectedIndex].text + ", sección " + aula.seccion
+        );
+    }
+
+    function consultarHorarioPorDocente() {
+        gradoHorario.value = "";
+        actualizarSeccionesHorario();
+        contenedorTablaHorario.classList.add("oculto");
+        datosDocenteHorario.classList.add("oculto");
+        if (!seleccionHorario.value) {
+            mensajeHorarioDocente.textContent = "Seleccione un grado y sección o un docente.";
+            return;
+        }
+
+        var registros = [];
+        aulasHorario.forEach(function(aula) {
+            obtenerHorarioAula(aula).forEach(function(clase) {
+                if (clase.docente === seleccionHorario.value) {
+                    registros.push(clase);
+                }
+            });
+        });
+        registros.sort(function(a, b) {
+            return diasHorario.indexOf(a.dia) - diasHorario.indexOf(b.dia) ||
+                horasHorario.indexOf(a.hora) - horasHorario.indexOf(b.hora);
+        });
+        var datosDocente = asignaturasHorario.filter(function(clase) {
+            return clase.docente === seleccionHorario.value;
+        })[0];
+        renderizarHorario(
+            registros,
+            "Horario semanal de " + datosDocente.docente + " — " + datosDocente.area,
+            datosDocente
+        );
+    }
+
     function buscarDocentePorDni(dni) {
         for (var i = 0; i < docentes.length; i++) {
             if (docentes[i].dni === dni) {
@@ -181,10 +390,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function buscarDocentesRegistrados() {
-        var termino = normalizarBusquedaDocente(buscarDocente.value.trim());
+        var termino = normalizar(buscarDocente.value.trim());
+        resultadosBusquedaDocente.textContent = "";
+        seleccionDocente.value = "";
+        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
+        if (!termino) {
+            resultadosBusquedaDocente.classList.add("oculto");
+            return;
+        }
+
         var docentesFiltrados = docentes.filter(function(docente) {
-            var nombres = normalizarBusquedaDocente(docente.nombres);
-            var apellidos = normalizarBusquedaDocente(docente.apellidos);
+            var nombres = normalizar(docente.nombres);
+            var apellidos = normalizar(docente.apellidos);
             var nombreCompleto = nombres + " " + apellidos;
             return nombreCompleto.indexOf(termino) !== -1 ||
                 nombres.indexOf(termino) !== -1 ||
@@ -192,30 +409,41 @@ document.addEventListener("DOMContentLoaded", function() {
                 docente.dni.indexOf(termino) !== -1;
         });
 
-        seleccionDocente.textContent = "";
-        var opcionInicial = document.createElement("option");
-        opcionInicial.value = "";
-        opcionInicial.textContent = docentes.length === 0
-            ? "Primero registre un docente."
-            : docentesFiltrados.length === 0
-                ? "No se encontraron coincidencias."
-                : "Seleccione un docente...";
-        seleccionDocente.appendChild(opcionInicial);
+        resultadosBusquedaDocente.classList.remove("oculto");
+        if (docentesFiltrados.length === 0) {
+            var sinResultados = document.createElement("li");
+            sinResultados.className = "docentes-busqueda__sin-resultados";
+            sinResultados.textContent = "No se encontraron docentes";
+            resultadosBusquedaDocente.appendChild(sinResultados);
+            return;
+        }
 
         docentesFiltrados.forEach(function(docente) {
-            var opcion = document.createElement("option");
-            opcion.value = docente.dni;
-            opcion.textContent = docente.nombres + " " + docente.apellidos + " — DNI " + docente.dni;
-            seleccionDocente.appendChild(opcion);
-        });
+            var resultado = document.createElement("li");
+            var botonResultado = document.createElement("button");
+            var nombreCompleto = docente.nombres + " " + docente.apellidos;
+            botonResultado.type = "button";
+            botonResultado.className = "docentes-busqueda__resultado";
+            botonResultado.setAttribute("aria-label", nombreCompleto + ", DNI " + docente.dni + ", " + docente.especialidad);
 
-        if (docentes.length === 0) {
-            mostrarMensaje(mensajeBusquedaDocente, "Aún no hay docentes registrados. Registre uno en el catálogo para comenzar.", "error");
-        } else if (docentesFiltrados.length === 0) {
-            mostrarMensaje(mensajeBusquedaDocente, "No se encontraron docentes que coincidan con el nombre, apellido o DNI.", "error");
-        } else {
-            mostrarMensaje(mensajeBusquedaDocente, docentesFiltrados.length + " docente(s) encontrado(s). Seleccione uno de la lista.", "exito");
-        }
+            var nombre = document.createElement("span");
+            nombre.textContent = nombreCompleto;
+            var detalleDni = document.createElement("small");
+            detalleDni.textContent = "DNI: " + docente.dni;
+            var detalleArea = document.createElement("small");
+            detalleArea.textContent = "Área o especialidad: " + docente.especialidad;
+            botonResultado.appendChild(nombre);
+            botonResultado.appendChild(detalleDni);
+            botonResultado.appendChild(detalleArea);
+            resultado.appendChild(botonResultado);
+            resultadosBusquedaDocente.appendChild(resultado);
+
+            botonResultado.addEventListener("click", function() {
+                seleccionDocente.value = docente.dni;
+                docenteAsistenciaSeleccionado.textContent = nombreCompleto + " — DNI " + docente.dni + " — " + docente.especialidad;
+                resultadosBusquedaDocente.classList.add("oculto");
+            });
+        });
     }
 
     function fechaLocal(fecha) {
@@ -225,11 +453,30 @@ document.addEventListener("DOMContentLoaded", function() {
         return anio + "-" + mes + "-" + dia;
     }
 
-    function establecerFechaHoraActual() {
+    function establecerFechaHoraPredeterminada() {
         var ahora = new Date();
         fechaAsistencia.value = fechaLocal(ahora);
-        horaAsistencia.value = ("0" + ahora.getHours()).slice(-2) + ":" +
-            ("0" + ahora.getMinutes()).slice(-2);
+        horaAsistencia.value = "07:00";
+        periodoAsistencia.value = "AM";
+    }
+
+    function convertirHoraEnMinutos(hora, periodo) {
+        var partes = /^(\d{1,2}):([0-5]\d)$/.exec(hora);
+        if (!partes) {
+            return null;
+        }
+        var horas = Number(partes[1]);
+        var minutos = Number(partes[2]);
+        if (horas < 1 || horas > 12) {
+            return null;
+        }
+        return (horas % 12 + (periodo === "PM" ? 12 : 0)) * 60 + minutos;
+    }
+
+    function formatearHora(hora, periodo) {
+        var partes = hora.split(":");
+        var horas = ("0" + partes[0]).slice(-2);
+        return horas + ":" + partes[1] + (periodo === "PM" ? " p. m." : " a. m.");
     }
 
     function formatearFecha(fecha) {
@@ -243,7 +490,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (asistencias.length === 0) {
             var filaVacia = document.createElement("tr");
             var celdaVacia = document.createElement("td");
-            celdaVacia.colSpan = 6;
+            celdaVacia.colSpan = 8;
             celdaVacia.textContent = "Aún no hay asistencias registradas.";
             filaVacia.appendChild(celdaVacia);
             listaAsistencias.appendChild(filaVacia);
@@ -257,14 +504,49 @@ document.addEventListener("DOMContentLoaded", function() {
                 asistencia.docente,
                 asistencia.dni,
                 formatearFecha(asistencia.fecha),
-                asistencia.hora,
-                asistencia.estado,
-                asistencia.justificacion || "—"
+                formatearHora(asistencia.horaIngreso, asistencia.periodoIngreso),
+                asistencia.horaSalida
+                    ? formatearHora(asistencia.horaSalida, asistencia.periodoSalida)
+                    : "—",
+                asistencia.estado
             ].forEach(function(valor) {
                 var celda = document.createElement("td");
                 celda.textContent = valor;
                 fila.appendChild(celda);
             });
+
+            var celdaJustificacion = document.createElement("td");
+            var motivo = document.createElement("div");
+            motivo.textContent = asistencia.justificacion || "—";
+            var adjunto = document.createElement("div");
+            adjunto.textContent = "Archivo: ";
+            if (asistencia.archivoNombre) {
+                var enlaceArchivo = document.createElement("a");
+                enlaceArchivo.href = asistencia.archivoUrl;
+                enlaceArchivo.target = "_blank";
+                enlaceArchivo.rel = "noopener";
+                enlaceArchivo.textContent = asistencia.archivoNombre;
+                adjunto.appendChild(enlaceArchivo);
+            } else {
+                adjunto.appendChild(document.createTextNode("—"));
+            }
+            celdaJustificacion.appendChild(motivo);
+            celdaJustificacion.appendChild(adjunto);
+            fila.appendChild(celdaJustificacion);
+
+            var celdaAcciones = document.createElement("td");
+            var botonEditar = document.createElement("button");
+            botonEditar.type = "button";
+            botonEditar.className = "docentes-editar";
+            botonEditar.setAttribute("aria-label", "Editar asistencia de " + asistencia.docente);
+            botonEditar.textContent = "✎ Editar";
+            (function(indice) {
+                botonEditar.addEventListener("click", function() {
+                    iniciarEdicionAsistencia(indice);
+                });
+            })(i);
+            celdaAcciones.appendChild(botonEditar);
+            fila.appendChild(celdaAcciones);
             listaAsistencias.appendChild(fila);
         }
     }
@@ -272,10 +554,68 @@ document.addEventListener("DOMContentLoaded", function() {
     function actualizarCampoJustificacion() {
         var requiereJustificacion = estadoAsistencia.value === "Falta justificada";
         grupoJustificacion.classList.toggle("oculto", !requiereJustificacion);
+        grupoArchivoJustificacion.classList.toggle("oculto", !requiereJustificacion);
         justificacionAsistencia.required = requiereJustificacion;
+        horaSalida.required = estadoAsistencia.value === "Asistencia" || estadoAsistencia.value === "Tardanza";
         if (!requiereJustificacion) {
             justificacionAsistencia.value = "";
+            archivoJustificacion.value = "";
+            nombreArchivoJustificacion.textContent = "";
+        } else if (indiceAsistenciaEnEdicion !== null && archivoOriginalEnEdicion) {
+            nombreArchivoJustificacion.textContent = "Archivo actual: " + archivoOriginalEnEdicion.name;
         }
+    }
+
+    function restablecerFormularioAsistencia() {
+        indiceAsistenciaEnEdicion = null;
+        archivoOriginalEnEdicion = null;
+        urlArchivoOriginalEnEdicion = "";
+        formularioAsistencia.reset();
+        buscarDocente.disabled = false;
+        botonBuscarDocente.disabled = false;
+        fechaAsistencia.disabled = false;
+        botonGuardarAsistencia.textContent = "Registrar asistencia";
+        botonCancelarEdicionAsistencia.classList.add("oculto");
+        establecerFechaHoraPredeterminada();
+        actualizarCampoJustificacion();
+        buscarDocente.value = "";
+        seleccionDocente.value = "";
+        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
+        resultadosBusquedaDocente.textContent = "";
+        resultadosBusquedaDocente.classList.add("oculto");
+    }
+
+    function iniciarEdicionAsistencia(indice) {
+        var asistencia = asistencias[indice];
+        if (!asistencia) {
+            return;
+        }
+
+        indiceAsistenciaEnEdicion = indice;
+        archivoOriginalEnEdicion = asistencia.archivo || null;
+        urlArchivoOriginalEnEdicion = asistencia.archivoUrl || "";
+        formularioAsistencia.reset();
+        buscarDocente.disabled = true;
+        botonBuscarDocente.disabled = true;
+        fechaAsistencia.disabled = true;
+        seleccionDocente.value = asistencia.dni;
+        docenteAsistenciaSeleccionado.textContent =
+            asistencia.docente + " — DNI " + asistencia.dni;
+        fechaAsistencia.value = asistencia.fecha;
+        horaAsistencia.value = asistencia.horaIngreso;
+        periodoAsistencia.value = asistencia.periodoIngreso;
+        horaSalida.value = asistencia.horaSalida;
+        periodoSalida.value = asistencia.periodoSalida || "AM";
+        estadoAsistencia.value = asistencia.estado;
+        actualizarCampoJustificacion();
+        justificacionAsistencia.value = asistencia.justificacion || "";
+        nombreArchivoJustificacion.textContent = archivoOriginalEnEdicion
+            ? "Archivo actual: " + archivoOriginalEnEdicion.name
+            : "";
+        botonGuardarAsistencia.textContent = "Guardar cambios";
+        botonCancelarEdicionAsistencia.classList.remove("oculto");
+        limpiarMensaje(mensajeAsistencia);
+        formularioAsistencia.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function registrarAsistencia(event) {
@@ -284,12 +624,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var docente = buscarDocentePorDni(seleccionDocente.value);
         var fecha = fechaAsistencia.value;
-        var hora = horaAsistencia.value;
+        var ingreso = horaAsistencia.value;
+        var periodoIngreso = periodoAsistencia.value;
+        var salida = horaSalida.value;
+        var periodoSalidaSeleccionado = periodoSalida.value;
         var estado = estadoAsistencia.value;
         var justificacion = justificacionAsistencia.value.trim();
+        var ingresoMinutos = convertirHoraEnMinutos(ingreso, periodoIngreso);
+        var salidaMinutos = salida ? convertirHoraEnMinutos(salida, periodoSalidaSeleccionado) : null;
 
-        if (!docente || !fecha || !hora || !estado) {
-            mostrarMensaje(mensajeAsistencia, "Seleccione un docente y complete la fecha, la hora y el estado.", "error");
+        if (!docente || !fecha || !ingreso || !estado) {
+            mostrarMensaje(mensajeAsistencia, "Seleccione un docente y complete la fecha, la hora de ingreso y el estado.", "error");
+            return;
+        }
+        if (ingresoMinutos === null) {
+            mostrarMensaje(mensajeAsistencia, "Ingrese una hora de ingreso válida entre 01:00 y 12:59 y seleccione a. m. o p. m.", "error");
+            return;
+        }
+        if ((estado === "Asistencia" || estado === "Tardanza") && !salida) {
+            mostrarMensaje(mensajeAsistencia, "Ingrese la hora de salida para registrar la asistencia.", "error");
+            return;
+        }
+        if (salida && salidaMinutos === null) {
+            mostrarMensaje(mensajeAsistencia, "Ingrese una hora de salida válida entre 01:00 y 12:59 y seleccione a. m. o p. m.", "error");
+            return;
+        }
+        if (salida && salidaMinutos < ingresoMinutos) {
+            mostrarMensaje(mensajeAsistencia, "La hora de salida no puede ser anterior a la hora de ingreso.", "error");
             return;
         }
         if (estado === "Falta justificada" && !justificacion) {
@@ -301,30 +662,68 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        asistencias.push({
-            docente: docente.nombres + " " + docente.apellidos,
-            dni: docente.dni,
-            fecha: fecha,
-            hora: hora,
+        var registroAnterior = indiceAsistenciaEnEdicion !== null
+            ? asistencias[indiceAsistenciaEnEdicion]
+            : null;
+        var archivoNuevo = archivoJustificacion.files[0] || null;
+        var archivoSeleccionado = estado === "Falta justificada"
+            ? archivoNuevo || (registroAnterior ? archivoOriginalEnEdicion : null)
+            : null;
+        var urlArchivo = "";
+        if (archivoSeleccionado) {
+            urlArchivo = archivoSeleccionado === archivoOriginalEnEdicion
+                ? urlArchivoOriginalEnEdicion
+                : URL.createObjectURL(archivoSeleccionado);
+        }
+
+        var registro = {
+            docente: registroAnterior ? registroAnterior.docente : docente.nombres + " " + docente.apellidos,
+            dni: registroAnterior ? registroAnterior.dni : docente.dni,
+            fecha: registroAnterior ? registroAnterior.fecha : fecha,
+            horaIngreso: ingreso,
+            periodoIngreso: periodoIngreso,
+            horaSalida: salida,
+            periodoSalida: periodoSalidaSeleccionado,
             estado: estado,
-            justificacion: estado === "Falta justificada" ? justificacion : ""
-        });
+            justificacion: estado === "Falta justificada" ? justificacion : "",
+            archivo: archivoSeleccionado,
+            archivoNombre: archivoSeleccionado ? archivoSeleccionado.name : "",
+            archivoUrl: urlArchivo
+        };
+        if (registroAnterior) {
+            asistencias[indiceAsistenciaEnEdicion] = registro;
+            if (registroAnterior.archivoUrl && registroAnterior.archivoUrl !== urlArchivo) {
+                URL.revokeObjectURL(registroAnterior.archivoUrl);
+            }
+        } else {
+            asistencias.push(registro);
+        }
+
         mostrarAsistencias();
-        formularioAsistencia.reset();
-        establecerFechaHoraActual();
-        actualizarCampoJustificacion();
-        buscarDocente.value = "";
-        seleccionDocente.textContent = "";
-        var opcionInicial = document.createElement("option");
-        opcionInicial.value = "";
-        opcionInicial.textContent = docentes.length === 0 ? "Primero registre un docente." : "Busque y seleccione un docente.";
-        seleccionDocente.appendChild(opcionInicial);
-        limpiarMensaje(mensajeBusquedaDocente);
-        mostrarMensaje(mensajeAsistencia, "Asistencia registrada correctamente.", "exito");
+        var estabaEditando = registroAnterior !== null;
+        restablecerFormularioAsistencia();
+        mostrarMensaje(
+            mensajeAsistencia,
+            estabaEditando ? "Los cambios se guardaron correctamente." : "Asistencia registrada correctamente.",
+            "exito"
+        );
     }
 
     dniDocente.addEventListener("input", function() {
         dniDocente.value = dniDocente.value.replace(/\D/g, "").slice(0, 8);
+    });
+
+    archivoJustificacion.addEventListener("change", function() {
+        var archivo = archivoJustificacion.files[0];
+        nombreArchivoJustificacion.textContent = archivo ? "Archivo seleccionado: " + archivo.name : "";
+    });
+
+    botonSeleccionarArchivo.addEventListener("click", function() {
+        archivoJustificacion.click();
+    });
+
+    camposTextoDocente.forEach(function(config) {
+        config.elemento.addEventListener("input", validarTextoDocenteEnEntrada);
     });
 
     formularioDocente.addEventListener("submit", function(event) {
@@ -332,9 +731,9 @@ document.addEventListener("DOMContentLoaded", function() {
         limpiarMensaje(mensajeDocente);
 
         var dni = dniDocente.value.trim();
-        var nombres = document.getElementById("nombre-docente").value.trim();
-        var apellidos = document.getElementById("apellido-docente").value.trim();
-        var especialidad = document.getElementById("especialidad-docente").value.trim();
+        var nombres = camposTextoDocente[0].elemento.value.trim();
+        var apellidos = camposTextoDocente[1].elemento.value.trim();
+        var especialidad = camposTextoDocente[2].elemento.value.trim();
 
         if (!/^\d{8}$/.test(dni)) {
             mostrarMensaje(mensajeDocente, "El DNI debe tener exactamente 8 dígitos numéricos. Complete los 8 dígitos.", "error");
@@ -342,6 +741,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         if (!nombres || !apellidos || !especialidad) {
             mostrarMensaje(mensajeDocente, "Complete los nombres, apellidos y especialidad para registrar al docente.", "error");
+            return;
+        }
+        if (!patronTextoDocente.test(nombres)) {
+            camposTextoDocente[0].elemento.setAttribute("aria-invalid", "true");
+            mostrarMensaje(mensajeDocente, "Nombres solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
+            return;
+        }
+        if (!patronTextoDocente.test(apellidos)) {
+            camposTextoDocente[1].elemento.setAttribute("aria-invalid", "true");
+            mostrarMensaje(mensajeDocente, "Apellidos solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
+            return;
+        }
+        if (!patronTextoDocente.test(especialidad)) {
+            camposTextoDocente[2].elemento.setAttribute("aria-invalid", "true");
+            mostrarMensaje(mensajeDocente, "Especialidad solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
             return;
         }
         if (buscarDocentePorDni(dni)) {
@@ -357,28 +771,50 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         mostrarDocentes();
         formularioDocente.reset();
+        camposTextoDocente.forEach(function(config) {
+            config.elemento.removeAttribute("aria-invalid");
+        });
+        errorTextoDocenteVisible = false;
         buscarDocente.value = "";
-        seleccionDocente.textContent = "";
-        var opcionInicial = document.createElement("option");
-        opcionInicial.value = "";
-        opcionInicial.textContent = "Busque y seleccione un docente.";
-        seleccionDocente.appendChild(opcionInicial);
-        limpiarMensaje(mensajeBusquedaDocente);
+        seleccionDocente.value = "";
+        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
+        resultadosBusquedaDocente.textContent = "";
+        resultadosBusquedaDocente.classList.add("oculto");
         mostrarMensaje(mensajeDocente, "Docente registrado correctamente.", "exito");
     });
 
     botonBuscarDocente.addEventListener("click", buscarDocentesRegistrados);
+    buscarDocente.addEventListener("input", function() {
+        resultadosBusquedaDocente.textContent = "";
+        resultadosBusquedaDocente.classList.add("oculto");
+        seleccionDocente.value = "";
+        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
+    });
     buscarDocente.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            buscarDocentesRegistrados();
         }
     });
     estadoAsistencia.addEventListener("change", actualizarCampoJustificacion);
+    botonCancelarEdicionAsistencia.addEventListener("click", function() {
+        restablecerFormularioAsistencia();
+        mostrarMensaje(mensajeAsistencia, "Edición cancelada.", "exito");
+    });
+    gradoHorario.addEventListener("change", function() {
+        seleccionHorario.value = "";
+        actualizarSeccionesHorario();
+        contenedorTablaHorario.classList.add("oculto");
+        datosDocenteHorario.classList.add("oculto");
+        mensajeHorarioDocente.textContent = "Seleccione una sección para consultar el horario.";
+    });
+    seccionHorario.addEventListener("change", consultarHorarioPorAula);
+    seleccionHorario.addEventListener("change", consultarHorarioPorDocente);
     formularioAsistencia.addEventListener("submit", registrarAsistencia);
 
     mostrarDocentes();
-    establecerFechaHoraActual();
+    mostrarOpcionesDocenteHorario();
+    actualizarSeccionesHorario();
+    establecerFechaHoraPredeterminada();
     actualizarCampoJustificacion();
     mostrarAsistencias();
 
@@ -393,22 +829,16 @@ document.addEventListener("DOMContentLoaded", function() {
         sidebarToggle.setAttribute("aria-label", collapsed ? "Expandir menú" : "Contraer menú");
     });
 
-    // --- NAVEGACIÓN ENTRE VISTAS Y BOTÓN VOLVER ---
+    // --- NAVEGACIÓN ENTRE VISTAS ---
     var navItems = document.querySelectorAll(".nav-item");
     var vistas = document.querySelectorAll(".view");
     var reportCards = document.querySelectorAll(".report-card");
     var reportButtons = document.querySelectorAll(".report-card .btn-solid");
     var detalles = document.querySelectorAll(".reporte-detalle");
-    var btnVolver = document.getElementById("btn-volver");
-    var historialVistas = [];
 
     function pantallaActual() {
         var vistaVisible = document.querySelector(".view:not(.oculto)");
         return vistaVisible ? vistaVisible.id.replace("view-", "") : "matricula";
-    }
-
-    function actualizarBotonVolver() {
-        btnVolver.disabled = historialVistas.length === 0;
     }
 
     function mostrarPantalla(pantalla) {
@@ -441,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function() {
             boton.setAttribute("aria-expanded", "false");
         });
 
-        detalles.forEach(function(panel) {
+        function limpiarDetalleReporte(panel) {
             var error = panel.querySelector(".reporte-error");
             error.textContent = mensajeSinCoincidencias;
             error.classList.add("oculto");
@@ -450,14 +880,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 entrada.value = "";
                 entrada.classList.remove("is-invalid");
             });
-        });
+        }
 
         if (pantalla === "reportes") {
+            detalles.forEach(limpiarDetalleReporte);
             actualizarDashboard();
+            return;
         }
 
         if (!esReporte) {
             return;
+        }
+
+        var panelDetalle = document.getElementById("view-reporte-" + clave);
+        if (panelDetalle) {
+            limpiarDetalleReporte(panelDetalle);
         }
 
         var card = document.querySelector('.report-card[data-panel="' + clave + '"]');
@@ -471,10 +908,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (clave === "asistencia") {
-            var selectTipo = document.getElementById("tipo-asistencia");
-            var selectMes = document.getElementById("mes-asistencia");
-            if (selectTipo) { selectTipo.value = "diaria"; }
-            if (selectMes) { selectMes.value = "Marzo"; }
             renderizarAsistenciaActual();
             return;
         }
@@ -486,9 +919,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (pantalla === pantallaActual()) {
             return;
         }
-        historialVistas.push(pantallaActual());
         mostrarPantalla(pantalla);
-        actualizarBotonVolver();
     }
 
     navItems.forEach(function(item) {
@@ -503,40 +934,47 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    btnVolver.addEventListener("click", function() {
-        if (historialVistas.length === 0) {
-            return;
-        }
-        var anterior = historialVistas.pop();
-        mostrarPantalla(anterior);
-        actualizarBotonVolver();
-    });
-
     // --- REPORTES: búsqueda y registros ---
     var mensajeSinCoincidencias = "No se encontraron reportes que coincidan con la búsqueda.";
 
+    var estudiantesDemoBase = [
+        { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026", edad: "13 años", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
+        { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026", edad: "15 años", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
+        { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026", edad: "11 años", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
+        { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026", edad: "12 años", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
+        { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026", edad: "17 años", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
+        { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026", edad: "14 años", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
+    ];
+
     var configReportes = {
         matricula: {
-            datos: [
-                { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026" },
-                { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026" },
-                { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026" },
-                { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026" },
-                { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026" },
-                { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026" }
-            ],
+            datos: estudiantesDemoBase.map(function(estudiante) {
+                return {
+                    id: estudiante.id,
+                    nombres: estudiante.nombres,
+                    dni: estudiante.dni,
+                    grado: estudiante.grado,
+                    seccion: estudiante.seccion,
+                    fecha: estudiante.fecha
+                };
+            }),
             campos: ["id", "nombres", "dni", "grado", "seccion", "fecha"],
             columnas: ["ID", "Estudiante", "DNI", "Grado", "Sección", "Fecha"]
         },
         consolidado: {
-            datos: [
-                { id: "E-001", estudiante: "Ana Lucía Quispe", grado: "2º de secundaria", edad: "13 años", seccion: "B", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
-                { id: "E-002", estudiante: "Carlos Daniel Rojas", grado: "4º de secundaria", edad: "15 años", seccion: "A", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
-                { id: "E-003", estudiante: "María Fernanda Vargas", grado: "1º de secundaria", edad: "11 años", seccion: "A", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
-                { id: "E-004", estudiante: "Jorge Alberto Mendoza", grado: "2º de secundaria", edad: "12 años", seccion: "B", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
-                { id: "E-005", estudiante: "Sofía Isabel Campos", grado: "5º de secundaria", edad: "17 años", seccion: "A", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
-                { id: "E-006", estudiante: "Luis Enrique Paredes", grado: "3º de secundaria", edad: "14 años", seccion: "A", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
-            ],
+            datos: estudiantesDemoBase.map(function(estudiante) {
+                return {
+                    id: estudiante.id,
+                    estudiante: estudiante.nombres,
+                    grado: estudiante.grado,
+                    edad: estudiante.edad,
+                    seccion: estudiante.seccion,
+                    periodo: estudiante.periodo,
+                    promedio: estudiante.promedio,
+                    asistencia: estudiante.asistencia,
+                    conducta: estudiante.conducta
+                };
+            }),
             campos: ["id", "estudiante", "grado", "edad", "seccion", "periodo", "promedio", "asistencia", "conducta"],
             columnas: ["ID", "Estudiante", "Grado", "Edad", "Sección", "Periodo", "Promedio", "Asistencia", "Conducta"]
         },
@@ -796,7 +1234,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 error.classList.add("animation-shake");
                 return;
             }
-            descargarCSV("reporte-" + clave + ".csv", actual.columnas, actual.campos, actual.filas);
+            var fechaDescarga = new Date().toISOString().slice(0, 10);
+            descargarCSV("reporte-" + clave + "-" + fechaDescarga + ".csv", actual.columnas, actual.campos, actual.filas);
         });
     });
 
@@ -821,85 +1260,116 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // 2. Validaciones del formulario de matrícula (Estudiantes)
-    const formMatriculaValidacion = document.getElementById("matricula-form");
-    const cajaAlertaValidacion = document.getElementById("alerta");
+    var formMatriculaValidacion = document.getElementById("matricula-form");
+    var cajaAlertaValidacion = document.getElementById("alerta");
+    var dniEstudianteInput = document.getElementById("dni");
+
+    function mostrarAlertaMatricula(elemento, mensaje, tipo) {
+        if (!elemento) {
+            return;
+        }
+        elemento.textContent = mensaje;
+        elemento.classList.remove("oculto", "error", "exito");
+        elemento.classList.add(tipo);
+    }
+
+    function ocultarAlertaMatricula(elemento) {
+        if (!elemento) {
+            return;
+        }
+        elemento.classList.add("oculto");
+        elemento.classList.remove("error", "exito");
+    }
+
+    function limitarEntradaNumerica(elemento, maximo) {
+        if (!elemento) {
+            return;
+        }
+        elemento.addEventListener("input", function() {
+            elemento.value = elemento.value.replace(/\D/g, "").slice(0, maximo);
+        });
+    }
+
+    limitarEntradaNumerica(dniEstudianteInput, 8);
 
     if (formMatriculaValidacion) {
         formMatriculaValidacion.addEventListener("submit", function(evento) {
             evento.preventDefault();
-            
-            let dni = document.getElementById("dni").value;
-            let grado = document.getElementById("grado").value;
-            let seccion = document.getElementById("seccion").value;
+
+            var dni = document.getElementById("dni").value;
+            var grado = document.getElementById("grado").value;
+            var seccion = document.getElementById("seccion").value;
 
             if (dni.length !== 8) {
-                cajaAlertaValidacion.innerHTML = "Error: El DNI debe tener exactamente 8 números.";
-                cajaAlertaValidacion.className = "error"; 
-                cajaAlertaValidacion.classList.remove("oculto"); 
+                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: El DNI debe tener exactamente 8 números.", "error");
                 return;
             }
 
             if (seccion === "B" && grado !== "2") {
-                cajaAlertaValidacion.innerHTML = "Error: La sección B solo está disponible para 2º de secundaria.";
-                cajaAlertaValidacion.className = "error"; 
-                cajaAlertaValidacion.classList.remove("oculto"); 
+                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: La sección B solo está disponible para 2º de secundaria.", "error");
                 return;
             }
-            
-            cajaAlertaValidacion.innerHTML = "¡Estudiante matriculado correctamente!";
-            cajaAlertaValidacion.className = "exito"; 
-            cajaAlertaValidacion.classList.remove("oculto"); 
-            
+
+            mostrarAlertaMatricula(cajaAlertaValidacion, "¡Estudiante matriculado correctamente!", "exito");
+
             formMatriculaValidacion.reset();
             selectSeccion.value = "A";
-            selectSeccion.disabled = true; 
+            selectSeccion.disabled = true;
 
-            setTimeout(() => {
-                cajaAlertaValidacion.classList.add("oculto");
+            setTimeout(function() {
+                ocultarAlertaMatricula(cajaAlertaValidacion);
             }, 3000);
         });
     }
 
     // 3. Lógica para el Formulario de Apoderados y Tabla
-    const formApoderado = document.getElementById("apoderado-form");
-    const alertaApoderado = document.getElementById("alerta-apoderado");
-    const tablaRelaciones = document.getElementById("tabla-relaciones");
+    var formApoderado = document.getElementById("apoderado-form");
+    var alertaApoderado = document.getElementById("alerta-apoderado");
+    var tablaRelaciones = document.getElementById("tabla-relaciones");
+    var apoderados = [];
+
+    limitarEntradaNumerica(document.getElementById("ap_dni"), 8);
+    limitarEntradaNumerica(document.getElementById("ap_telefono"), 9);
+    limitarEntradaNumerica(document.getElementById("ap_estudiante"), 8);
 
     if (formApoderado) {
         formApoderado.addEventListener("submit", function(evento) {
             evento.preventDefault();
-            
-            let apNombres = document.getElementById("ap_nombres").value;
-            let apDni = document.getElementById("ap_dni").value;
-            let apEstudiante = document.getElementById("ap_estudiante").value;
+
+            var apNombres = document.getElementById("ap_nombres").value.trim();
+            var apDni = document.getElementById("ap_dni").value.trim();
+            var apEstudiante = document.getElementById("ap_estudiante").value.trim();
 
             if (apDni.length !== 8 || apEstudiante.length !== 8) {
-                alertaApoderado.innerHTML = "Error: Los DNI deben tener 8 números.";
-                alertaApoderado.className = "error";
-                alertaApoderado.classList.remove("oculto");
+                mostrarAlertaMatricula(alertaApoderado, "Error: Los DNI deben tener 8 números.", "error");
                 return;
             }
 
             if (tablaRelaciones.querySelector("td[colspan]")) {
-                tablaRelaciones.innerHTML = ""; 
+                tablaRelaciones.innerHTML = "";
             }
 
-            let fila = document.createElement("tr");
-            fila.innerHTML = `
-                <td>${apNombres}</td>
-                <td>${apDni}</td>
-                <td>${apEstudiante}</td>
-            `;
+            var apoderado = {
+                nombres: apNombres,
+                dni: apDni,
+                dniEstudiante: apEstudiante
+            };
+            apoderados.push(apoderado);
+
+            var fila = document.createElement("tr");
+            [apoderado.nombres, apoderado.dni, apoderado.dniEstudiante].forEach(function(valor) {
+                var celda = document.createElement("td");
+                celda.textContent = valor;
+                fila.appendChild(celda);
+            });
             tablaRelaciones.appendChild(fila);
 
-            alertaApoderado.innerHTML = "¡Apoderado registrado y asociado correctamente!";
-            alertaApoderado.className = "exito";
-            alertaApoderado.classList.remove("oculto");
+            mostrarAlertaMatricula(alertaApoderado, "¡Apoderado registrado y asociado correctamente!", "exito");
 
             formApoderado.reset();
 
-            setTimeout(() => {
-                alertaApoderado.classList.add("oculto");
+            setTimeout(function() {
+                ocultarAlertaMatricula(alertaApoderado);
             }, 3000);
         });
     }
