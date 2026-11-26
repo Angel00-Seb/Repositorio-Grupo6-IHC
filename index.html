@@ -252,201 +252,230 @@
                     <!-- ===== VIEW: CONTROL DE ASISTENCIA DOCENTE ===== -->
                     <section id="view-docentes" class="view oculto" aria-label="Control de asistencia docente" aria-hidden="true">
                         <div class="view-header">
-                            <h2 class="view-title">Control de Asistencia Docente</h2>
-                            <p class="view-subtitle">Registre docentes y controle su asistencia.</p>
+                            <h2 class="view-title">Control Docente</h2>
+                            <p class="view-subtitle">Gestione docentes, registre asistencias y consulte horarios.</p>
                         </div>
 
-                        <div class="docentes-contenido">
-                            <div class="docentes-panel">
-                                <h3>Registrar docente</h3>
-                                <form id="form-docente" class="docentes-form" novalidate>
-                                    <div class="input-group">
-                                        <label for="dni-docente">DNI (8 dígitos):</label>
-                                        <input type="text" id="dni-docente" pattern="[0-9]{8}" inputmode="numeric" autocomplete="off" required>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="nombre-docente">Nombres:</label>
-                                        <input type="text" id="nombre-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="given-name" required>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="apellido-docente">Apellidos:</label>
-                                        <input type="text" id="apellido-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="family-name" required>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="especialidad-docente">Especialidad:</label>
-                                        <input type="text" id="especialidad-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" required>
-                                    </div>
-                                    <button type="submit" class="btn-primario">Registrar docente</button>
-                                    <p id="mensaje-docente" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
-                                </form>
+                        <div class="docentes-vistas">
+                            <section class="docentes-inicio" data-docentes-panel="inicio" aria-labelledby="docentes-panel-titulo">
+                                <h3 id="docentes-panel-titulo">Panel principal</h3>
+                                <div class="docentes-accesos">
+                                    <button class="docentes-acceso" type="button" data-docentes-vista="docentes">
+                                        <strong>Docentes</strong><span>Consultar y registrar docentes</span>
+                                        <small id="total-docentes">0 docentes registrados</small>
+                                    </button>
+                                    <button class="docentes-acceso" type="button" data-docentes-vista="registro">
+                                        <strong>Asistencia</strong><span>Registrar ingreso, salida y estado</span>
+                                        <small>Registro y confirmación</small>
+                                    </button>
+                                    <button class="docentes-acceso" type="button" data-docentes-vista="horarios">
+                                        <strong>Horario</strong><span>Consultar por docente, grado y sección</span>
+                                        <small>Horario semanal</small>
+                                    </button>
+                                    <button class="docentes-acceso" type="button" data-docentes-vista="asistencias">
+                                        <strong>Registros</strong><span>Consultar, editar y descargar reportes</span>
+                                        <small id="total-asistencias">0 asistencias registradas</small>
+                                    </button>
+                                </div>
+                            </section>
 
-                                <div class="docentes-listado">
-                                    <h3>Catálogo de docentes</h3>
+                            <section class="docentes-vista oculto" data-docentes-panel="docentes" aria-labelledby="docentes-registro-titulo" aria-hidden="true">
+                                <div class="docentes-vista__encabezado">
+                                    <h3 id="docentes-registro-titulo">Gestión y consulta de docentes</h3>
+                                    <button class="btn-secundario" type="button" data-docentes-vista="inicio">Volver al panel</button>
+                                </div>
+                                <div class="docentes-contenido">
+                                    <div class="docentes-panel">
+                                        <h4>Registrar docente</h4>
+                                        <form id="form-docente" class="docentes-form" novalidate>
+                                            <div class="input-group">
+                                                <label for="dni-docente">DNI (8 dígitos):</label>
+                                                <input type="text" id="dni-docente" pattern="[0-9]{8}" inputmode="numeric" autocomplete="off" required>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="nombre-docente">Nombres:</label>
+                                                <input type="text" id="nombre-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="given-name" required>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="apellido-docente">Apellidos:</label>
+                                                <input type="text" id="apellido-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="family-name" required>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="especialidad-docente">Especialidad:</label>
+                                                <input type="text" id="especialidad-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" required>
+                                            </div>
+                                            <button type="submit" class="btn-primario">Registrar docente</button>
+                                            <p id="mensaje-docente" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
+                                        </form>
+                                    </div>
+                                    <div class="docentes-listado">
+                                        <h4>Catálogo de docentes</h4>
+                                        <div class="input-group docentes-filtro">
+                                            <label for="buscar-catalogo-docentes">Buscar por nombre, DNI o especialidad</label>
+                                            <input type="search" id="buscar-catalogo-docentes" placeholder="Escriba para filtrar">
+                                        </div>
+                                        <div class="registros">
+                                            <table class="tabla-registros docentes-tabla">
+                                                <thead><tr><th scope="col">DNI</th><th scope="col">Nombres</th><th scope="col">Apellidos</th><th scope="col">Especialidad</th></tr></thead>
+                                                <tbody id="lista-docentes"><tr><td colspan="4">Aún no hay docentes registrados.</td></tr></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="docentes-vista oculto" data-docentes-panel="registro" aria-labelledby="asistencia-registro-titulo" aria-hidden="true">
+                                <div class="docentes-vista__encabezado">
+                                    <h3 id="asistencia-registro-titulo">Registrar asistencia</h3>
+                                    <button class="btn-secundario" type="button" data-docentes-vista="inicio">Volver al panel</button>
+                                </div>
+                                <div class="docentes-panel docentes-formulario-panel">
+                                    <form id="form-asistencia" class="docentes-form" novalidate>
+                                        <div class="input-group docentes-busqueda docentes-campo-completo">
+                                            <label for="buscar-docente">Buscar docente por nombre o DNI:</label>
+                                            <div class="docentes-busqueda__controles">
+                                                <input type="search" id="buscar-docente" autocomplete="off" placeholder="Escriba un nombre o DNI">
+                                                <button id="buscar-docente-btn" class="btn-primario" type="button">Buscar docente</button>
+                                            </div>
+                                            <ul id="resultados-busqueda-docente" class="docentes-busqueda__resultados oculto" aria-label="Resultados de búsqueda" aria-live="polite"></ul>
+                                        </div>
+                                        <div class="input-group docentes-campo-completo">
+                                            <input type="hidden" id="docente-asistencia">
+                                            <div class="docentes-docente-seleccionado-fila">
+                                                <span class="input-group__label">Docente seleccionado:</span>
+                                                <p id="docente-asistencia-seleccionado" class="docentes-docente-seleccionado" role="status" aria-live="polite">No hay docente seleccionado</p>
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="fecha-asistencia">Fecha:</label>
+                                            <input type="date" id="fecha-asistencia" required>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="hora-asistencia">Hora de ingreso:</label>
+                                            <div class="docentes-hora">
+                                                <input type="text" id="hora-asistencia" value="07:00" inputmode="numeric" placeholder="HH:MM" aria-label="Hora de ingreso en formato de 12 horas" required>
+                                                <select id="periodo-asistencia" aria-label="Período de la hora de ingreso"><option value="AM" selected>a. m.</option><option value="PM">p. m.</option></select>
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="hora-salida">Hora de salida:</label>
+                                            <div class="docentes-hora">
+                                                <input type="text" id="hora-salida" inputmode="numeric" placeholder="HH:MM" aria-label="Hora de salida en formato de 12 horas">
+                                                <select id="periodo-salida" aria-label="Período de la hora de salida"><option value="AM">a. m.</option><option value="PM">p. m.</option></select>
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="estado-asistencia">Estado de asistencia:</label>
+                                            <select id="estado-asistencia" required>
+                                                <option value="" selected>Seleccione un estado...</option>
+                                                <option value="Asistencia">Asistencia</option>
+                                                <option value="Tardanza">Tardanza</option>
+                                                <option value="Falta justificada">Falta justificada</option>
+                                                <option value="Falta injustificada">Falta injustificada</option>
+                                            </select>
+                                        </div>
+                                        <div id="grupo-justificacion" class="input-group docentes-campo-completo oculto">
+                                            <label for="justificacion-asistencia">Motivo u observación:</label>
+                                            <textarea id="justificacion-asistencia" rows="3" placeholder="Indique el motivo de la falta"></textarea>
+                                        </div>
+                                        <div id="grupo-archivo-justificacion" class="input-group docentes-campo-completo oculto">
+                                            <label for="archivo-justificacion">Adjuntar documento o imagen (opcional):</label>
+                                            <button id="seleccionar-archivo-justificacion" class="btn-primario" type="button" aria-controls="archivo-justificacion">Seleccionar archivo</button>
+                                            <input type="file" id="archivo-justificacion" accept="image/*,.pdf,.doc,.docx,.odt,.rtf,.txt" hidden>
+                                            <p id="nombre-archivo-justificacion" role="status" aria-live="polite"></p>
+                                        </div>
+                                        <button id="guardar-asistencia" type="submit" class="btn-primario">Confirmar registro</button>
+                                        <button id="cancelar-edicion-asistencia" type="button" class="btn-secundario oculto">Cancelar edición</button>
+                                        <p id="mensaje-asistencia" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
+                                    </form>
+                                </div>
+                            </section>
+
+                            <section class="docentes-vista oculto" data-docentes-panel="asistencias" aria-labelledby="asistencias-listado-titulo" aria-hidden="true">
+                                <div class="docentes-vista__encabezado">
+                                    <h3 id="asistencias-listado-titulo">Asistencias registradas</h3>
+                                    <button class="btn-secundario" type="button" data-docentes-vista="inicio">Volver al panel</button>
+                                </div>
+                                <div class="docentes-listado docentes-asistencias">
+                                    <div class="docentes-filtros-asistencia">
+                                        <div class="input-group">
+                                            <label for="buscar-asistencias">Buscar docente o DNI</label>
+                                            <input type="search" id="buscar-asistencias" placeholder="Nombre o DNI">
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="filtrar-estado-asistencia">Filtrar por estado</label>
+                                            <select id="filtrar-estado-asistencia">
+                                                <option value="">Todos los estados</option>
+                                                <option value="Asistencia">Asistencia</option>
+                                                <option value="Tardanza">Tardanza</option>
+                                                <option value="Falta justificada">Falta justificada</option>
+                                                <option value="Falta injustificada">Falta injustificada</option>
+                                            </select>
+                                        </div>
+                                        <button id="descargar-reporte-docentes" class="btn-primario" type="button">Descargar reporte CSV</button>
+                                        <p id="mensaje-reporte-docentes" class="docentes-mensaje oculto" role="status" aria-live="polite"></p>
+                                    </div>
                                     <div class="registros">
                                         <table class="tabla-registros docentes-tabla">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">DNI</th>
-                                                    <th scope="col">Nombres</th>
-                                                    <th scope="col">Apellidos</th>
-                                                    <th scope="col">Especialidad</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="lista-docentes">
-                                                <tr>
-                                                    <td colspan="4">Aún no hay docentes registrados.</td>
-                                                </tr>
-                                            </tbody>
+                                            <thead><tr><th scope="col">Docente</th><th scope="col">DNI</th><th scope="col">Fecha</th><th scope="col">Hora de ingreso</th><th scope="col">Hora de salida</th><th scope="col">Estado</th><th scope="col">Justificación</th><th scope="col">Acciones</th></tr></thead>
+                                            <tbody id="lista-asistencias"><tr><td colspan="8">Aún no hay asistencias registradas.</td></tr></tbody>
                                         </table>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
 
-                            <div class="docentes-panel">
-                                <h3>Registrar asistencia</h3>
-                                <form id="form-asistencia" class="docentes-form" novalidate>
-                                    <div class="input-group docentes-busqueda docentes-campo-completo">
-                                    <label for="buscar-docente">Buscar docente por nombre o DNI:</label>
-                                    <div class="docentes-busqueda__controles">
-                                        <input type="search" id="buscar-docente" autocomplete="off" placeholder="Escriba un nombre o DNI">
-                                        <button id="buscar-docente-btn" class="btn-primario" type="button">Buscar docente</button>
+                            <section class="docentes-vista oculto" data-docentes-panel="horarios" aria-labelledby="horarios-docentes-titulo" aria-hidden="true">
+                                <div class="docentes-vista__encabezado">
+                                    <h3 id="horarios-docentes-titulo">Consultar horario</h3>
+                                    <button class="btn-secundario" type="button" data-docentes-vista="inicio">Volver al panel</button>
+                                </div>
+                                <div class="docentes-panel docentes-horarios">
+                                    <div class="docentes-horarios__filtros">
+                                        <div class="input-group">
+                                            <label for="grado-horario">Grado:</label>
+                                            <select id="grado-horario"><option value="">Seleccione un grado...</option><option value="1">Primer grado</option><option value="2">Segundo grado</option><option value="3">Tercer grado</option><option value="4">Cuarto grado</option><option value="5">Quinto grado</option></select>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="seccion-horario">Sección:</label>
+                                            <select id="seccion-horario" disabled><option value="">Seleccione primero un grado...</option></select>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="docente-horario">Consultar por docente:</label>
+                                            <select id="docente-horario"><option value="">Seleccione un docente...</option></select>
+                                        </div>
                                     </div>
-                                    <ul id="resultados-busqueda-docente" class="docentes-busqueda__resultados oculto" aria-label="Resultados de búsqueda" aria-live="polite"></ul>
+                                    <div id="datos-docente-horario" class="docentes-horarios__docente oculto" aria-live="polite">
+                                        <p><strong>Docente:</strong> <span id="nombre-docente-horario"></span></p>
+                                        <p><strong>DNI:</strong> <span id="dni-docente-horario"></span></p>
+                                        <p><strong>Especialidad o área:</strong> <span id="area-docente-horario"></span></p>
                                     </div>
-                                    <div class="input-group docentes-campo-completo">
-                                    <input type="hidden" id="docente-asistencia">
-                                    <div class="docentes-docente-seleccionado-fila">
-                                        <span class="input-group__label">Docente seleccionado:</span>
-                                        <p id="docente-asistencia-seleccionado" class="docentes-docente-seleccionado" role="status" aria-live="polite">No hay docente seleccionado</p>
-                                    </div>
-                                    </div>
-                                    <div class="input-group">
-                                    <label for="fecha-asistencia">Fecha:</label>
-                                    <input type="date" id="fecha-asistencia" required>
-                                    </div>
-                                    <div class="input-group">
-                                    <label for="hora-asistencia">Hora de ingreso:</label>
-                                    <div class="docentes-hora">
-                                        <input type="text" id="hora-asistencia" value="07:00" inputmode="numeric" placeholder="HH:MM" aria-label="Hora de ingreso en formato de 12 horas" required>
-                                        <select id="periodo-asistencia" aria-label="Período de la hora de ingreso">
-                                            <option value="AM" selected>a. m.</option>
-                                            <option value="PM">p. m.</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                    <div class="input-group">
-                                    <label for="hora-salida">Hora de salida:</label>
-                                    <div class="docentes-hora">
-                                        <input type="text" id="hora-salida" inputmode="numeric" placeholder="HH:MM" aria-label="Hora de salida en formato de 12 horas">
-                                        <select id="periodo-salida" aria-label="Período de la hora de salida">
-                                            <option value="AM">a. m.</option>
-                                            <option value="PM">p. m.</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                    <div class="input-group docentes-campo-completo">
-                                    <label for="estado-asistencia">Estado:</label>
-                                    <select id="estado-asistencia" required>
-                                        <option value="" selected>Seleccione un estado...</option>
-                                        <option value="Asistencia">Asistencia</option>
-                                        <option value="Tardanza">Tardanza</option>
-                                        <option value="Falta justificada">Falta justificada</option>
-                                        <option value="Falta injustificada">Falta injustificada</option>
-                                    </select>
-                                    </div>
-                                    <div id="grupo-justificacion" class="input-group docentes-campo-completo oculto">
-                                    <label for="justificacion-asistencia">Justificación:</label>
-                                    <textarea id="justificacion-asistencia" rows="3" placeholder="Indique el motivo de la falta"></textarea>
-                                    </div>
-                                    <div id="grupo-archivo-justificacion" class="input-group docentes-campo-completo oculto">
-                                    <label for="archivo-justificacion">Adjuntar documento o imagen (opcional):</label>
-                                    <button id="seleccionar-archivo-justificacion" class="btn-primario" type="button" aria-controls="archivo-justificacion">Seleccionar archivo</button>
-                                    <input type="file" id="archivo-justificacion" accept="image/*,.pdf,.doc,.docx,.odt,.rtf,.txt" hidden>
-                                    <p id="nombre-archivo-justificacion" role="status" aria-live="polite"></p>
-                                    </div>
-                                    <button id="guardar-asistencia" type="submit" class="btn-primario">Registrar asistencia</button>
-                                    <button id="cancelar-edicion-asistencia" type="button" class="btn-secundario oculto">Cancelar</button>
-                                    <p id="mensaje-asistencia" class="docentes-mensaje oculto" role="alert" aria-live="polite"></p>
-                                </form>
-                            </div>
-
-                            <div class="docentes-panel docentes-horarios">
-                                <h3>Consultar horarios de docentes</h3>
-                                <div class="docentes-horarios__filtros">
-                                    <div class="input-group">
-                                        <label for="grado-horario">Grado:</label>
-                                        <select id="grado-horario">
-                                            <option value="">Seleccione un grado...</option>
-                                            <option value="1">Primer grado</option>
-                                            <option value="2">Segundo grado</option>
-                                            <option value="3">Tercer grado</option>
-                                            <option value="4">Cuarto grado</option>
-                                            <option value="5">Quinto grado</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="seccion-horario">Sección:</label>
-                                        <select id="seccion-horario" disabled>
-                                            <option value="">Seleccione primero un grado...</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="docente-horario">Consultar por docente:</label>
-                                        <select id="docente-horario">
-                                            <option value="">Seleccione un docente...</option>
-                                        </select>
+                                    <p id="mensaje-horario-docente" class="docentes-mensaje" role="status" aria-live="polite">Seleccione un grado y sección o un docente.</p>
+                                    <div id="tabla-horario-docente-contenedor" class="registros oculto">
+                                        <table class="tabla-registros docentes-tabla">
+                                            <caption id="titulo-horario-docente"></caption>
+                                            <thead><tr><th scope="col">Día</th><th scope="col">Hora</th><th scope="col">Grado</th><th scope="col">Sección</th><th scope="col">Asignatura</th><th scope="col">Docente</th><th scope="col">DNI</th><th scope="col">Área</th></tr></thead>
+                                            <tbody id="tabla-horario-docente"></tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                <div id="datos-docente-horario" class="docentes-horarios__docente oculto" aria-live="polite">
-                                    <p><strong>Docente:</strong> <span id="nombre-docente-horario"></span></p>
-                                    <p><strong>DNI:</strong> <span id="dni-docente-horario"></span></p>
-                                    <p><strong>Especialidad o área:</strong> <span id="area-docente-horario"></span></p>
-                                </div>
-                                <p id="mensaje-horario-docente" class="docentes-mensaje" role="status" aria-live="polite">Seleccione un grado y sección o un docente.</p>
-                                <div id="tabla-horario-docente-contenedor" class="registros oculto">
-                                    <table class="tabla-registros docentes-tabla">
-                                        <caption id="titulo-horario-docente"></caption>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Día</th>
-                                                <th scope="col">Hora</th>
-                                                <th scope="col">Grado</th>
-                                                <th scope="col">Sección</th>
-                                                <th scope="col">Asignatura</th>
-                                                <th scope="col">Docente</th>
-                                                <th scope="col">DNI</th>
-                                                <th scope="col">Área</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabla-horario-docente"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                            </section>
 
-                        <div class="docentes-listado docentes-asistencias">
-                            <h3>Asistencias registradas</h3>
-                            <div class="registros">
-                                <table class="tabla-registros docentes-tabla">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Docente</th>
-                                            <th scope="col">DNI</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Hora de ingreso</th>
-                                            <th scope="col">Hora de salida</th>
-                                            <th scope="col">Estado</th>
-                                            <th scope="col">Justificación</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="lista-asistencias">
-                                        <tr>
-                                            <td colspan="8">Aún no hay asistencias registradas.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <section class="docentes-vista oculto" data-docentes-panel="confirmacion" aria-labelledby="confirmacion-asistencia-titulo" aria-hidden="true">
+                                <div class="docentes-confirmacion">
+                                    <span class="docentes-confirmacion__icono" aria-hidden="true">✓</span>
+                                    <h3 id="confirmacion-asistencia-titulo">Registro guardado correctamente</h3>
+                                    <dl class="docentes-confirmacion__datos">
+                                        <div><dt>Docente</dt><dd id="confirmacion-docente"></dd></div>
+                                        <div><dt>Fecha</dt><dd id="confirmacion-fecha"></dd></div>
+                                        <div><dt>Hora de ingreso</dt><dd id="confirmacion-hora"></dd></div>
+                                        <div><dt>Estado</dt><dd id="confirmacion-estado"></dd></div>
+                                    </dl>
+                                    <div class="docentes-confirmacion__acciones">
+                                        <button class="btn-primario" type="button" data-docentes-vista="asistencias">Ver registros</button>
+                                        <button class="btn-secundario" type="button" data-docentes-vista="inicio">Volver al panel</button>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
                     </section>
 
