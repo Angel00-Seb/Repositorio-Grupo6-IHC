@@ -30,8 +30,8 @@
                 <p>Sistema de Matrícula - Conchán</p>
             </div>
             <form id="login-form">
-                <div class="input-group"><label for="usuario">Usuario:</label><input type="text" id="usuario" placeholder="Ingrese su usuario" required></div>
-                <div class="input-group"><label for="password">Contraseña:</label><input type="password" id="password" placeholder="Ingrese su contraseña" required></div>
+                <div class="input-group"><label for="usuario">Usuario:</label><div class="login-field"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></svg><input type="text" id="usuario" placeholder="Ingrese su usuario" autocomplete="username" required></div></div>
+                <div class="input-group"><label for="password">Contraseña:</label><div class="login-field"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg><input type="password" id="password" placeholder="Ingrese su contraseña" autocomplete="current-password" required></div></div>
                 <button type="submit" class="btn-primario">Ingresar al Sistema</button>
                 <div class="demo-info"><strong>Prototipo de demostración.</strong><br>Usuario: <b>directora</b> <br> Contraseña: <b>demo2026</b></div>
                 <p id="login-error" class="error-msg oculto">Usuario o contraseña incorrectos.</p>
@@ -45,7 +45,7 @@
             <aside id="sidebar" class="sidebar" aria-label="Menú principal">
                 <div class="sidebar-header">
                     <div class="sidebar-user">
-                        <img src="assets/perfil.jpg" alt="" class="sidebar-user__avatar" width="44" height="44">
+                        <span class="sidebar-user__avatar" aria-hidden="true">IS</span>
                         <span class="sidebar-user__meta sidebar-label">
                             <span class="sidebar-user__name" id="nombre-usuario"></span>
                             <span class="sidebar-user__role" id="rol-usuario"></span>
