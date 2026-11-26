@@ -4,6 +4,27 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .docentes-accesos {
+    grid-template-columns: repeat(2, minmax(180px, 215px));
+    max-width: 450px;
+  }
+}
+
+@media (max-width: 800px) {
+  .docentes-contenido {
+    grid-template-columns: 1fr;
+  }
+
+  .docentes-filtros-asistencia {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .docentes-filtros-asistencia .btn-primario {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 600px) {
   html {
     scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom));
@@ -184,6 +205,39 @@
   .docentes-contenido {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+
+  .docentes-inicio {
+    min-height: 500px;
+    padding: 24px 16px;
+  }
+
+  .docentes-accesos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .docentes-filtros-asistencia,
+  .docentes-confirmacion__datos {
+    grid-template-columns: 1fr;
+  }
+
+  .docentes-acceso {
+    min-height: 160px;
+  }
+
+  .docentes-vista__encabezado {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .docentes-vista__encabezado .btn-secundario,
+  .docentes-filtros-asistencia .btn-primario,
+  .docentes-confirmacion__acciones button {
+    width: 100%;
+  }
+
+  .docentes-confirmacion__acciones {
+    flex-direction: column;
   }
 
   .docentes-panel,

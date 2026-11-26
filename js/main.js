@@ -147,6 +147,19 @@ document.addEventListener("DOMContentLoaded", function() {
     var nombreDocenteHorario = document.getElementById("nombre-docente-horario");
     var dniDocenteHorario = document.getElementById("dni-docente-horario");
     var areaDocenteHorario = document.getElementById("area-docente-horario");
+    var panelesDocentes = document.querySelectorAll("[data-docentes-panel]");
+    var buscarCatalogoDocentes = document.getElementById("buscar-catalogo-docentes");
+    var buscarAsistencias = document.getElementById("buscar-asistencias");
+    var filtrarEstadoAsistencia = document.getElementById("filtrar-estado-asistencia");
+    var botonDescargarReporteDocentes = document.getElementById("descargar-reporte-docentes");
+    var mensajeReporteDocentes = document.getElementById("mensaje-reporte-docentes");
+    var totalDocentes = document.getElementById("total-docentes");
+    var totalAsistencias = document.getElementById("total-asistencias");
+    var confirmacionDocente = document.getElementById("confirmacion-docente");
+    var confirmacionFecha = document.getElementById("confirmacion-fecha");
+    var confirmacionHora = document.getElementById("confirmacion-hora");
+    var confirmacionEstado = document.getElementById("confirmacion-estado");
+    var confirmacionTitulo = document.getElementById("confirmacion-asistencia-titulo");
     var camposTextoDocente = [
         { elemento: document.getElementById("nombre-docente"), etiqueta: "Nombres" },
         { elemento: document.getElementById("apellido-docente"), etiqueta: "Apellidos" },
@@ -188,6 +201,31 @@ document.addEventListener("DOMContentLoaded", function() {
         elemento.className = "docentes-mensaje oculto";
     }
 
+    function mostrarVistaDocentes(nombreVista, enfocar) {
+        var panelActivo = null;
+        panelesDocentes.forEach(function(panel) {
+            var visible = panel.getAttribute("data-docentes-panel") === nombreVista;
+            panel.classList.toggle("oculto", !visible);
+            panel.setAttribute("aria-hidden", visible ? "false" : "true");
+            if (visible) {
+                panelActivo = panel;
+            }
+        });
+        if (enfocar && panelActivo) {
+            var encabezado = panelActivo.querySelector("h3");
+            if (encabezado) {
+                encabezado.setAttribute("tabindex", "-1");
+                encabezado.focus();
+            }
+        }
+    }
+
+    document.querySelectorAll("[data-docentes-vista]").forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            mostrarVistaDocentes(boton.getAttribute("data-docentes-vista"), true);
+        });
+    });
+
     function validarTextoDocenteEnEntrada(event) {
         var campo = event.currentTarget;
         var campoConfig = camposTextoDocente.filter(function(config) {
@@ -218,18 +256,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function mostrarDocentes() {
         listaDocentes.textContent = "";
+        var termino = normalizar(buscarCatalogoDocentes.value.trim());
+        var docentesVisibles = docentes.filter(function(docente) {
+            return normalizar([
+                docente.dni,
+                docente.nombres,
+                docente.apellidos,
+                docente.especialidad
+            ].join(" ")).indexOf(termino) !== -1;
+        });
+        totalDocentes.textContent = docentes.length + (docentes.length === 1 ? " docente registrado" : " docentes registrados");
 
-        if (docentes.length === 0) {
+        if (docentesVisibles.length === 0) {
             var filaVacia = document.createElement("tr");
             var celdaVacia = document.createElement("td");
             celdaVacia.colSpan = 4;
-            celdaVacia.textContent = "Aún no hay docentes registrados.";
+            celdaVacia.textContent = docentes.length === 0
+                ? "Aún no hay docentes registrados."
+                : "No se encontraron docentes para esta búsqueda.";
             filaVacia.appendChild(celdaVacia);
             listaDocentes.appendChild(filaVacia);
             return;
         }
 
-        docentes.forEach(function(docente) {
+        docentesVisibles.forEach(function(docente) {
             var fila = document.createElement("tr");
             [docente.dni, docente.nombres, docente.apellidos, docente.especialidad].forEach(function(valor) {
                 var celda = document.createElement("td");
@@ -484,14 +534,35 @@ document.addEventListener("DOMContentLoaded", function() {
         return partes.length === 3 ? partes[2] + "/" + partes[1] + "/" + partes[0] : fecha;
     }
 
+    function mostrarConfirmacionAsistencia(registro, estabaEditando) {
+        confirmacionTitulo.textContent = estabaEditando
+            ? "Cambios guardados correctamente"
+            : "Registro guardado correctamente";
+        confirmacionDocente.textContent = registro.docente + " — DNI " + registro.dni;
+        confirmacionFecha.textContent = formatearFecha(registro.fecha);
+        confirmacionHora.textContent = formatearHora(registro.horaIngreso, registro.periodoIngreso);
+        confirmacionEstado.textContent = registro.estado;
+        mostrarVistaDocentes("confirmacion", false);
+    }
+
     function mostrarAsistencias() {
         listaAsistencias.textContent = "";
+        var termino = normalizar(buscarAsistencias.value.trim());
+        var estadoSeleccionado = filtrarEstadoAsistencia.value;
+        var asistenciasVisibles = asistencias.filter(function(asistencia) {
+            var coincideTexto = normalizar(asistencia.docente + " " + asistencia.dni).indexOf(termino) !== -1;
+            var coincideEstado = !estadoSeleccionado || asistencia.estado === estadoSeleccionado;
+            return coincideTexto && coincideEstado;
+        });
+        totalAsistencias.textContent = asistencias.length + (asistencias.length === 1 ? " asistencia registrada" : " asistencias registradas");
 
-        if (asistencias.length === 0) {
+        if (asistenciasVisibles.length === 0) {
             var filaVacia = document.createElement("tr");
             var celdaVacia = document.createElement("td");
             celdaVacia.colSpan = 8;
-            celdaVacia.textContent = "Aún no hay asistencias registradas.";
+            celdaVacia.textContent = asistencias.length === 0
+                ? "Aún no hay asistencias registradas."
+                : "No hay asistencias que coincidan con los filtros.";
             filaVacia.appendChild(celdaVacia);
             listaAsistencias.appendChild(filaVacia);
             return;
@@ -499,6 +570,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
         for (var i = asistencias.length - 1; i >= 0; i--) {
             var asistencia = asistencias[i];
+            if (asistenciasVisibles.indexOf(asistencia) === -1) {
+                continue;
+            }
             var fila = document.createElement("tr");
             [
                 asistencia.docente,
@@ -574,7 +648,7 @@ document.addEventListener("DOMContentLoaded", function() {
         buscarDocente.disabled = false;
         botonBuscarDocente.disabled = false;
         fechaAsistencia.disabled = false;
-        botonGuardarAsistencia.textContent = "Registrar asistencia";
+        botonGuardarAsistencia.textContent = "Confirmar registro";
         botonCancelarEdicionAsistencia.classList.add("oculto");
         establecerFechaHoraPredeterminada();
         actualizarCampoJustificacion();
@@ -615,6 +689,7 @@ document.addEventListener("DOMContentLoaded", function() {
         botonGuardarAsistencia.textContent = "Guardar cambios";
         botonCancelarEdicionAsistencia.classList.remove("oculto");
         limpiarMensaje(mensajeAsistencia);
+        mostrarVistaDocentes("registro", false);
         formularioAsistencia.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
@@ -702,11 +777,7 @@ document.addEventListener("DOMContentLoaded", function() {
         mostrarAsistencias();
         var estabaEditando = registroAnterior !== null;
         restablecerFormularioAsistencia();
-        mostrarMensaje(
-            mensajeAsistencia,
-            estabaEditando ? "Los cambios se guardaron correctamente." : "Asistencia registrada correctamente.",
-            "exito"
-        );
+        mostrarConfirmacionAsistencia(registro, estabaEditando);
     }
 
     dniDocente.addEventListener("input", function() {
@@ -783,6 +854,41 @@ document.addEventListener("DOMContentLoaded", function() {
         mostrarMensaje(mensajeDocente, "Docente registrado correctamente.", "exito");
     });
 
+    buscarCatalogoDocentes.addEventListener("input", mostrarDocentes);
+    buscarAsistencias.addEventListener("input", mostrarAsistencias);
+    filtrarEstadoAsistencia.addEventListener("change", mostrarAsistencias);
+    botonDescargarReporteDocentes.addEventListener("click", function() {
+        var termino = normalizar(buscarAsistencias.value.trim());
+        var estadoSeleccionado = filtrarEstadoAsistencia.value;
+        var registrosFiltrados = asistencias.filter(function(asistencia) {
+            return normalizar(asistencia.docente + " " + asistencia.dni).indexOf(termino) !== -1 &&
+                (!estadoSeleccionado || asistencia.estado === estadoSeleccionado);
+        });
+        if (registrosFiltrados.length === 0) {
+            mostrarMensaje(mensajeReporteDocentes, "No hay asistencias para incluir en el reporte.", "error");
+            return;
+        }
+        limpiarMensaje(mensajeReporteDocentes);
+        descargarCSV(
+            "reporte-asistencia-docente-" + fechaLocal(new Date()) + ".csv",
+            ["Docente", "DNI", "Fecha", "Hora de ingreso", "Hora de salida", "Estado", "Justificación"],
+            ["docente", "dni", "fecha", "horaIngreso", "horaSalida", "estado", "justificacion"],
+            registrosFiltrados.map(function(asistencia) {
+                return {
+                    docente: asistencia.docente,
+                    dni: asistencia.dni,
+                    fecha: formatearFecha(asistencia.fecha),
+                    horaIngreso: formatearHora(asistencia.horaIngreso, asistencia.periodoIngreso),
+                    horaSalida: asistencia.horaSalida
+                        ? formatearHora(asistencia.horaSalida, asistencia.periodoSalida)
+                        : "—",
+                    estado: asistencia.estado,
+                    justificacion: asistencia.justificacion || "—"
+                };
+            })
+        );
+    });
+
     botonBuscarDocente.addEventListener("click", buscarDocentesRegistrados);
     buscarDocente.addEventListener("input", function() {
         resultadosBusquedaDocente.textContent = "";
@@ -817,6 +923,7 @@ document.addEventListener("DOMContentLoaded", function() {
     establecerFechaHoraPredeterminada();
     actualizarCampoJustificacion();
     mostrarAsistencias();
+    mostrarVistaDocentes("inicio", false);
 
 
     // --- BARRA LATERAL ---
