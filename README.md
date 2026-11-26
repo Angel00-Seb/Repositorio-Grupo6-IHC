@@ -30,4 +30,4 @@ Reglas:
 
 > Nota: el registro de asistencia docente está en Docentes; la consulta del reporte de asistencia está en Reportes y usa datos de demostración independientes del registro.
 
-El resumen de Reportes usa seis matrículas de demostración y muestra el aforo de 30 estudiantes como referencia visual. El formulario de matrícula aún no incorpora sus registros a los reportes ni bloquea el aforo. La validación del DNI del estudiante comprueba la longitud, pero todavía debe restringir la entrada a ocho dígitos numéricos.
+El resumen de Reportes y el dashboard se calculan desde una fuente común de matrículas: se inician con seis registros de demostración y cada matrícula nueva se agrega a esa fuente (bloqueando DNI repetidos). El aforo de 30 estudiantes sigue siendo una referencia visual y aún no bloquea nuevas matrículas. El reporte Consolidado muestra Género en lugar de promedio, asistencia y conducta. El reporte de asistencia docente todavía usa datos de demostración separados del registro; su unificación queda pendiente de definición.

@@ -953,6 +953,45 @@ document.addEventListener("DOMContentLoaded", function() {
         var clave = esReporte ? pantalla.replace("reporte-", "") : "";
         var vistaBase = esReporte ? "reportes" : pantalla;
 
+        var headerLogo = document.getElementById("header-logo");
+        var headerModulo = document.getElementById("header-modulo");
+        var headerModuloIcono = document.getElementById("header-modulo-icono");
+        var headerModuloTitulo = document.getElementById("header-modulo-titulo");
+        var headerModuloSubtitulo = document.getElementById("header-modulo-subtitulo");
+        var titulosModulo = {
+            matricula: {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z" /><path d="M8 8h8M8 12h6M8 16h4" /></svg>',
+                titulo: "Matrícula del estudiante",
+                subtitulo: "Registre los datos del estudiante y apoderado para el proceso de matrícula."
+            },
+            docentes: {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>',
+                titulo: "Docentes",
+                subtitulo: "Módulo en construcción. Aquí va el contenido del equipo de Docentes."
+            },
+            reportes: {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3v18h18" /><rect x="7" y="10" width="3" height="8" /><rect x="12" y="6" width="3" height="12" /><rect x="17" y="13" width="3" height="5" /></svg>',
+                titulo: "Panel de Reportes",
+                subtitulo: "Consulta y analiza la información institucional."
+            }
+        };
+        var infoModulo = titulosModulo[vistaBase];
+        if (headerLogo && headerModulo && headerModuloIcono && headerModuloTitulo && headerModuloSubtitulo) {
+            if (infoModulo) {
+                headerLogo.classList.add("oculto");
+                headerModulo.classList.remove("oculto");
+                headerModuloIcono.innerHTML = infoModulo.icono;
+                headerModuloTitulo.textContent = infoModulo.titulo;
+                headerModuloSubtitulo.textContent = infoModulo.subtitulo;
+            } else {
+                headerLogo.classList.remove("oculto");
+                headerModulo.classList.add("oculto");
+                headerModuloIcono.innerHTML = "";
+                headerModuloTitulo.textContent = "";
+                headerModuloSubtitulo.textContent = "";
+            }
+        }
+
         navItems.forEach(function(nav) {
             var activa = nav.getAttribute("data-vista") === vistaBase;
             nav.classList.toggle("activo", activa);
@@ -1045,45 +1084,60 @@ document.addEventListener("DOMContentLoaded", function() {
     var mensajeSinCoincidencias = "No se encontraron reportes que coincidan con la búsqueda.";
 
     var estudiantesDemoBase = [
-        { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026", edad: "13 años", periodo: "2026 - I", promedio: "17.8", asistencia: "96%", conducta: "Excelente" },
-        { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026", edad: "15 años", periodo: "2026 - I", promedio: "15.4", asistencia: "88%", conducta: "Satisfactoria" },
-        { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026", edad: "11 años", periodo: "2026 - I", promedio: "18.5", asistencia: "98%", conducta: "Excelente" },
-        { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026", edad: "12 años", periodo: "2026 - I", promedio: "13.9", asistencia: "82%", conducta: "En proceso" },
-        { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026", edad: "17 años", periodo: "2026 - I", promedio: "16.7", asistencia: "94%", conducta: "Satisfactoria" },
-        { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026", edad: "14 años", periodo: "2026 - I", promedio: "14.6", asistencia: "90%", conducta: "En proceso" }
+        { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026", edad: "13 años", periodo: "2026 - I", genero: "Femenino" },
+        { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026", edad: "15 años", periodo: "2026 - I", genero: "Masculino" },
+        { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026", edad: "11 años", periodo: "2026 - I", genero: "Femenino" },
+        { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026", edad: "12 años", periodo: "2026 - I", genero: "Masculino" },
+        { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026", edad: "17 años", periodo: "2026 - I", genero: "Femenino" },
+        { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026", edad: "14 años", periodo: "2026 - I", genero: "Masculino" }
     ];
+
+    var matriculas = estudiantesDemoBase.map(function(estudiante) {
+        return Object.assign({}, estudiante);
+    });
+
+    function obtenerDatosReporteMatricula() {
+        return matriculas.map(function(estudiante) {
+            return {
+                id: estudiante.id,
+                nombres: estudiante.nombres,
+                dni: estudiante.dni,
+                grado: estudiante.grado,
+                seccion: estudiante.seccion,
+                fecha: estudiante.fecha
+            };
+        });
+    }
+
+    function obtenerDatosReporteConsolidado() {
+        return matriculas.map(function(estudiante) {
+            return {
+                id: estudiante.id,
+                estudiante: estudiante.nombres,
+                grado: estudiante.grado,
+                edad: estudiante.edad || "—",
+                seccion: estudiante.seccion,
+                periodo: estudiante.periodo || "2026 - I",
+                genero: estudiante.genero || "—"
+            };
+        });
+    }
+
+    function sincronizarReportesMatricula() {
+        configReportes.matricula.datos = obtenerDatosReporteMatricula();
+        configReportes.consolidado.datos = obtenerDatosReporteConsolidado();
+    }
 
     var configReportes = {
         matricula: {
-            datos: estudiantesDemoBase.map(function(estudiante) {
-                return {
-                    id: estudiante.id,
-                    nombres: estudiante.nombres,
-                    dni: estudiante.dni,
-                    grado: estudiante.grado,
-                    seccion: estudiante.seccion,
-                    fecha: estudiante.fecha
-                };
-            }),
+            datos: [],
             campos: ["id", "nombres", "dni", "grado", "seccion", "fecha"],
             columnas: ["ID", "Estudiante", "DNI", "Grado", "Sección", "Fecha"]
         },
         consolidado: {
-            datos: estudiantesDemoBase.map(function(estudiante) {
-                return {
-                    id: estudiante.id,
-                    estudiante: estudiante.nombres,
-                    grado: estudiante.grado,
-                    edad: estudiante.edad,
-                    seccion: estudiante.seccion,
-                    periodo: estudiante.periodo,
-                    promedio: estudiante.promedio,
-                    asistencia: estudiante.asistencia,
-                    conducta: estudiante.conducta
-                };
-            }),
-            campos: ["id", "estudiante", "grado", "edad", "seccion", "periodo", "promedio", "asistencia", "conducta"],
-            columnas: ["ID", "Estudiante", "Grado", "Edad", "Sección", "Periodo", "Promedio", "Asistencia", "Conducta"]
+            datos: [],
+            campos: ["id", "estudiante", "grado", "edad", "seccion", "periodo", "genero"],
+            columnas: ["ID", "Estudiante", "Grado", "Edad", "Sección", "Periodo", "Género"]
         },
         asistencia: {
             vistas: {
@@ -1110,52 +1164,110 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
+    sincronizarReportesMatricula();
+
     var datosActualesReporte = {
         matricula: { filas: [], columnas: [], campos: [] },
         consolidado: { filas: [], columnas: [], campos: [] },
         asistencia: { filas: [], columnas: [], campos: [] }
     };
     function actualizarDashboard() {
-        var matriculas = configReportes.matricula.datos;
         var aforo = 30;
-        var secciones = new Map();
+        var seccionesObjetivo = [
+            { etiqueta: "1°A", grado: "1º de secundaria", seccion: "A" },
+            { etiqueta: "2°A", grado: "2º de secundaria", seccion: "A" },
+            { etiqueta: "2°B", grado: "2º de secundaria", seccion: "B" },
+            { etiqueta: "3°A", grado: "3º de secundaria", seccion: "A" },
+            { etiqueta: "4°A", grado: "4º de secundaria", seccion: "A" },
+            { etiqueta: "5°A", grado: "5º de secundaria", seccion: "A" }
+        ];
 
-        matriculas.forEach(function(registro) {
-            var nombre = registro.grado + " · Sección " + registro.seccion;
-            secciones.set(nombre, (secciones.get(nombre) || 0) + 1);
+        var conteos = seccionesObjetivo.map(function(objetivo) {
+            var cantidad = matriculas.filter(function(estudiante) {
+                return estudiante.grado === objetivo.grado && estudiante.seccion === objetivo.seccion;
+            }).length;
+            return { etiqueta: objetivo.etiqueta, cantidad: cantidad };
         });
 
         var cifras = [
-            [matriculas.length, "Matrículas de ejemplo"],
-            [secciones.size, "Grados y secciones con registros"],
-            [aforo, "Aforo de referencia por sección"]
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>',
+                valor: String(matriculas.length),
+                texto: "Estudiantes matriculados"
+            },
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>',
+                valor: "10",
+                texto: "Docentes registrados"
+            },
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3h18v18H3z" /><path d="M9 3v18" /><path d="M15 12h2" /></svg>',
+                valor: "6",
+                texto: "Aulas disponibles"
+            },
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21h18" /><path d="M5 21V7l8-4 8 4v14" /><path d="M9 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v11H9z" /></svg>',
+                valor: "180",
+                texto: "Capacidad institucional"
+            }
         ];
         var contenedorCifras = document.getElementById("resumen-dashboard-cifras");
         contenedorCifras.replaceChildren();
         cifras.forEach(function(cifra) {
             var tarjeta = document.createElement("div");
             tarjeta.className = "resumen-dashboard__cifra";
+
+            var icono = document.createElement("div");
+            icono.className = "resumen-dashboard__cifra-icono";
+            icono.innerHTML = cifra.icono;
+
+            var divisor = document.createElement("span");
+            divisor.className = "resumen-dashboard__cifra-divisor";
+            divisor.setAttribute("aria-hidden", "true");
+
+            var info = document.createElement("div");
+            info.className = "resumen-dashboard__cifra-info";
+
             var valor = document.createElement("strong");
-            valor.textContent = cifra[0];
-            var descripcion = document.createElement("span");
-            descripcion.textContent = cifra[1];
-            tarjeta.append(valor, descripcion);
+            valor.textContent = cifra.valor;
+            var texto = document.createElement("span");
+            texto.textContent = cifra.texto;
+            info.append(valor, texto);
+
+            tarjeta.append(icono, divisor, info);
             contenedorCifras.appendChild(tarjeta);
         });
 
         var contenedorSecciones = document.getElementById("resumen-dashboard-secciones");
         contenedorSecciones.replaceChildren();
-        Array.from(secciones).sort(function(a, b) { return a[0].localeCompare(b[0], "es"); }).forEach(function(seccion) {
-            var fila = document.createElement("div");
-            fila.className = "resumen-dashboard__seccion";
+        conteos.forEach(function(item) {
+            var columna = document.createElement("div");
+            columna.className = "resumen-dashboard__seccion";
+            var descripcionBarra = item.etiqueta + ": " + item.cantidad + " de " + aforo + " estudiantes";
+            columna.setAttribute("role", "img");
+            columna.setAttribute("aria-label", descripcionBarra);
+
+            var valor = document.createElement("span");
+            valor.className = "resumen-dashboard__valor";
+            valor.textContent = item.cantidad;
+
+            var barra = document.createElement("div");
+            barra.className = "resumen-dashboard__barra";
+            barra.setAttribute("aria-hidden", "true");
+
+            var relleno = document.createElement("div");
+            relleno.className = "resumen-dashboard__relleno";
+            var porcentaje = Math.min((item.cantidad / aforo) * 100, 100);
+            relleno.style.height = porcentaje + "%";
+            barra.appendChild(relleno);
+
             var etiqueta = document.createElement("span");
-            etiqueta.textContent = seccion[0] + ": " + seccion[1] + " de " + aforo + " estudiantes";
-            var barra = document.createElement("progress");
-            barra.max = aforo;
-            barra.value = seccion[1];
-            barra.setAttribute("aria-label", etiqueta.textContent);
-            fila.append(etiqueta, barra);
-            contenedorSecciones.appendChild(fila);
+            etiqueta.className = "resumen-dashboard__etiqueta";
+            etiqueta.textContent = item.etiqueta;
+            etiqueta.setAttribute("aria-hidden", "true");
+
+            columna.append(valor, barra, etiqueta);
+            contenedorSecciones.appendChild(columna);
         });
     }
 
@@ -1326,6 +1438,12 @@ document.addEventListener("DOMContentLoaded", function() {
         URL.revokeObjectURL(url);
     }
 
+    document.querySelectorAll(".btn-volver-reportes").forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            irA("reportes");
+        });
+    });
+
     document.querySelectorAll(".btn-descargar").forEach(function(boton) {
         boton.addEventListener("click", function() {
             var clave = boton.getAttribute("data-reporte");
@@ -1403,7 +1521,10 @@ document.addEventListener("DOMContentLoaded", function() {
         formMatriculaValidacion.addEventListener("submit", function(evento) {
             evento.preventDefault();
 
-            var dni = document.getElementById("dni").value;
+            var nombres = document.getElementById("nombres").value.trim();
+            var apellidos = document.getElementById("apellidos").value.trim();
+            var dni = document.getElementById("dni").value.trim();
+            var genero = document.getElementById("genero").value;
             var grado = document.getElementById("grado").value;
             var seccion = document.getElementById("seccion").value;
 
@@ -1412,10 +1533,44 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
+            if (!genero) {
+                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: Seleccione el género del estudiante.", "error");
+                return;
+            }
+
             if (seccion === "B" && grado !== "2") {
                 mostrarAlertaMatricula(cajaAlertaValidacion, "Error: La sección B solo está disponible para 2º de secundaria.", "error");
                 return;
             }
+
+            var dniRepetido = matriculas.some(function(estudiante) {
+                return estudiante.dni === dni;
+            });
+            if (dniRepetido) {
+                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: Ya existe un estudiante matriculado con ese DNI.", "error");
+                return;
+            }
+
+            var numeroSecuencia = matriculas.length + 1;
+            var nuevoId = "E-" + String(numeroSecuencia).padStart(3, "0");
+            var hoy = new Date();
+            var fechaMatricula = fechaLocal(hoy);
+
+            matriculas.push({
+                id: nuevoId,
+                nombres: nombres,
+                apellidos: apellidos,
+                dni: dni,
+                genero: genero,
+                grado: grado,
+                seccion: seccion,
+                fecha: fechaMatricula.split("-").reverse().join("/"),
+                edad: "—",
+                periodo: "2026 - I"
+            });
+
+            sincronizarReportesMatricula();
+            actualizarDashboard();
 
             mostrarAlertaMatricula(cajaAlertaValidacion, "¡Estudiante matriculado correctamente!", "exito");
 
@@ -1449,6 +1604,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (apDni.length !== 8 || apEstudiante.length !== 8) {
                 mostrarAlertaMatricula(alertaApoderado, "Error: Los DNI deben tener 8 números.", "error");
+                return;
+            }
+
+            var estudianteAsociado = matriculas.some(function(estudiante) {
+                return estudiante.dni === apEstudiante;
+            });
+            if (!estudianteAsociado) {
+                mostrarAlertaMatricula(alertaApoderado, "Error: No existe un estudiante matriculado con ese DNI.", "error");
+                return;
+            }
+
+            var dniApoderadoRepetido = apoderados.some(function(apoderado) {
+                return apoderado.dni === apDni;
+            });
+            if (dniApoderadoRepetido) {
+                mostrarAlertaMatricula(alertaApoderado, "Error: Ya existe un apoderado registrado con ese DNI.", "error");
                 return;
             }
 

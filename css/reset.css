@@ -21,7 +21,7 @@ body {
 }
 
 .oculto {
-  display: none;
+  display: none !important;
 }
 
 /* Texto disponible para lectores de pantalla sin ocupar espacio visible */

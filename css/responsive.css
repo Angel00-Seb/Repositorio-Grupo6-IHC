@@ -88,6 +88,26 @@
     display: none;
   }
 
+  .header-modulo {
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .header-modulo__icono .icono {
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-modulo__titulo {
+    font-size: 13px;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .header-modulo__subtitulo {
+    display: none;
+  }
+
   .header-actions {
     justify-self: end;
     justify-content: flex-end;
@@ -369,6 +389,46 @@
 
   .report-grid {
     grid-template-columns: 1fr;
+  }
+
+  .resumen-dashboard__grafico {
+    grid-template-columns: auto 1fr;
+    gap: 6px;
+  }
+
+  .resumen-dashboard__eje-y {
+    height: 140px;
+    margin-bottom: calc(14px * 1.2 + 8px);
+    font-size: 12px;
+  }
+
+  .resumen-dashboard__secciones {
+    gap: 8px;
+  }
+
+  .resumen-dashboard__secciones::before {
+    top: calc(14px + 8px);
+    height: 140px;
+    box-sizing: border-box;
+    border-left: 1px solid color-mix(in srgb, var(--color-muted) 60%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-muted) 60%, transparent);
+    background: repeating-linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-muted) 22%, transparent) 0,
+      color-mix(in srgb, var(--color-muted) 22%, transparent) 1px,
+      transparent 1px,
+      transparent calc(140px / 6)
+    );
+  }
+
+  .resumen-dashboard__barra {
+    height: 140px;
+    max-width: 44px;
+  }
+
+  .resumen-dashboard__valor,
+  .resumen-dashboard__etiqueta {
+    font-size: 14px;
   }
 
   .reporte-detalle__encabezado {
