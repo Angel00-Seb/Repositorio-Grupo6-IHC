@@ -85,11 +85,19 @@
             <div class="dashboard-content">
                 <header class="content-header">
                     <div class="header-inicio">
-                        <div class="header-logo">
+                        <div id="header-logo" class="header-logo">
                             <img src="assets/logo.png" alt="Logo del colegio" class="logo-small">
                             <div class="header-brand">
                                 <span class="header-brand__name">I.E. José Carlos Mariátegui</span>
                                 <span class="header-brand__system">Sistema de Gestión Educativa</span>
+                            </div>
+                        </div>
+                        <div id="header-modulo" class="header-modulo oculto" aria-live="polite">
+                            <span id="header-modulo-icono" class="header-modulo__icono" aria-hidden="true"></span>
+                            <span class="header-modulo__divisor" aria-hidden="true"></span>
+                            <div class="header-modulo__info">
+                                <span id="header-modulo-titulo" class="header-modulo__titulo"></span>
+                                <span id="header-modulo-subtitulo" class="header-modulo__subtitulo"></span>
                             </div>
                         </div>
                     </div>
@@ -251,11 +259,6 @@
 
                     <!-- ===== VIEW: CONTROL DE ASISTENCIA DOCENTE ===== -->
                     <section id="view-docentes" class="view oculto" aria-label="Control de asistencia docente" aria-hidden="true">
-                        <div class="view-header">
-                            <h2 class="view-title">Control de Asistencia Docente</h2>
-                            <p class="view-subtitle">Registre docentes y controle su asistencia.</p>
-                        </div>
-
                         <div class="docentes-contenido">
                             <div class="docentes-panel">
                                 <h3>Registrar docente</h3>
@@ -453,22 +456,38 @@
 
                     <!-- ===== VIEW: REPORTES (menú de tarjetas) ===== -->
                     <section id="view-reportes" class="view oculto" aria-label="Menú reportes" aria-hidden="true">
-                        <h2 class="view-title">Panel de Reportes</h2>
-                        <p class="view-subtitle">Consulta y analiza la información institucional.</p>
-
-                        <section class="resumen-dashboard" aria-labelledby="resumen-dashboard-titulo">
-                            <h3 id="resumen-dashboard-titulo">Resumen de matrículas</h3>
-                            <p class="resumen-dashboard__nota">Datos de demostración. El límite de 30 estudiantes por sección es una referencia visual.</p>
-                            <div id="resumen-dashboard-cifras" class="resumen-dashboard__cifras"></div>
-                            <h4>Ocupación por grado y sección</h4>
-                            <div id="resumen-dashboard-secciones" class="resumen-dashboard__secciones"></div>
+                        <section class="resumen-dashboard" aria-label="Resumen de matrículas">
+                            <div class="resumen-dashboard__panel">
+                                <div id="resumen-dashboard-cifras" class="resumen-dashboard__cifras"></div>
+                                <div class="resumen-dashboard__panel-encabezado">
+                                    <h4 class="resumen-dashboard__panel-titulo">Distribución de Estudiantes por Aula</h4>
+                                    <div class="resumen-dashboard__leyenda" aria-label="Leyenda del gráfico">
+                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--estudiantes" aria-hidden="true"></span>Estudiantes</span>
+                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--capacidad" aria-hidden="true"></span>Capacidad</span>
+                                    </div>
+                                </div>
+                                <div class="resumen-dashboard__grafico">
+                                    <div class="resumen-dashboard__eje-y" aria-hidden="true">
+                                        <span>30</span><span>25</span><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span>
+                                    </div>
+                                    <div id="resumen-dashboard-secciones" class="resumen-dashboard__secciones"></div>
+                                </div>
+                            </div>
                         </section>
+
+                        <div class="reportes-disponibles">
+                            <div class="reportes-disponibles__encabezado">
+                                <h3 class="reportes-disponibles__titulo">Reportes Disponibles</h3>
+                                <span class="reportes-disponibles__linea" aria-hidden="true"></span>
+                            </div>
+                        </div>
 
                         <div class="report-grid">
                             <div class="card w-100 mb-3 report-card" data-panel="matricula">
                                 <div class="card-body">
                                     <div class="report-card__content">
                                         <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><path d="M9 12h6M9 16h6" /></svg>
+                                        <span class="report-card__divider" aria-hidden="true"></span>
                                         <div class="report-card__text"><h4 class="card-title report-card__title">Reporte de Matrícula</h4><p class="card-text report-card__desc">Consulta la cantidad de estudiantes matriculados en la institución educativa.</p></div>
                                     </div>
                                     <a href="#" class="btn-solid theme-primary" data-panel="matricula" aria-controls="view-reporte-matricula" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
@@ -478,6 +497,7 @@
                                 <div class="card-body">
                                     <div class="report-card__content">
                                         <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3v18h18" /><rect x="7" y="13" width="3" height="5" /><rect x="12" y="9" width="3" height="9" /><rect x="17" y="5" width="3" height="13" /></svg>
+                                        <span class="report-card__divider" aria-hidden="true"></span>
                                         <div class="report-card__text"><h4 class="card-title report-card__title">Consolidado de Estudiantes</h4><p class="card-text report-card__desc">Visualiza la información general y la distribución de los estudiantes de la institución.</p></div>
                                     </div>
                                     <a href="#" class="btn-solid theme-primary" data-panel="consolidado" aria-controls="view-reporte-consolidado" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
@@ -487,6 +507,7 @@
                                 <div class="card-body">
                                     <div class="report-card__content">
                                         <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M9 16l2 2 4-4" /></svg>
+                                        <span class="report-card__divider" aria-hidden="true"></span>
                                         <div class="report-card__text"><h4 class="card-title report-card__title">Asistencia Docente</h4><p class="card-text report-card__desc">Consulta y supervisa el registro de asistencia del personal docente.</p></div>
                                     </div>
                                     <a href="#" class="btn-solid theme-primary" data-panel="asistencia" aria-controls="view-reporte-asistencia" aria-expanded="false" aria-pressed="false" role="button">Consultar reporte</a>
@@ -498,7 +519,10 @@
                     <!-- VISTAS DE DETALLE DE REPORTES -->
                     <section id="view-reporte-matricula" class="view oculto reporte-detalle" aria-label="Reporte de matrícula" aria-hidden="true">
                         <div class="reporte-detalle__encabezado">
-                            <h3 class="reporte-detalle__titulo">Reporte de matrícula</h3>
+                            <div class="reporte-detalle__titulo-grupo">
+                                <button type="button" class="btn-volver-reportes" aria-label="Volver a reportes"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg></button>
+                                <h3 class="reporte-detalle__titulo">Reporte de matrícula</h3>
+                            </div>
                             <button type="button" class="btn-descargar" data-reporte="matricula"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M7 10l5 5 5-5" /><path d="M12 15V3" /></svg><span>Descargar datos</span></button>
                         </div>
                         <form class="busqueda-form" data-busqueda="matricula" role="search">
@@ -512,7 +536,10 @@
 
                     <section id="view-reporte-consolidado" class="view oculto reporte-detalle" aria-label="Consolidado de estudiantes" aria-hidden="true">
                         <div class="reporte-detalle__encabezado">
-                            <h3 class="reporte-detalle__titulo">Consolidado de estudiantes</h3>
+                            <div class="reporte-detalle__titulo-grupo">
+                                <button type="button" class="btn-volver-reportes" aria-label="Volver a reportes"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg></button>
+                                <h3 class="reporte-detalle__titulo">Consolidado de estudiantes</h3>
+                            </div>
                             <button type="button" class="btn-descargar" data-reporte="consolidado"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M7 10l5 5 5-5" /><path d="M12 15V3" /></svg><span>Descargar datos</span></button>
                         </div>
                         <form class="busqueda-form" data-busqueda="consolidado" role="search">
@@ -526,7 +553,10 @@
 
                     <section id="view-reporte-asistencia" class="view oculto reporte-detalle" aria-label="Asistencia docente" aria-hidden="true">
                         <div class="reporte-detalle__encabezado">
-                            <h3 class="reporte-detalle__titulo">Asistencia docente</h3>
+                            <div class="reporte-detalle__titulo-grupo">
+                                <button type="button" class="btn-volver-reportes" aria-label="Volver a reportes"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg></button>
+                                <h3 class="reporte-detalle__titulo">Asistencia docente</h3>
+                            </div>
                             <button type="button" class="btn-descargar" data-reporte="asistencia"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M7 10l5 5 5-5" /><path d="M12 15V3" /></svg><span>Descargar datos</span></button>
                         </div>
                         <div class="busqueda-form" role="search">
