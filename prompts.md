@@ -22,6 +22,12 @@ Usa los estilos que ya tenemos en skills/reglas y haz que se vea bien en celular
 
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los reportes siguen usando datos de demostración y el formulario de matrícula todavía no actualiza estas cifras.
 
+## Login — Codex
+
+**Prompt 4.0**
+
+Agrega iconos sencillos a los campos de usuario y contraseña del login siguiendo la guía de estilos conserva las etiquetas de texto para que se entienda también con lector de pantalla y no cambies el carrusel que ya funciona
+
 ## Página principal — Codex
 
 **Prompt 4.1**
@@ -67,5 +73,9 @@ El calendario quedó muy pegado al nombre del colegio y sobra espacio a la derec
 **Prompt 4.11**
 
 En el celular el año académico sigue bajando debajo del logo haz que el nombre del colegio el calendario con el año y el modo oscuro entren en una sola fila incluso en pantallas pequeñas sin que se corte nada
+
+**Prompt 4.12**
+
+En el menú de Inicio volvió a salir una foto de gato para la directora cambia esa imagen por sus iniciales sin tocar la navegación ni el menú inferior
 
 **Archivos:** `index.html`, `js/main.js`, `css/components.css` y `css/responsive.css`. Los accesos usan las vistas ya implementadas; no se modifica el formulario de inicio de sesión ni se crea otro carrusel.
