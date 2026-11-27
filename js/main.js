@@ -1132,6 +1132,35 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- NAVEGACIÓN ENTRE VISTAS ---
     var navItems = document.querySelectorAll(".nav-item[data-vista]");
     var vistas = document.querySelectorAll(".view");
+
+    // Única fuente de iconos: barra lateral, cabecera y tarjetas de «Módulos del sistema».
+    var ICONOS_MODULO = {
+        inicio: "bi-house-door",
+        matricula: "bi-people",
+        docentes: "bi-mortarboard",
+        reportes: "bi-bar-chart"
+    };
+
+    function sincronizarIconosModulo() {
+        navItems.forEach(function(nav) {
+            var icono = nav.querySelector(".bi-icono");
+            var clase = ICONOS_MODULO[nav.getAttribute("data-vista")];
+            if (icono && clase) {
+                icono.className = "bi " + clase + " bi-icono";
+            }
+        });
+
+        document.querySelectorAll(".report-card--modulo[data-home-vista]").forEach(function(tarjeta) {
+            var icono = tarjeta.querySelector(".report-card__icon");
+            var clase = ICONOS_MODULO[tarjeta.getAttribute("data-home-vista")];
+            if (icono && clase) {
+                icono.className = "bi " + clase + " report-card__icon";
+            }
+        });
+    }
+
+    sincronizarIconosModulo();
+
     // Solo las tarjetas de reportes (con data-panel) abren un detalle. Las
     // tarjetas de «Módulos del sistema» también usan .report-card/.btn-solid
     // pero navegan con data-home-vista y no deben caer en este listener.
@@ -1160,19 +1189,19 @@ document.addEventListener("DOMContentLoaded", function() {
         var headerModuloSubtitulo = document.getElementById("header-modulo-subtitulo");
         var titulosModulo = {
             matricula: {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z" /><path d="M8 8h8M8 12h6M8 16h4" /></svg>',
-                titulo: "Matrícula del estudiante",
-                subtitulo: "Registre los datos del estudiante y apoderado para el proceso de matrícula."
+                icono: '<i class="bi ' + ICONOS_MODULO.matricula + ' bi-icono" aria-hidden="true"></i>',
+                titulo: "Módulo de Matrícula",
+                subtitulo: "Registrar estudiantes, consultar matrículas y gestionar información."
             },
             docentes: {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>',
-                titulo: "Docentes",
-                subtitulo: "Registre docentes, controle su asistencia y consulte los horarios."
+                icono: '<i class="bi ' + ICONOS_MODULO.docentes + ' bi-icono" aria-hidden="true"></i>',
+                titulo: "Módulo de Docentes",
+                subtitulo: "Registrar docentes, controlar asistencia y consultar horarios."
             },
             reportes: {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3v18h18" /><rect x="7" y="10" width="3" height="8" /><rect x="12" y="6" width="3" height="12" /><rect x="17" y="13" width="3" height="5" /></svg>',
-                titulo: "Panel de Reportes",
-                subtitulo: "Consulta y analiza la información institucional."
+                icono: '<i class="bi ' + ICONOS_MODULO.reportes + ' bi-icono" aria-hidden="true"></i>',
+                titulo: "Módulo de Reportes",
+                subtitulo: "Consultar reportes de matrícula, consolidado de estudiantes y asistencia docente."
             }
         };
         var infoModulo = titulosModulo[vistaBase];
@@ -1551,29 +1580,29 @@ document.addEventListener("DOMContentLoaded", function() {
         var cuerpo = document.createElement("div");
         cuerpo.className = "card-body";
 
-        var encabezado = document.createElement("div");
-        encabezado.className = "d-flex justify-content-between align-items-start gap-2";
+        var cifra = document.createElement("div");
+        cifra.className = "inicio-kpi__cifra";
 
-        var valor = document.createElement("strong");
-        valor.className = "inicio-kpi__valor";
-        valor.textContent = datos.valor;
-
-        var icono = document.createElement("span");
-        icono.className = "inicio-kpi__icono";
-        icono.setAttribute("aria-hidden", "true");
+        var icono = document.createElement("div");
+        icono.className = "resumen-dashboard__cifra-icono";
         icono.innerHTML = datos.icono;
 
-        encabezado.append(valor, icono);
+        var divisor = document.createElement("span");
+        divisor.className = "resumen-dashboard__cifra-divisor";
+        divisor.setAttribute("aria-hidden", "true");
 
-        var texto = document.createElement("p");
-        texto.className = "inicio-kpi__texto mb-1";
+        var info = document.createElement("div");
+        info.className = "resumen-dashboard__cifra-info";
+
+        var valor = document.createElement("strong");
+        valor.textContent = datos.valor;
+
+        var texto = document.createElement("span");
         texto.textContent = datos.texto;
 
-        var detalle = document.createElement("span");
-        detalle.className = "inicio-kpi__detalle";
-        detalle.textContent = datos.detalle;
-
-        cuerpo.append(encabezado, texto, detalle);
+        info.append(valor, texto);
+        cifra.append(icono, divisor, info);
+        cuerpo.appendChild(cifra);
         tarjeta.appendChild(cuerpo);
         columna.appendChild(tarjeta);
         return columna;
@@ -1587,33 +1616,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var datosAulas = obtenerConteoAulasDashboard();
         var totalAulas = datosAulas.secciones.length;
-        var aulasActivas = datosAulas.conteos.filter(function(item) { return item.cantidad > 0; }).length;
         var ocupacion = totalAulas ? Math.round((matriculas.length / (datosAulas.aforo * totalAulas)) * 100) : 0;
-        var especialidades = docentes.map(function(docente) { return docente.especialidad; }).filter(function(especialidad, indice, lista) {
-            return Boolean(especialidad) && lista.indexOf(especialidad) === indice;
-        }).length;
 
         var kpis = [
             {
-                clave: "ocean",
+                clave: "heading",
                 valor: String(matriculas.length),
                 texto: "Estudiantes matriculados",
-                detalle: "Año académico 2026",
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>'
+                icono: '<i class="bi bi-person-badge bi-icono" aria-hidden="true"></i>'
             },
             {
-                clave: "turquoise",
+                clave: "accent",
                 valor: String(docentes.length),
                 texto: "Docentes registrados",
-                detalle: especialidades + " especialidades",
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" /><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" /></svg>'
+                icono: '<i class="bi bi-person-check bi-icono" aria-hidden="true"></i>'
             },
             {
-                clave: "magenta",
+                clave: "heading",
                 valor: ocupacion + "%",
                 texto: "Ocupación de aulas",
-                detalle: aulasActivas + " de " + totalAulas + " aulas activas",
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21h18" /><path d="M5 21V7l8-4 8 4v14" /><path d="M9 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v11H9z" /></svg>'
+                icono: '<i class="bi bi-speedometer2 bi-icono" aria-hidden="true"></i>'
             }
         ];
 
@@ -1678,44 +1700,45 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function renderizarBarrasGradoInicio() {
-        var contenedor = document.getElementById("inicio-barras-grado");
+    function renderizarGraficoGradoAulaInicio() {
+        var contenedor = document.getElementById("inicio-barras-grado-aula");
         if (!contenedor) {
             return;
         }
 
+        var datosAulas = obtenerConteoAulasDashboard();
+        var aforo = datosAulas.aforo;
         var total = matriculas.length;
         contenedor.replaceChildren();
-        for (var grado = 1; grado <= 5; grado++) {
-            var cantidad = matriculas.filter(function(estudiante) {
-                return Number.parseInt(estudiante.grado, 10) === grado;
-            }).length;
-            var porcentaje = total ? Math.round((cantidad / total) * 100) : 0;
-            var etiqueta = etiquetaGrado(String(grado));
 
-            var fila = document.createElement("div");
-            fila.className = "inicio-barra";
+        datosAulas.conteos.forEach(function(item) {
+            var porcentaje = total ? Math.round((item.cantidad / total) * 100) : 0;
+            var columna = document.createElement("div");
+            columna.className = "resumen-dashboard__seccion";
+            columna.setAttribute("role", "img");
+            columna.setAttribute("aria-label", item.etiqueta + ": " + item.cantidad + " de " + aforo + " estudiantes, " + porcentaje + "% del total");
 
-            var meta = document.createElement("div");
-            meta.className = "inicio-barra__meta";
-            var nombre = document.createElement("span");
-            nombre.textContent = etiqueta;
-            var valor = document.createElement("strong");
-            valor.textContent = cantidad + " (" + porcentaje + "%)";
-            meta.append(nombre, valor);
+            var valor = document.createElement("span");
+            valor.className = "resumen-dashboard__valor";
+            valor.textContent = item.cantidad + " (" + porcentaje + "%)";
 
-            var pista = document.createElement("div");
-            pista.className = "progress inicio-barra__pista";
-            pista.setAttribute("role", "img");
-            pista.setAttribute("aria-label", etiqueta + ": " + cantidad + " estudiantes, " + porcentaje + "% del total");
+            var barra = document.createElement("div");
+            barra.className = "resumen-dashboard__barra";
+            barra.setAttribute("aria-hidden", "true");
+
             var relleno = document.createElement("div");
-            relleno.className = "progress-bar inicio-barra__relleno inicio-barra__relleno--" + grado;
-            relleno.style.width = porcentaje + "%";
-            pista.appendChild(relleno);
+            relleno.className = "resumen-dashboard__relleno";
+            relleno.style.height = Math.min((item.cantidad / aforo) * 100, 100) + "%";
+            barra.appendChild(relleno);
 
-            fila.append(meta, pista);
-            contenedor.appendChild(fila);
-        }
+            var etiqueta = document.createElement("span");
+            etiqueta.className = "resumen-dashboard__etiqueta";
+            etiqueta.textContent = item.etiqueta;
+            etiqueta.setAttribute("aria-hidden", "true");
+
+            columna.append(valor, barra, etiqueta);
+            contenedor.appendChild(columna);
+        });
     }
 
     function renderizarAsistenciaInicio() {
@@ -1774,11 +1797,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }).format(new Date());
         }
 
-        var datosAulas = obtenerConteoAulasDashboard();
         actualizarKpisInicio();
-        renderizarGraficoAulas("inicio-grafico-aulas", datosAulas.conteos, datosAulas.aforo);
+        renderizarGraficoGradoAulaInicio();
         renderizarDonaGeneroInicio();
-        renderizarBarrasGradoInicio();
         renderizarAsistenciaInicio();
     }
 

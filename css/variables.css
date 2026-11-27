@@ -29,6 +29,7 @@
   --color-on-accent: #1B211D; /* texto sobre fondo naranja/acento */
   --color-action: #1E5A3C; /* fondo de botones, no cambia con el tema */
   --color-ink: #1B211D; /* fondo oscuro fijo, no cambia con el tema */
+  --color-kpi-verde: var(--color-pine); /* verde pino: franja y contorno del KPI */
 
   /* Tipografía */
   --font-heading: "Open Sans", sans-serif;
@@ -54,6 +55,7 @@
   --page-gutter: 24px;
   --sidebar-width: 240px;
   --sidebar-collapsed: 76px;
+  --header-altura: 78px; /* alinea la línea de la cabecera con la del sidebar */
 
   /* Radios y sombras (con colores de la guía) */
   --radius: 8px;
@@ -100,4 +102,5 @@
   --color-sidebar: #123D27; /* el sidebar se mantiene pino */
   --color-matricula-surface: #EDF2C8;
   --color-matricula-text: #1B211D;
+  --color-kpi-verde: var(--color-heading); /* se mantiene claro sobre fondo oscuro */
 }
