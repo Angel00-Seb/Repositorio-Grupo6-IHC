@@ -66,6 +66,16 @@
   --accessibility-filter: none;
   --color-matricula-surface: var(--color-surface);
   --color-matricula-text: var(--color-text);
+
+  /* Módulo Docentes: tarjeta marfil, panel/encabezados verde claro y aulas pastel */
+  --color-marfil-tarjeta: #F6F4EE;
+  --color-tabla-claro: #E7F1E3;
+  --color-aula-1: #BFE3F5;
+  --color-aula-2: #FCE7A8;
+  --color-aula-3: #BFEAD9;
+  --color-aula-4: #F1D4E4;
+  --color-aula-5: #F7CFC0;
+  --color-aula-6: #DCD2EA;
 }
 
 /* ============================================================

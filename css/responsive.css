@@ -211,31 +211,62 @@
     width: 100%;
   }
 
-  .docentes-contenido {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .docentes-panel,
   .docentes-listado {
     padding: 16px;
-  }
-
-  .docentes-panel .docentes-listado {
-    padding: 0;
   }
 
   .docentes-form {
     grid-template-columns: 1fr;
   }
 
-  .docentes-horarios__filtros {
+  .docentes-horarios__busqueda {
     grid-template-columns: 1fr;
-    gap: 0;
+    gap: 16px;
   }
 
-  .docentes-horarios__docente {
-    grid-template-columns: 1fr;
+  .docentes-horarios__busqueda-columna {
+    align-self: stretch;
+  }
+
+  .horario-matriz {
+    min-width: 620px;
+  }
+
+  .horario-matriz td,
+  .horario-matriz th {
+    padding: 6px 4px;
+  }
+
+  .docentes-tabs {
+    padding: 0 10px;
+  }
+
+  .docentes-tab {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .docentes-tabs-paneles {
+    padding: 14px;
+  }
+
+  .docentes-pane-cuerpo {
+    padding: 14px;
+  }
+
+  .docentes-pane-cabecera h3 {
+    font-size: var(--font-size-min);
+  }
+
+  .dialog {
+    width: calc(100% - 16px);
+    max-height: calc(100% - 16px);
+  }
+
+  .dialog-body,
+  .dialog-header,
+  .dialog-footer {
+    padding: 14px;
   }
 
   .docentes-form .btn-primario,
