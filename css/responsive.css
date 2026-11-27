@@ -181,6 +181,36 @@
     padding: 16px;
   }
 
+  .matricula-form-grid,
+  .matricula-filtros {
+    grid-template-columns: 1fr;
+  }
+
+  .matricula-form-grid {
+    column-gap: 0;
+  }
+
+  .matricula-dni-control {
+    gap: 6px;
+  }
+
+  .matricula-module .matricula-reniec {
+    padding-inline: 7px;
+  }
+
+  .matricula-lista__encabezado {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .reporte-detalle {
+    padding: 14px;
+  }
+
+  .matricula-siagie {
+    width: 100%;
+  }
+
   .docentes-contenido {
     grid-template-columns: 1fr;
     gap: 16px;

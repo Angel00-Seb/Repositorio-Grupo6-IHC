@@ -15,7 +15,7 @@ Todo el HTML vive en `index.html`. **No se crean archivos HTML por módulo** mie
 | Login | `login-section` | — | `index.html` + `js/main.js` → `// --- LOGIN ---` |
 | Menú principal | `main-section` | — | `index.html` (sidebar y cabecera) |
 | Inicio | `view-inicio` | `inicio` | `index.html` (carrusel y accesos) + `js/main.js` → `// --- CARRUSEL ---` y navegación entre vistas |
-| Matrícula | `view-matricula` | `matricula` | `index.html` (formulario) + `js/main.js` → `// --- LÓGICA FINAL DE MATRÍCULA Y APODERADOS ---` |
+| Matrícula | `view-matricula` | `matricula` | `index.html` (formularios, listados y asociaciones) + `js/main.js` → `// --- REGISTRO Y ASOCIACIÓN DE MATRÍCULA ---` |
 | Docentes | `view-docentes` | `docentes` | `index.html` (formularios y tablas) + `js/main.js` → `// --- CONTROL DE ASISTENCIA DOCENTE ---` |
 | Reportes | `view-reportes` | `reportes` | `index.html` (reportes y dashboard) + `js/main.js` → `// --- REPORTES: búsqueda y registros ---` |
 
@@ -30,4 +30,4 @@ Reglas:
 
 > Nota: el registro de asistencia docente está en Docentes; la consulta del reporte de asistencia está en Reportes y usa datos de demostración independientes del registro.
 
-El resumen de Reportes y el dashboard se calculan desde una fuente común de matrículas: se inician con seis registros de demostración y cada matrícula nueva se agrega a esa fuente (bloqueando DNI repetidos). El aforo de 30 estudiantes sigue siendo una referencia visual y aún no bloquea nuevas matrículas. El reporte Consolidado muestra Género en lugar de promedio, asistencia y conducta. El reporte de asistencia docente todavía usa datos de demostración separados del registro; su unificación queda pendiente de definición.
+El resumen de Reportes y el dashboard se calculan desde una fuente común de matrículas: se inician con seis estudiantes de demostración; Matrícula también incluye seis apoderados y cuatro asociaciones de ejemplo. Los nuevos ID usan secuencias `E0001` y `P0001`, y cada matrícula nueva se agrega a la fuente común (bloqueando DNI repetidos). La vista Matrícula incluye formularios independientes para estudiantes y apoderados, filtros, acciones de consulta/edición/eliminación y asociaciones con parentesco, fecha y observaciones. Las búsquedas RENIEC y los envíos SIAGIE son simulaciones locales con datos de prueba; no consultan servicios externos ni persisten registros al recargar la página. El aforo de 30 estudiantes sigue siendo una referencia visual y aún no bloquea nuevas matrículas. El reporte Consolidado muestra Género en lugar de promedio, asistencia y conducta. El reporte de asistencia docente todavía usa datos de demostración separados del registro; su unificación queda pendiente de definición.

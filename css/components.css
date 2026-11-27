@@ -134,6 +134,10 @@ h3 {
   line-height: 1.4;
 }
 
+[data-theme="dark"] .login-card .demo-info {
+  color: #F6F4EE;
+}
+
 .error-msg {
   color: var(--color-error);
   background-color: rgba(176, 63, 0, 0.12);
@@ -625,10 +629,283 @@ h3 {
 
 /* --- MÓDULO DE MATRÍCULA --- */
 .matricula-module {
-  background: var(--color-surface);
+  min-width: 0;
+  background: var(--color-matricula-surface);
+  color: var(--color-matricula-text);
   padding: 25px;
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
+}
+
+.matricula-contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.matricula-module .registros {
+  min-width: 0;
+}
+
+.matricula-module input,
+.matricula-module select,
+.matricula-module textarea {
+  background-color: var(--color-matricula-surface);
+  color: var(--color-matricula-text);
+}
+
+.matricula-module .btn-secundario {
+  border-color: var(--color-heading);
+  background: var(--color-matricula-surface);
+  color: var(--color-matricula-text);
+}
+
+.matricula-module .matricula-subtitulo {
+  margin: 0 0 16px;
+  color: var(--color-matricula-text);
+}
+
+.matricula-module legend,
+.matricula-module label,
+.matricula-module .matricula-label {
+  color: var(--color-matricula-text);
+}
+
+.matricula-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 18px;
+  align-items: start;
+}
+
+.matricula-form-grid .input-group {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.matricula-form-grid .input-group > label {
+  min-height: 2.5em;
+  line-height: 1.25;
+}
+
+.matricula-module textarea {
+  display: block;
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid var(--color-muted);
+  border-radius: 6px;
+  box-sizing: border-box;
+  background: var(--color-matricula-surface);
+  color: var(--color-matricula-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  resize: none;
+  overflow-y: auto;
+}
+
+.matricula-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.matricula-form__actions > button {
+  flex: 1 1 220px;
+  min-height: 48px;
+}
+
+.matricula-lista__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.matricula-lista__encabezado .matricula-subtitulo {
+  margin: 0;
+}
+
+.matricula-filtros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.matricula-filtros--asociacion {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.matricula-filtros .input-group {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.matricula-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--color-text);
+  font-size: var(--font-size-min);
+  font-weight: 700;
+}
+
+.matricula-reniec,
+.matricula-siagie {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-min);
+  font-weight: 700;
+}
+
+.matricula-dni-control,
+.matricula-search {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.matricula-dni-control > input,
+.matricula-search > input {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.matricula-dni-control > input {
+  width: 100%;
+  max-width: none;
+  flex: 1 1 0;
+  box-sizing: border-box;
+}
+
+.matricula-module .input-group input,
+.matricula-module .input-group select,
+.matricula-module .input-group textarea {
+  height: 48px;
+  min-height: 48px;
+  box-sizing: border-box;
+  font-family: var(--font-body);
+}
+
+.matricula-module .input-group input,
+.matricula-module .input-group select {
+  padding: 10px 12px;
+}
+
+.matricula-search__button {
+  display: inline-flex;
+  min-width: 48px;
+  min-height: 48px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-heading);
+  border-radius: var(--radius);
+  background: var(--color-action);
+  color: var(--color-on-dark);
+  font: inherit;
+  font-size: var(--font-size-min);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.matricula-search__button:hover {
+  background: var(--color-pine);
+}
+
+.matricula-search__button .icono {
+  width: 22px;
+  height: 22px;
+}
+
+.matricula-reniec .icono,
+.matricula-siagie .icono {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.matricula-tabla {
+  min-width: 900px;
+}
+
+.matricula-tabla td {
+  vertical-align: middle;
+  background-color: var(--color-matricula-surface);
+  color: var(--color-matricula-text);
+}
+
+.matricula-tabla th {
+  background-color: var(--color-matricula-surface);
+  color: var(--color-heading);
+}
+
+.matricula-acciones {
+  min-width: 160px;
+  white-space: nowrap;
+}
+
+.matricula-accion {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  margin: 2px;
+  place-items: center;
+  border: 1px solid var(--color-heading);
+  border-radius: var(--radius);
+  background: var(--color-matricula-surface);
+  color: var(--color-matricula-text);
+  cursor: pointer;
+}
+
+.matricula-accion:hover {
+  background: var(--color-naranja-claro);
+}
+
+.matricula-accion .icono {
+  width: 20px;
+  height: 20px;
+}
+
+[data-theme="dark"] .matricula-module .matricula-tabla th {
+  color: #1E5A3C;
+}
+
+[data-theme="dark"] .matricula-module .btn-secundario:not(.matricula-reniec):hover {
+  background: #EDF2C8;
+  color: #1B211D;
+}
+
+/* Módulos claros sobre el fondo oscuro general. */
+[data-theme="dark"] #view-docentes,
+[data-theme="dark"] #view-reportes,
+[data-theme="dark"] .reporte-detalle {
+  --color-background: #EDF2C8;
+  --color-surface: #EDF2C8;
+  --color-naranja-claro: #EDF2C8;
+  --color-text: #1B211D;
+  --color-heading: #1E5A3C;
+  --color-muted: #5A5A52;
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .reporte-detalle {
+  padding: 20px;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
 }
 
 /* --- CONTROL DE ASISTENCIA DOCENTE --- */
@@ -839,6 +1116,31 @@ h3 {
   font: inherit;
   font-size: var(--font-size-min);
   cursor: pointer;
+}
+
+.matricula-module .matricula-reniec {
+  width: auto;
+  height: 40px;
+  min-width: 0;
+  min-height: 40px;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 4px 8px;
+  border-color: #00765A;
+  background: #00765A;
+  color: #FFFFFF;
+  font-size: 14px;
+}
+
+.matricula-module .matricula-reniec .icono {
+  width: 18px;
+  height: 18px;
+}
+
+.matricula-module .matricula-reniec:hover {
+  border-color: #1E5A3C;
+  background: #1E5A3C;
+  color: #FFFFFF;
 }
 
 .btn-secundario:hover,
@@ -1184,6 +1486,10 @@ legend {
   white-space: nowrap;
 }
 
+[data-theme="dark"] #view-reportes .reportes-disponibles__titulo {
+  color: #8A5A00;
+}
+
 .reportes-disponibles__linea {
   flex: 1;
   height: 2px;
@@ -1278,7 +1584,7 @@ legend {
 }
 
 .resumen-dashboard__leyenda-color--estudiantes {
-  background: var(--color-action);
+  background: var(--color-chart-ocean);
 }
 
 .resumen-dashboard__leyenda-color--capacidad {
@@ -1366,8 +1672,32 @@ legend {
   width: 100%;
   min-height: 0;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  background: var(--color-action);
+  background: var(--color-chart-ocean);
   transition: height 0.3s ease;
+}
+
+.resumen-dashboard__seccion:nth-child(6n + 1) .resumen-dashboard__relleno {
+  background: var(--color-chart-ocean);
+}
+
+.resumen-dashboard__seccion:nth-child(6n + 2) .resumen-dashboard__relleno {
+  background: var(--color-chart-yellow);
+}
+
+.resumen-dashboard__seccion:nth-child(6n + 3) .resumen-dashboard__relleno {
+  background: var(--color-chart-turquoise);
+}
+
+.resumen-dashboard__seccion:nth-child(6n + 4) .resumen-dashboard__relleno {
+  background: var(--color-chart-magenta);
+}
+
+.resumen-dashboard__seccion:nth-child(6n + 5) .resumen-dashboard__relleno {
+  background: var(--color-chart-vermilion);
+}
+
+.resumen-dashboard__seccion:nth-child(6n) .resumen-dashboard__relleno {
+  background: var(--color-chart-plum);
 }
 
 .resumen-dashboard__etiqueta {

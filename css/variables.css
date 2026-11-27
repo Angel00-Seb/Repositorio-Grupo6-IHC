@@ -15,6 +15,14 @@
   --color-error: #B03F00; /* rojo terracota */
   --color-info: #0B5C99; /* celeste vívido */
 
+  /* Paleta de gráficos */
+  --color-chart-ocean: #007ACC;
+  --color-chart-yellow: #FAB426;
+  --color-chart-turquoise: #009E73;
+  --color-chart-magenta: #CC79A7;
+  --color-chart-vermilion: #D55E00;
+  --color-chart-plum: #3B1C47;
+
   /* Alias semánticos: apuntan siempre a colores de la paleta */
   --color-sidebar: var(--color-pine); /* verde pino institucional */
   --color-on-dark: #F6F4EE; /* texto/iconos claros sobre fondos oscuros */
@@ -56,6 +64,8 @@
   /* Ajustes visuales aplicados a las vistas, no al panel de controles */
   --accessibility-zoom: 1;
   --accessibility-filter: none;
+  --color-matricula-surface: var(--color-surface);
+  --color-matricula-text: var(--color-text);
 }
 
 /* ============================================================
@@ -78,4 +88,6 @@
   --color-success: #F6F4EE; /* marfil: legible sobre el realce */
   --color-error: #E8A317; /* acento: legible sobre el realce */
   --color-sidebar: #123D27; /* el sidebar se mantiene pino */
+  --color-matricula-surface: #EDF2C8;
+  --color-matricula-text: #1B211D;
 }

@@ -1081,12 +1081,12 @@ document.addEventListener("DOMContentLoaded", function() {
     var mensajeSinCoincidencias = "No se encontraron reportes que coincidan con la búsqueda.";
 
     var estudiantesDemoBase = [
-        { id: "E-001", nombres: "Ana Lucía Quispe", dni: "12345678", grado: "2º de secundaria", seccion: "B", fecha: "14/03/2026", edad: "13 años", periodo: "2026 - I", genero: "Femenino" },
-        { id: "E-002", nombres: "Carlos Daniel Rojas", dni: "87654321", grado: "4º de secundaria", seccion: "A", fecha: "15/03/2026", edad: "15 años", periodo: "2026 - I", genero: "Masculino" },
-        { id: "E-003", nombres: "María Fernanda Vargas", dni: "45678123", grado: "1º de secundaria", seccion: "A", fecha: "16/03/2026", edad: "11 años", periodo: "2026 - I", genero: "Femenino" },
-        { id: "E-004", nombres: "Jorge Alberto Mendoza", dni: "11223344", grado: "2º de secundaria", seccion: "B", fecha: "17/03/2026", edad: "12 años", periodo: "2026 - I", genero: "Masculino" },
-        { id: "E-005", nombres: "Sofía Isabel Campos", dni: "55667788", grado: "5º de secundaria", seccion: "A", fecha: "18/03/2026", edad: "17 años", periodo: "2026 - I", genero: "Femenino" },
-        { id: "E-006", nombres: "Luis Enrique Paredes", dni: "99887766", grado: "3º de secundaria", seccion: "A", fecha: "19/03/2026", edad: "14 años", periodo: "2026 - I", genero: "Masculino" }
+        { id: "E0001", codigoModular: "1234567", nombres: "Ana Lucía", apellidoPaterno: "Quispe", apellidoMaterno: "Rojas", dni: "12345678", fechaNacimiento: "2013-04-14", grado: "2", seccion: "B", fecha: "14/03/2026", edad: 13, periodo: "2026 - I", genero: "Femenino", historialEnfermedades: "Ninguna", celular: "987654321", procedencia: "Conchán" },
+        { id: "E0002", codigoModular: "1234567", nombres: "Carlos Daniel", apellidoPaterno: "Rojas", apellidoMaterno: "Mendoza", dni: "87654321", fechaNacimiento: "2010-08-15", grado: "4", seccion: "A", fecha: "15/03/2026", edad: 15, periodo: "2026 - I", genero: "Masculino", historialEnfermedades: "Ninguna", celular: "987654322", procedencia: "Conchán" },
+        { id: "E0003", codigoModular: "1234567", nombres: "María Fernanda", apellidoPaterno: "Vargas", apellidoMaterno: "Salazar", dni: "45678123", fechaNacimiento: "2014-03-16", grado: "1", seccion: "A", fecha: "16/03/2026", edad: 11, periodo: "2026 - I", genero: "Femenino", historialEnfermedades: "Ninguna", celular: "987654323", procedencia: "Chota" },
+        { id: "E0004", codigoModular: "1234567", nombres: "Jorge Alberto", apellidoPaterno: "Mendoza", apellidoMaterno: "Cruz", dni: "11223344", fechaNacimiento: "2013-03-17", grado: "2", seccion: "B", fecha: "17/03/2026", edad: 12, periodo: "2026 - I", genero: "Masculino", historialEnfermedades: "Ninguna", celular: "987654324", procedencia: "Conchán" },
+        { id: "E0005", codigoModular: "1234567", nombres: "Sofía Isabel", apellidoPaterno: "Campos", apellidoMaterno: "Díaz", dni: "55667788", fechaNacimiento: "2008-03-18", grado: "5", seccion: "A", fecha: "18/03/2026", edad: 17, periodo: "2026 - I", genero: "Femenino", historialEnfermedades: "Ninguna", celular: "987654325", procedencia: "Chota" },
+        { id: "E0006", codigoModular: "1234567", nombres: "Luis Enrique", apellidoPaterno: "Paredes", apellidoMaterno: "Vega", dni: "99887766", fechaNacimiento: "2012-03-19", grado: "3", seccion: "A", fecha: "19/03/2026", edad: 14, periodo: "2026 - I", genero: "Masculino", historialEnfermedades: "Ninguna", celular: "987654326", procedencia: "Conchán" }
     ];
 
     var matriculas = estudiantesDemoBase.map(function(estudiante) {
@@ -1097,9 +1097,9 @@ document.addEventListener("DOMContentLoaded", function() {
         return matriculas.map(function(estudiante) {
             return {
                 id: estudiante.id,
-                nombres: estudiante.nombres,
+                nombres: nombreCompleto(estudiante),
                 dni: estudiante.dni,
-                grado: estudiante.grado,
+                grado: etiquetaGrado(estudiante.grado),
                 seccion: estudiante.seccion,
                 fecha: estudiante.fecha
             };
@@ -1110,9 +1110,9 @@ document.addEventListener("DOMContentLoaded", function() {
         return matriculas.map(function(estudiante) {
             return {
                 id: estudiante.id,
-                estudiante: estudiante.nombres,
-                grado: estudiante.grado,
-                edad: estudiante.edad || "—",
+                estudiante: nombreCompleto(estudiante),
+                grado: etiquetaGrado(estudiante.grado),
+                edad: estudiante.edad ? estudiante.edad + " años" : "—",
                 seccion: estudiante.seccion,
                 periodo: estudiante.periodo || "2026 - I",
                 genero: estudiante.genero || "—"
@@ -1181,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var conteos = seccionesObjetivo.map(function(objetivo) {
             var cantidad = matriculas.filter(function(estudiante) {
-                return estudiante.grado === objetivo.grado && estudiante.seccion === objetivo.seccion;
+                return Number.parseInt(estudiante.grado, 10) === Number.parseInt(objetivo.grado, 10) && estudiante.seccion === objetivo.seccion;
             }).length;
             return { etiqueta: objetivo.etiqueta, cantidad: cantidad };
         });
@@ -1462,190 +1462,670 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // ==========================================
-    // --- LÓGICA FINAL DE MATRÍCULA Y APODERADOS ---
+    // --- REGISTRO Y ASOCIACIÓN DE MATRÍCULA ---
     // ==========================================
-    
-    // 1. Habilitar Sección B solo para 2do grado
-    const selectGrado = document.getElementById("grado");
-    const selectSeccion = document.getElementById("seccion");
+    var formMatricula = document.getElementById("matricula-form");
+    var formApoderado = document.getElementById("apoderado-form");
+    var formAsociacion = document.getElementById("asociacion-form");
+    var alertaEstudiante = document.getElementById("alerta");
+    var alertaApoderado = document.getElementById("alerta-apoderado");
+    var alertaAsociacion = document.getElementById("alerta-asociacion");
+    var tablaEstudiantes = document.getElementById("tabla-estudiantes");
+    var tablaApoderados = document.getElementById("tabla-apoderados");
+    var tablaRelaciones = document.getElementById("tabla-relaciones");
+    var campoFechaNacimiento = document.getElementById("fecha-nacimiento");
+    var selectGrado = document.getElementById("grado");
+    var selectSeccion = document.getElementById("seccion");
+    var apoderados = [
+        { id: "P0001", nombres: "Rosa Elena", apellidoPaterno: "Quispe", apellidoMaterno: "Rojas", dni: "22334455", sexo: "Femenino", celular: "987654111", procedencia: "Conchán" },
+        { id: "P0002", nombres: "José Manuel", apellidoPaterno: "Rojas", apellidoMaterno: "Mendoza", dni: "66778899", sexo: "Masculino", celular: "987654112", procedencia: "Conchán" },
+        { id: "P0003", nombres: "Elena María", apellidoPaterno: "Vargas", apellidoMaterno: "Salazar", dni: "77889900", sexo: "Femenino", celular: "987654113", procedencia: "Chota" },
+        { id: "P0004", nombres: "Pedro Antonio", apellidoPaterno: "Mendoza", apellidoMaterno: "Cruz", dni: "33445566", sexo: "Masculino", celular: "987654114", procedencia: "Conchán" },
+        { id: "P0005", nombres: "Carmen Luz", apellidoPaterno: "Campos", apellidoMaterno: "Díaz", dni: "44557788", sexo: "Femenino", celular: "987654115", procedencia: "Chota" },
+        { id: "P0006", nombres: "Miguel Ángel", apellidoPaterno: "Paredes", apellidoMaterno: "Vega", dni: "88990011", sexo: "Masculino", celular: "987654116", procedencia: "Conchán" }
+    ];
+    var asociaciones = [
+        { id: "R001", estudianteId: "E0001", apoderadoId: "P0001", parentesco: "Madre", fecha: "2026-03-14", observacion: "Contacto principal" },
+        { id: "R002", estudianteId: "E0002", apoderadoId: "P0002", parentesco: "Padre", fecha: "2026-03-15", observacion: "Autoriza trámites" },
+        { id: "R003", estudianteId: "E0003", apoderadoId: "P0003", parentesco: "Madre", fecha: "2026-03-16", observacion: "Contacto alternativo" },
+        { id: "R004", estudianteId: "E0004", apoderadoId: "P0004", parentesco: "Padre", fecha: "2026-03-17", observacion: "Contacto principal" }
+    ];
+    var estudianteEnEdicion = null;
+    var apoderadoEnEdicion = null;
+    var asociacionEnEdicion = null;
+    var fechaHoy = fechaLocal(new Date());
+    document.getElementById("estudiante-id").value = siguienteId(matriculas, "E");
+    document.getElementById("ap-id").value = siguienteId(apoderados, "P");
+    document.getElementById("asociacion-fecha").value = fechaHoy;
+    campoFechaNacimiento.max = fechaHoy;
 
-    if (selectGrado && selectSeccion) {
-        selectGrado.addEventListener("change", function() {
-            if (this.value === "2") {
-                selectSeccion.disabled = false;
-                selectSeccion.value = "B"; 
-            } else {
-                selectSeccion.value = "A"; 
-                selectSeccion.disabled = true; 
-            }
-        });
-    }
-
-    // 2. Validaciones del formulario de matrícula (Estudiantes)
-    var formMatriculaValidacion = document.getElementById("matricula-form");
-    var cajaAlertaValidacion = document.getElementById("alerta");
-    var dniEstudianteInput = document.getElementById("dni");
+    var simulacionesReniec = {
+        estudiante: {
+            "12345678": { nombres: "Ana Lucía", paterno: "Quispe", materno: "Rojas", fechaNacimiento: "2013-04-14", sexo: "Femenino" },
+            "87654321": { nombres: "Carlos Daniel", paterno: "Rojas", materno: "Mendoza", fechaNacimiento: "2010-08-15", sexo: "Masculino" },
+            "44556677": { nombres: "Lucía Fernanda", paterno: "Huamán", materno: "Vega", fechaNacimiento: "2014-02-20", sexo: "Femenino" }
+        },
+        apoderado: {
+            "22334455": { nombres: "Rosa Elena", paterno: "Quispe", materno: "Rojas", sexo: "Femenino" },
+            "66778899": { nombres: "José Manuel", paterno: "Huamán", materno: "Vega", sexo: "Masculino" },
+            "77889900": { nombres: "Carmen Luz", paterno: "Mendoza", materno: "Salazar", sexo: "Femenino" }
+        }
+    };
 
     function mostrarAlertaMatricula(elemento, mensaje, tipo) {
-        if (!elemento) {
-            return;
-        }
         elemento.textContent = mensaje;
         elemento.classList.remove("oculto", "error", "exito");
         elemento.classList.add(tipo);
     }
 
     function ocultarAlertaMatricula(elemento) {
-        if (!elemento) {
-            return;
-        }
         elemento.classList.add("oculto");
         elemento.classList.remove("error", "exito");
+        elemento.textContent = "";
     }
 
     function limitarEntradaNumerica(elemento, maximo) {
-        if (!elemento) {
-            return;
-        }
         elemento.addEventListener("input", function() {
             elemento.value = elemento.value.replace(/\D/g, "").slice(0, maximo);
         });
     }
 
-    limitarEntradaNumerica(dniEstudianteInput, 8);
-
-    if (formMatriculaValidacion) {
-        formMatriculaValidacion.addEventListener("submit", function(evento) {
-            evento.preventDefault();
-
-            var nombres = document.getElementById("nombres").value.trim();
-            var apellidos = document.getElementById("apellidos").value.trim();
-            var dni = document.getElementById("dni").value.trim();
-            var genero = document.getElementById("genero").value;
-            var grado = document.getElementById("grado").value;
-            var seccion = document.getElementById("seccion").value;
-
-            if (dni.length !== 8) {
-                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: El DNI debe tener exactamente 8 números.", "error");
-                return;
-            }
-
-            if (!genero) {
-                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: Seleccione el género del estudiante.", "error");
-                return;
-            }
-
-            if (seccion === "B" && grado !== "2") {
-                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: La sección B solo está disponible para 2º de secundaria.", "error");
-                return;
-            }
-
-            var dniRepetido = matriculas.some(function(estudiante) {
-                return estudiante.dni === dni;
-            });
-            if (dniRepetido) {
-                mostrarAlertaMatricula(cajaAlertaValidacion, "Error: Ya existe un estudiante matriculado con ese DNI.", "error");
-                return;
-            }
-
-            var numeroSecuencia = matriculas.length + 1;
-            var nuevoId = "E-" + String(numeroSecuencia).padStart(3, "0");
-            var hoy = new Date();
-            var fechaMatricula = fechaLocal(hoy);
-
-            matriculas.push({
-                id: nuevoId,
-                nombres: nombres,
-                apellidos: apellidos,
-                dni: dni,
-                genero: genero,
-                grado: grado,
-                seccion: seccion,
-                fecha: fechaMatricula.split("-").reverse().join("/"),
-                edad: "—",
-                periodo: "2026 - I"
-            });
-
-            sincronizarReportesMatricula();
-            actualizarDashboard();
-
-            mostrarAlertaMatricula(cajaAlertaValidacion, "¡Estudiante matriculado correctamente!", "exito");
-
-            formMatriculaValidacion.reset();
-            selectSeccion.value = "A";
-            selectSeccion.disabled = true;
-
-            setTimeout(function() {
-                ocultarAlertaMatricula(cajaAlertaValidacion);
-            }, 3000);
+    function limitarEntradaLetras(elemento) {
+        elemento.addEventListener("input", function() {
+            elemento.value = elemento.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]/g, "");
         });
     }
 
-    // 3. Lógica para el Formulario de Apoderados y Tabla
-    var formApoderado = document.getElementById("apoderado-form");
-    var alertaApoderado = document.getElementById("alerta-apoderado");
-    var tablaRelaciones = document.getElementById("tabla-relaciones");
-    var apoderados = [];
+    function nombreCompleto(registro) {
+        if (registro.apellidoPaterno || registro.apellidoMaterno) {
+            return [registro.nombres, registro.apellidoPaterno, registro.apellidoMaterno].filter(Boolean).join(" ");
+        }
+        return registro.nombres || "Sin nombre";
+    }
 
-    limitarEntradaNumerica(document.getElementById("ap_dni"), 8);
-    limitarEntradaNumerica(document.getElementById("ap_telefono"), 9);
-    limitarEntradaNumerica(document.getElementById("ap_estudiante"), 8);
+    function codigoGrado(grado) {
+        var coincidencia = String(grado || "").match(/\d/);
+        return coincidencia ? coincidencia[0] : "";
+    }
 
-    if (formApoderado) {
-        formApoderado.addEventListener("submit", function(evento) {
-            evento.preventDefault();
+    function etiquetaGrado(grado) {
+        var codigo = codigoGrado(grado);
+        return codigo ? codigo + "º de secundaria" : (grado || "—");
+    }
 
-            var apNombres = document.getElementById("ap_nombres").value.trim();
-            var apDni = document.getElementById("ap_dni").value.trim();
-            var apEstudiante = document.getElementById("ap_estudiante").value.trim();
+    function edadDesdeFecha(fecha) {
+        if (!fecha) {
+            return "";
+        }
+        var nacimiento = new Date(fecha + "T00:00:00");
+        var hoy = new Date();
+        var edad = hoy.getFullYear() - nacimiento.getFullYear();
+        if (hoy.getMonth() < nacimiento.getMonth() || (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate())) {
+            edad -= 1;
+        }
+        return edad >= 0 ? edad : "";
+    }
 
-            if (apDni.length !== 8 || apEstudiante.length !== 8) {
-                mostrarAlertaMatricula(alertaApoderado, "Error: Los DNI deben tener 8 números.", "error");
-                return;
-            }
+    function siguienteId(registros, prefijo) {
+        var numero = registros.length + 1;
+        var id = prefijo + String(numero).padStart(4, "0");
+        while (registros.some(function(registro) { return registro.id === id; })) {
+            numero += 1;
+            id = prefijo + String(numero).padStart(4, "0");
+        }
+        return id;
+    }
 
-            var estudianteAsociado = matriculas.some(function(estudiante) {
-                return estudiante.dni === apEstudiante;
-            });
-            if (!estudianteAsociado) {
-                mostrarAlertaMatricula(alertaApoderado, "Error: No existe un estudiante matriculado con ese DNI.", "error");
-                return;
-            }
+    function textoCelda(fila, texto) {
+        var celda = document.createElement("td");
+        celda.textContent = texto || "—";
+        fila.appendChild(celda);
+        return celda;
+    }
 
-            var dniApoderadoRepetido = apoderados.some(function(apoderado) {
-                return apoderado.dni === apDni;
-            });
-            if (dniApoderadoRepetido) {
-                mostrarAlertaMatricula(alertaApoderado, "Error: Ya existe un apoderado registrado con ese DNI.", "error");
-                return;
-            }
+    function agregarAccion(fila, accion, etiqueta, dibujo) {
+        var boton = document.createElement("button");
+        boton.type = "button";
+        boton.className = "matricula-accion";
+        boton.dataset.accion = accion;
+        boton.setAttribute("aria-label", etiqueta);
+        boton.title = etiqueta;
+        boton.innerHTML = '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + dibujo + "</svg>";
+        fila.lastElementChild.appendChild(boton);
+    }
 
-            if (tablaRelaciones.querySelector("td[colspan]")) {
-                tablaRelaciones.innerHTML = "";
-            }
+    function celdaAcciones(fila) {
+        var celda = document.createElement("td");
+        celda.className = "matricula-acciones";
+        fila.appendChild(celda);
+    }
 
-            var apoderado = {
-                nombres: apNombres,
-                dni: apDni,
-                dniEstudiante: apEstudiante
-            };
-            apoderados.push(apoderado);
+    var iconosAccion = {
+        consultar: '<circle cx="11" cy="11" r="7" /><path d="m16 16 5 5" />',
+        editar: '<path d="m15 5 4 4M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16z" />',
+        eliminar: '<path d="M4 7h16M10 11v6m4-6v6M6 7l1 14h10l1-14M9 7V4h6v3" />',
+        enviar: '<path d="M20 7v5h-5M4 17v-5h5" /><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2" />'
+    };
 
+    function renderizarEstudiantes() {
+        var termino = normalizar(document.getElementById("filtro-estudiante").value.trim());
+        var gradoFiltro = document.getElementById("filtro-grado").value;
+        var sexoFiltro = document.getElementById("filtro-sexo-estudiante").value;
+        var filtrados = matriculas.filter(function(estudiante) {
+            var coincideTexto = normalizar(nombreCompleto(estudiante) + " " + estudiante.dni).includes(termino);
+            return coincideTexto && (!gradoFiltro || codigoGrado(estudiante.grado) === gradoFiltro) && (!sexoFiltro || estudiante.genero === sexoFiltro);
+        });
+        tablaEstudiantes.replaceChildren();
+        if (!filtrados.length) {
+            var vacio = document.createElement("tr");
+            var celdaVacia = textoCelda(vacio, "No hay estudiantes que coincidan con los filtros.");
+            celdaVacia.colSpan = 7;
+            celdaVacia.className = "tabla-registros__vacio";
+            tablaEstudiantes.appendChild(vacio);
+            return;
+        }
+        filtrados.forEach(function(estudiante) {
             var fila = document.createElement("tr");
-            [apoderado.nombres, apoderado.dni, apoderado.dniEstudiante].forEach(function(valor) {
-                var celda = document.createElement("td");
-                celda.textContent = valor;
-                fila.appendChild(celda);
-            });
-            tablaRelaciones.appendChild(fila);
-
-            mostrarAlertaMatricula(alertaApoderado, "¡Apoderado registrado y asociado correctamente!", "exito");
-
-            formApoderado.reset();
-
-            setTimeout(function() {
-                ocultarAlertaMatricula(alertaApoderado);
-            }, 3000);
+            textoCelda(fila, estudiante.id);
+            textoCelda(fila, nombreCompleto(estudiante));
+            textoCelda(fila, estudiante.dni);
+            textoCelda(fila, (codigoGrado(estudiante.grado) ? codigoGrado(estudiante.grado) + "º" : "—") + " / " + (estudiante.seccion || "—"));
+            textoCelda(fila, estudiante.edad ? estudiante.edad + " años" : "—");
+            textoCelda(fila, estudiante.sincronizadoSiagie ? "Enviado" : "Pendiente");
+            celdaAcciones(fila);
+            agregarAccion(fila, "consultar", "Consultar " + estudiante.id, iconosAccion.consultar);
+            agregarAccion(fila, "editar", "Editar " + estudiante.id, iconosAccion.editar);
+            agregarAccion(fila, "eliminar", "Eliminar " + estudiante.id, iconosAccion.eliminar);
+            if (!estudiante.sincronizadoSiagie) {
+                agregarAccion(fila, "enviar", "Simular envío de " + estudiante.id + " a SIAGIE", iconosAccion.enviar);
+            }
+            tablaEstudiantes.appendChild(fila);
         });
     }
+
+    function renderizarApoderados() {
+        var termino = normalizar(document.getElementById("filtro-apoderado").value.trim());
+        var sexoFiltro = document.getElementById("filtro-sexo-apoderado").value;
+        var filtrados = apoderados.filter(function(apoderado) {
+            return normalizar(nombreCompleto(apoderado) + " " + apoderado.dni).includes(termino) && (!sexoFiltro || apoderado.sexo === sexoFiltro);
+        });
+        tablaApoderados.replaceChildren();
+        if (!filtrados.length) {
+            var vacio = document.createElement("tr");
+            var celdaVacia = textoCelda(vacio, apoderados.length ? "No hay apoderados que coincidan con los filtros." : "Aún no hay apoderados registrados.");
+            celdaVacia.colSpan = 7;
+            celdaVacia.className = "tabla-registros__vacio";
+            tablaApoderados.appendChild(vacio);
+            return;
+        }
+        filtrados.forEach(function(apoderado) {
+            var fila = document.createElement("tr");
+            textoCelda(fila, apoderado.id);
+            textoCelda(fila, nombreCompleto(apoderado));
+            textoCelda(fila, apoderado.dni);
+            textoCelda(fila, apoderado.sexo);
+            textoCelda(fila, apoderado.celular);
+            textoCelda(fila, apoderado.procedencia);
+            celdaAcciones(fila);
+            agregarAccion(fila, "consultar", "Consultar " + apoderado.id, iconosAccion.consultar);
+            agregarAccion(fila, "editar", "Editar " + apoderado.id, iconosAccion.editar);
+            agregarAccion(fila, "eliminar", "Eliminar " + apoderado.id, iconosAccion.eliminar);
+            tablaApoderados.appendChild(fila);
+        });
+    }
+
+    function renderizarOpcionesAsociacion() {
+        var filtroEstudiante = normalizar(document.getElementById("buscar-estudiante-asociacion").value.trim());
+        var filtroApoderado = normalizar(document.getElementById("buscar-apoderado-asociacion").value.trim());
+        var selectEstudiante = document.getElementById("asociacion-estudiante");
+        var selectApoderado = document.getElementById("asociacion-apoderado");
+        var estudianteSeleccionado = selectEstudiante.value;
+        var apoderadoSeleccionado = selectApoderado.value;
+
+        selectEstudiante.replaceChildren(new Option("Seleccione un estudiante...", ""));
+        matriculas.filter(function(estudiante) {
+            return normalizar(nombreCompleto(estudiante) + " " + estudiante.dni).includes(filtroEstudiante);
+        }).forEach(function(estudiante) {
+            selectEstudiante.add(new Option(nombreCompleto(estudiante) + " · DNI " + estudiante.dni, estudiante.id));
+        });
+        selectApoderado.replaceChildren(new Option("Seleccione un apoderado...", ""));
+        apoderados.filter(function(apoderado) {
+            return normalizar(nombreCompleto(apoderado) + " " + apoderado.dni).includes(filtroApoderado);
+        }).forEach(function(apoderado) {
+            selectApoderado.add(new Option(nombreCompleto(apoderado) + " · DNI " + apoderado.dni, apoderado.id));
+        });
+        if (Array.from(selectEstudiante.options).some(function(opcion) { return opcion.value === estudianteSeleccionado; })) {
+            selectEstudiante.value = estudianteSeleccionado;
+        }
+        if (Array.from(selectApoderado.options).some(function(opcion) { return opcion.value === apoderadoSeleccionado; })) {
+            selectApoderado.value = apoderadoSeleccionado;
+        }
+    }
+
+    function renderizarAsociaciones() {
+        var termino = normalizar(document.getElementById("filtro-asociacion").value.trim());
+        var filtradas = asociaciones.filter(function(asociacion) {
+            var estudiante = matriculas.find(function(item) { return item.id === asociacion.estudianteId; });
+            var apoderado = apoderados.find(function(item) { return item.id === asociacion.apoderadoId; });
+            return normalizar(
+                (estudiante ? nombreCompleto(estudiante) + " " + estudiante.dni : "") + " " +
+                (apoderado ? nombreCompleto(apoderado) + " " + apoderado.dni : "")
+            ).includes(termino);
+        });
+        tablaRelaciones.replaceChildren();
+        if (!filtradas.length) {
+            var vacio = document.createElement("tr");
+            var celdaVacia = textoCelda(vacio, asociaciones.length ? "No hay asociaciones que coincidan con el filtro." : "Aún no hay asociaciones registradas.");
+            celdaVacia.colSpan = 8;
+            celdaVacia.className = "tabla-registros__vacio";
+            tablaRelaciones.appendChild(vacio);
+            return;
+        }
+        filtradas.forEach(function(asociacion) {
+            var estudiante = matriculas.find(function(item) { return item.id === asociacion.estudianteId; });
+            var apoderado = apoderados.find(function(item) { return item.id === asociacion.apoderadoId; });
+            var fila = document.createElement("tr");
+            fila.dataset.id = asociacion.id;
+            textoCelda(fila, estudiante ? nombreCompleto(estudiante) : "Registro no disponible");
+            textoCelda(fila, estudiante ? estudiante.dni : "—");
+            textoCelda(fila, apoderado ? nombreCompleto(apoderado) : "Registro no disponible");
+            textoCelda(fila, apoderado ? apoderado.dni : "—");
+            textoCelda(fila, asociacion.parentesco);
+            textoCelda(fila, asociacion.fecha);
+            textoCelda(fila, asociacion.observacion || "—");
+            celdaAcciones(fila);
+            agregarAccion(fila, "consultar", "Consultar asociación", iconosAccion.consultar);
+            agregarAccion(fila, "editar", "Modificar asociación", iconosAccion.editar);
+            agregarAccion(fila, "eliminar", "Eliminar asociación", iconosAccion.eliminar);
+            tablaRelaciones.appendChild(fila);
+        });
+    }
+
+    function actualizarListasMatricula() {
+        renderizarEstudiantes();
+        renderizarApoderados();
+        renderizarOpcionesAsociacion();
+        renderizarAsociaciones();
+    }
+
+    function iniciarEdicionEstudiante(estudiante) {
+        estudianteEnEdicion = estudiante.id;
+        document.getElementById("estudiante-id").value = estudiante.id;
+        document.getElementById("codigo-modular").value = estudiante.codigoModular || "";
+        document.getElementById("nombres").value = estudiante.nombres || "";
+        document.getElementById("apellido-paterno").value = estudiante.apellidoPaterno || "";
+        document.getElementById("apellido-materno").value = estudiante.apellidoMaterno || "";
+        document.getElementById("dni").value = estudiante.dni || "";
+        campoFechaNacimiento.value = estudiante.fechaNacimiento || "";
+        document.getElementById("genero").value = estudiante.genero || "";
+        document.getElementById("historial-enfermedades").value = estudiante.historialEnfermedades || "No registrado (dato de demostración)";
+        document.getElementById("celular-estudiante").value = estudiante.celular || "";
+        document.getElementById("procedencia-estudiante").value = estudiante.procedencia || "";
+        selectGrado.value = codigoGrado(estudiante.grado);
+        selectSeccion.value = estudiante.seccion || "";
+        document.getElementById("guardar-estudiante").textContent = "Guardar cambios";
+        document.getElementById("cancelar-edicion-estudiante").classList.remove("oculto");
+        formMatricula.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function limpiarEdicionEstudiante() {
+        estudianteEnEdicion = null;
+        formMatricula.reset();
+        document.getElementById("estudiante-id").value = siguienteId(matriculas, "E");
+        document.getElementById("guardar-estudiante").textContent = "Guardar matrícula";
+        document.getElementById("cancelar-edicion-estudiante").classList.add("oculto");
+    }
+
+    function iniciarEdicionApoderado(apoderado) {
+        apoderadoEnEdicion = apoderado.id;
+        document.getElementById("ap-id").value = apoderado.id;
+        document.getElementById("ap_nombres").value = apoderado.nombres;
+        document.getElementById("ap-apellido-paterno").value = apoderado.apellidoPaterno;
+        document.getElementById("ap-apellido-materno").value = apoderado.apellidoMaterno;
+        document.getElementById("ap_dni").value = apoderado.dni;
+        document.getElementById("ap-sexo").value = apoderado.sexo;
+        document.getElementById("ap_telefono").value = apoderado.celular;
+        document.getElementById("ap-procedencia").value = apoderado.procedencia;
+        document.getElementById("guardar-apoderado").textContent = "Guardar cambios";
+        document.getElementById("cancelar-edicion-apoderado").classList.remove("oculto");
+        formApoderado.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function limpiarEdicionApoderado() {
+        apoderadoEnEdicion = null;
+        formApoderado.reset();
+        document.getElementById("ap-id").value = siguienteId(apoderados, "P");
+        document.getElementById("guardar-apoderado").textContent = "Guardar apoderado";
+        document.getElementById("cancelar-edicion-apoderado").classList.add("oculto");
+    }
+
+    function iniciarEdicionAsociacion(asociacion) {
+        asociacionEnEdicion = asociacion.id;
+        document.getElementById("buscar-estudiante-asociacion").value = "";
+        document.getElementById("buscar-apoderado-asociacion").value = "";
+        renderizarOpcionesAsociacion();
+        document.getElementById("asociacion-estudiante").value = asociacion.estudianteId;
+        document.getElementById("asociacion-apoderado").value = asociacion.apoderadoId;
+        document.getElementById("asociacion-parentesco").value = asociacion.parentesco;
+        document.getElementById("asociacion-fecha").value = asociacion.fecha;
+        document.getElementById("asociacion-observacion").value = asociacion.observacion || "";
+        document.getElementById("guardar-asociacion").textContent = "Guardar cambios";
+        document.getElementById("cancelar-edicion-asociacion").classList.remove("oculto");
+        formAsociacion.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function limpiarEdicionAsociacion() {
+        asociacionEnEdicion = null;
+        formAsociacion.reset();
+        document.getElementById("asociacion-fecha").value = fechaLocal(new Date());
+        document.getElementById("guardar-asociacion").textContent = "Asociar estudiante";
+        document.getElementById("cancelar-edicion-asociacion").classList.add("oculto");
+        renderizarOpcionesAsociacion();
+    }
+
+    function consultarRegistro(titulo, registro, persona) {
+        var detalles = persona
+            ? "Nombre: " + nombreCompleto(registro) + "\nDNI: " + registro.dni + "\nSexo: " + (registro.sexo || registro.genero || "—") +
+                "\nCelular: " + (registro.celular || "—") + "\nProcedencia: " + (registro.procedencia || "—")
+            : "Estudiante: " + (matriculas.find(function(item) { return item.id === registro.estudianteId; }) ?
+                nombreCompleto(matriculas.find(function(item) { return item.id === registro.estudianteId; })) : "No disponible") +
+                "\nApoderado: " + (apoderados.find(function(item) { return item.id === registro.apoderadoId; }) ?
+                    nombreCompleto(apoderados.find(function(item) { return item.id === registro.apoderadoId; })) : "No disponible") +
+                "\nParentesco: " + registro.parentesco + "\nFecha de asignación: " + registro.fecha +
+                "\nObservación: " + (registro.observacion || "—");
+        window.alert(titulo + "\n\n" + detalles);
+    }
+
+    function buscarSimulacionReniec(tipo, campoDni, campos, alerta) {
+        var dni = document.getElementById(campoDni).value.trim();
+        if (!/^\d{8}$/.test(dni)) {
+            mostrarAlertaMatricula(alerta, "Ingrese un DNI de 8 dígitos para iniciar la simulación.", "error");
+            return;
+        }
+        var resultado = simulacionesReniec[tipo][dni];
+        if (!resultado) {
+            mostrarAlertaMatricula(alerta, "No hay datos de prueba para este DNI. No se consultó RENIEC.", "error");
+            return;
+        }
+        Object.keys(campos).forEach(function(clave) {
+            document.getElementById(campos[clave]).value = resultado[clave] || "";
+        });
+        mostrarAlertaMatricula(alerta, "Simulación RENIEC exitosa: datos de prueba autocompletados. No se consultó el servicio real.", "exito");
+    }
+
+    [document.getElementById("dni"), document.getElementById("ap_dni")].forEach(function(campo) {
+        limitarEntradaNumerica(campo, 8);
+    });
+    limitarEntradaNumerica(document.getElementById("codigo-modular"), 7);
+    [document.getElementById("celular-estudiante"), document.getElementById("ap_telefono")].forEach(function(campo) {
+        limitarEntradaNumerica(campo, 9);
+    });
+    [
+        "nombres",
+        "apellido-paterno",
+        "apellido-materno",
+        "ap_nombres",
+        "ap-apellido-paterno",
+        "ap-apellido-materno"
+    ].forEach(function(id) {
+        limitarEntradaLetras(document.getElementById(id));
+    });
+
+    document.getElementById("buscar-reniec-estudiante").addEventListener("click", function() {
+        buscarSimulacionReniec("estudiante", "dni", {
+            nombres: "nombres",
+            paterno: "apellido-paterno",
+            materno: "apellido-materno",
+            fechaNacimiento: "fecha-nacimiento",
+            sexo: "genero"
+        }, alertaEstudiante);
+    });
+    document.getElementById("buscar-reniec-apoderado").addEventListener("click", function() {
+        buscarSimulacionReniec("apoderado", "ap_dni", {
+            nombres: "ap_nombres",
+            paterno: "ap-apellido-paterno",
+            materno: "ap-apellido-materno",
+            sexo: "ap-sexo"
+        }, alertaApoderado);
+    });
+
+    selectGrado.addEventListener("change", function() {
+        if (this.value !== "2" && selectSeccion.value === "B") {
+            selectSeccion.value = "A";
+        }
+        var opcionB = selectSeccion.querySelector('option[value="B"]');
+        opcionB.disabled = this.value !== "2";
+        if (this.value === "2") {
+            opcionB.disabled = false;
+        }
+    });
+
+    formMatricula.addEventListener("submit", function(evento) {
+        evento.preventDefault();
+        var idActual = estudianteEnEdicion;
+        var dni = document.getElementById("dni").value.trim();
+        var edad = edadDesdeFecha(campoFechaNacimiento.value);
+        var dniDuplicado = matriculas.some(function(estudiante) {
+            return estudiante.dni === dni && estudiante.id !== idActual;
+        });
+        if (dniDuplicado) {
+            mostrarAlertaMatricula(alertaEstudiante, "Ya existe un estudiante registrado con ese DNI.", "error");
+            return;
+        }
+        if (edad === "" || edad > 120) {
+            mostrarAlertaMatricula(alertaEstudiante, "Verifique la fecha de nacimiento para calcular una edad válida.", "error");
+            return;
+        }
+        var grado = selectGrado.value;
+        var seccion = selectSeccion.value;
+        if (seccion === "B" && grado !== "2") {
+            mostrarAlertaMatricula(alertaEstudiante, "La sección B solo está disponible para 2º de secundaria.", "error");
+            return;
+        }
+        var registro = {
+            id: idActual || siguienteId(matriculas, "E"),
+            codigoModular: document.getElementById("codigo-modular").value.trim(),
+            nombres: document.getElementById("nombres").value.trim(),
+            apellidoPaterno: document.getElementById("apellido-paterno").value.trim(),
+            apellidoMaterno: document.getElementById("apellido-materno").value.trim(),
+            dni: dni,
+            fechaNacimiento: campoFechaNacimiento.value,
+            edad: edad,
+            genero: document.getElementById("genero").value,
+            historialEnfermedades: document.getElementById("historial-enfermedades").value.trim(),
+            celular: document.getElementById("celular-estudiante").value.trim(),
+            procedencia: document.getElementById("procedencia-estudiante").value.trim(),
+            grado: grado,
+            seccion: seccion,
+            fecha: idActual ? (matriculas.find(function(item) { return item.id === idActual; }).fecha || fechaHoy.split("-").reverse().join("/")) : fechaHoy.split("-").reverse().join("/"),
+            periodo: "2026 - I",
+            sincronizadoSiagie: false
+        };
+        if (idActual) {
+            var indice = matriculas.findIndex(function(estudiante) { return estudiante.id === idActual; });
+            matriculas[indice] = registro;
+        } else {
+            matriculas.push(registro);
+        }
+        sincronizarReportesMatricula();
+        actualizarDashboard();
+        actualizarListasMatricula();
+        limpiarEdicionEstudiante();
+        mostrarAlertaMatricula(alertaEstudiante, idActual ? "Cambios del estudiante guardados." : "Estudiante matriculado correctamente.", "exito");
+    });
+
+    formApoderado.addEventListener("submit", function(evento) {
+        evento.preventDefault();
+        var idActual = apoderadoEnEdicion;
+        var dni = document.getElementById("ap_dni").value.trim();
+        if (apoderados.some(function(apoderado) { return apoderado.dni === dni && apoderado.id !== idActual; })) {
+            mostrarAlertaMatricula(alertaApoderado, "Ya existe un apoderado registrado con ese DNI.", "error");
+            return;
+        }
+        var registro = {
+            id: idActual || siguienteId(apoderados, "P"),
+            nombres: document.getElementById("ap_nombres").value.trim(),
+            apellidoPaterno: document.getElementById("ap-apellido-paterno").value.trim(),
+            apellidoMaterno: document.getElementById("ap-apellido-materno").value.trim(),
+            dni: dni,
+            sexo: document.getElementById("ap-sexo").value,
+            celular: document.getElementById("ap_telefono").value.trim(),
+            procedencia: document.getElementById("ap-procedencia").value.trim()
+        };
+        if (idActual) {
+            var indice = apoderados.findIndex(function(apoderado) { return apoderado.id === idActual; });
+            apoderados[indice] = registro;
+        } else {
+            apoderados.push(registro);
+        }
+        actualizarListasMatricula();
+        limpiarEdicionApoderado();
+        mostrarAlertaMatricula(alertaApoderado, idActual ? "Cambios del apoderado guardados." : "Apoderado registrado correctamente.", "exito");
+    });
+
+    formAsociacion.addEventListener("submit", function(evento) {
+        evento.preventDefault();
+        var estudianteId = document.getElementById("asociacion-estudiante").value;
+        var apoderadoId = document.getElementById("asociacion-apoderado").value;
+        var duplicada = asociaciones.some(function(asociacion) {
+            return asociacion.estudianteId === estudianteId && asociacion.apoderadoId === apoderadoId && asociacion.id !== asociacionEnEdicion;
+        });
+        if (duplicada) {
+            mostrarAlertaMatricula(alertaAsociacion, "Esta asociación ya existe.", "error");
+            return;
+        }
+        var estabaEditando = Boolean(asociacionEnEdicion);
+        var registro = {
+            id: asociacionEnEdicion || siguienteId(asociaciones, "R"),
+            estudianteId: estudianteId,
+            apoderadoId: apoderadoId,
+            parentesco: document.getElementById("asociacion-parentesco").value,
+            fecha: document.getElementById("asociacion-fecha").value,
+            observacion: document.getElementById("asociacion-observacion").value.trim()
+        };
+        if (asociacionEnEdicion) {
+            var indice = asociaciones.findIndex(function(asociacion) { return asociacion.id === asociacionEnEdicion; });
+            asociaciones[indice] = registro;
+        } else {
+            asociaciones.push(registro);
+        }
+        actualizarListasMatricula();
+        limpiarEdicionAsociacion();
+        mostrarAlertaMatricula(alertaAsociacion, estabaEditando ? "Asociación actualizada." : "Estudiante y apoderado asociados correctamente.", "exito");
+    });
+
+    function manejarAccionesTabla(evento, tipo) {
+        var boton = evento.target.closest("button[data-accion]");
+        if (!boton) {
+            return;
+        }
+        var fila = boton.closest("tr");
+        var accion = boton.dataset.accion;
+        if (tipo === "estudiante") {
+            var estudiante = matriculas.find(function(item) { return item.id === textoCeldaId(fila); });
+            if (!estudiante) {
+                return;
+            }
+            if (accion === "consultar") {
+                consultarRegistro("Detalle del estudiante", estudiante, true);
+            } else if (accion === "editar") {
+                iniciarEdicionEstudiante(estudiante);
+            } else if (accion === "eliminar" && window.confirm("¿Eliminar la matrícula de " + nombreCompleto(estudiante) + "?")) {
+                matriculas = matriculas.filter(function(item) { return item.id !== estudiante.id; });
+                asociaciones = asociaciones.filter(function(item) { return item.estudianteId !== estudiante.id; });
+                sincronizarReportesMatricula();
+                actualizarDashboard();
+                actualizarListasMatricula();
+                mostrarAlertaMatricula(alertaEstudiante, "Estudiante y sus asociaciones eliminados.", "exito");
+            } else if (accion === "enviar") {
+                estudiante.sincronizadoSiagie = true;
+                renderizarEstudiantes();
+                mostrarAlertaMatricula(alertaEstudiante, "Simulación SIAGIE exitosa: datos de " + estudiante.id + " enviados correctamente. No se realizó una conexión real.", "exito");
+            }
+        } else if (tipo === "apoderado") {
+            var apoderado = apoderados.find(function(item) { return item.id === textoCeldaId(fila); });
+            if (!apoderado) {
+                return;
+            }
+            if (accion === "consultar") {
+                consultarRegistro("Detalle del apoderado", apoderado, true);
+            } else if (accion === "editar") {
+                iniciarEdicionApoderado(apoderado);
+            } else if (accion === "eliminar" && window.confirm("¿Eliminar el registro de " + nombreCompleto(apoderado) + "?")) {
+                apoderados = apoderados.filter(function(item) { return item.id !== apoderado.id; });
+                asociaciones = asociaciones.filter(function(item) { return item.apoderadoId !== apoderado.id; });
+                actualizarListasMatricula();
+                mostrarAlertaMatricula(alertaApoderado, "Apoderado y sus asociaciones eliminados.", "exito");
+            }
+        } else {
+            var asociacion = asociaciones.find(function(item) { return item.id === fila.dataset.id; });
+            if (!asociacion) {
+                return;
+            }
+            if (accion === "consultar") {
+                consultarRegistro("Detalle de la asociación", asociacion, false);
+            } else if (accion === "editar") {
+                iniciarEdicionAsociacion(asociacion);
+            } else if (accion === "eliminar" && window.confirm("¿Eliminar esta asociación?")) {
+                asociaciones = asociaciones.filter(function(item) { return item.id !== asociacion.id; });
+                actualizarListasMatricula();
+                mostrarAlertaMatricula(alertaAsociacion, "Asociación eliminada.", "exito");
+            }
+        }
+    }
+
+    function textoCeldaId(fila) {
+        return fila.cells[0].textContent;
+    }
+
+    tablaEstudiantes.addEventListener("click", function(evento) { manejarAccionesTabla(evento, "estudiante"); });
+    tablaApoderados.addEventListener("click", function(evento) { manejarAccionesTabla(evento, "apoderado"); });
+    tablaRelaciones.addEventListener("click", function(evento) { manejarAccionesTabla(evento, "asociacion"); });
+
+    document.getElementById("sincronizar-siagie").addEventListener("click", function() {
+        var pendientes = matriculas.filter(function(estudiante) { return !estudiante.sincronizadoSiagie; });
+        pendientes.forEach(function(estudiante) { estudiante.sincronizadoSiagie = true; });
+        renderizarEstudiantes();
+        mostrarAlertaMatricula(
+            alertaEstudiante,
+            pendientes.length
+                ? "Simulación SIAGIE exitosa: " + pendientes.length + " registro(s) enviados. No se realizó una conexión real."
+                : "No hay registros pendientes por simular.",
+            "exito"
+        );
+    });
+
+    document.getElementById("cancelar-edicion-estudiante").addEventListener("click", limpiarEdicionEstudiante);
+    document.getElementById("cancelar-edicion-apoderado").addEventListener("click", limpiarEdicionApoderado);
+    document.getElementById("cancelar-edicion-asociacion").addEventListener("click", limpiarEdicionAsociacion);
+    document.getElementById("buscar-estudiante-tabla").addEventListener("click", renderizarEstudiantes);
+    document.getElementById("filtro-grado").addEventListener("change", renderizarEstudiantes);
+    document.getElementById("filtro-sexo-estudiante").addEventListener("change", renderizarEstudiantes);
+    document.getElementById("buscar-apoderado-tabla").addEventListener("click", renderizarApoderados);
+    document.getElementById("filtro-sexo-apoderado").addEventListener("change", renderizarApoderados);
+    document.getElementById("buscar-estudiante-asociacion-btn").addEventListener("click", renderizarOpcionesAsociacion);
+    document.getElementById("buscar-apoderado-asociacion-btn").addEventListener("click", renderizarOpcionesAsociacion);
+    document.getElementById("buscar-asociacion-tabla").addEventListener("click", renderizarAsociaciones);
+
+    [
+        ["filtro-estudiante", "buscar-estudiante-tabla"],
+        ["filtro-apoderado", "buscar-apoderado-tabla"],
+        ["buscar-estudiante-asociacion", "buscar-estudiante-asociacion-btn"],
+        ["buscar-apoderado-asociacion", "buscar-apoderado-asociacion-btn"],
+        ["filtro-asociacion", "buscar-asociacion-tabla"]
+    ].forEach(function(camposBusqueda) {
+        document.getElementById(camposBusqueda[0]).addEventListener("keydown", function(evento) {
+            if (evento.key === "Enter") {
+                evento.preventDefault();
+                document.getElementById(camposBusqueda[1]).click();
+            }
+        });
+    });
+
+    // Los registros iniciales son demostrativos y se muestran como pendientes de sincronización.
+    matriculas.forEach(function(estudiante) {
+        estudiante.sincronizadoSiagie = false;
+        estudiante.edad = Number.parseInt(estudiante.edad, 10) || "";
+    });
+    actualizarListasMatricula();
 });

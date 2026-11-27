@@ -42,11 +42,16 @@ Para variantes más suaves de un estado, conservar el mismo tono y reducir su op
 
 ### Gráficos
 
-Usar las series en este orden, sin saltarse primero los colores principales:
+Usar las series en este orden, sin saltarse primero los colores principales. Los tokens CSS deben conservar los valores de esta guía:
 
-1. Principales: azul océano `#007ACC`, amarillo `#FAB426`.
-2. Secundarios: turquesa vívido `#009E73`, magenta `#CC79A7`.
-3. Complementarios: bermellón `#D55E00`, púrpura ciruelo `#3B1C47`.
+| Serie | Color | HEX | Token CSS |
+|---|---|---|---|
+| Principal 1 | Azul océano | `#007ACC` | `--color-chart-ocean` |
+| Principal 2 | Amarillo | `#FAB426` | `--color-chart-yellow` |
+| Secundario 1 | Turquesa vívido | `#009E73` | `--color-chart-turquoise` |
+| Secundario 2 | Magenta | `#CC79A7` | `--color-chart-magenta` |
+| Complementario 1 | Bermellón | `#D55E00` | `--color-chart-vermilion` |
+| Complementario 2 | Púrpura ciruelo | `#3B1C47` | `--color-chart-plum` |
 
 ## Aplicación por elemento
 
