@@ -1,9 +1,3 @@
-@media (min-width: 900px) {
-  .home-modules {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 600px) {
   html {
     scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom));
@@ -116,7 +110,7 @@
     gap: 6px;
   }
 
-  .header-year label {
+  .header-year__etiqueta {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -128,53 +122,36 @@
     border: 0;
   }
 
-  .header-year select {
+  .header-year__valor {
+    display: inline-flex;
+    align-items: center;
     min-height: 40px;
-    padding-inline: 4px;
   }
 
   .carousel {
     padding: 16px;
   }
 
-  .carousel-controls button {
-    padding: 8px 12px;
-  }
-
-  .home-hero,
-  .home-hero .carousel-slide {
-    min-height: 210px;
-  }
-
   .home-hero {
+    --home-hero-altura: 210px;
     padding: 0;
   }
 
-  .home-hero__copy {
-    max-width: 100%;
-    padding: 18px;
+  .home-hero--compact {
+    --home-hero-altura: 150px;
   }
 
-  .home-hero .carousel-controls {
-    top: 8px;
-    right: 8px;
-    bottom: auto;
+  .home-hero__copy {
+    max-width: calc(100% - 24px);
+    padding: 14px 16px;
   }
 
   .home-hero__copy p {
     font-size: var(--font-size-min);
   }
 
-  .home-module {
-    grid-template-columns: 52px minmax(0, 1fr) 30px;
-    justify-items: stretch;
-    min-height: 96px;
-    padding: 14px;
-    text-align: left;
-  }
-
-  .home-module__text strong {
-    font-size: var(--font-size-h3);
+  .inicio-dona-contenedor {
+    justify-content: center;
   }
 
   .matricula-module {

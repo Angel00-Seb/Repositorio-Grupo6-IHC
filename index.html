@@ -32,8 +32,8 @@
             <form id="login-form">
                 <div class="input-group"><label for="usuario">Usuario:</label><input type="text" id="usuario" placeholder="Ingrese su usuario" required></div>
                 <div class="input-group"><label for="password">Contraseña:</label><input type="password" id="password" placeholder="Ingrese su contraseña" required></div>
+                <button type="button" id="login-autocompletar" class="login-autocompletar" aria-label="Autocompletar credenciales de demostración" title="Autocompletar credenciales de demostración"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /><path d="M12 1v3M12 20v3M1 12h3M20 12h3" /></svg></button>
                 <button type="submit" class="btn-primario">Ingresar al Sistema</button>
-                <div class="demo-info"><strong>Prototipo de demostración.</strong><br>Usuario: <b>directora</b> <br> Contraseña: <b>demo2026</b></div>
                 <p id="login-error" class="error-msg oculto">Usuario o contraseña incorrectos.</p>
             </form>
         </div>
@@ -105,12 +105,8 @@
                         <div class="header-year">
                             <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></svg>
                             <div class="header-year__info">
-                                <label for="anio-academico">Año académico</label>
-                                <select id="anio-academico" name="anio-academico">
-                                    <option value="2026" selected>2026</option>
-                                    <option value="2025">2025</option>
-                                    <option value="2024">2024</option>
-                                </select>
+                                <span class="header-year__etiqueta">Año académico</span>
+                                <span class="header-year__valor">2026</span>
                             </div>
                         </div>
                     </div>
@@ -120,43 +116,118 @@
                     <!-- VIEW: INICIO -->
                     <section id="view-inicio" class="view" aria-label="Inicio">
 
-                        <h2 class="view-title">Página principal</h2>
-                        <p class="home-welcome">Bienvenido/a</p>
-                        <p class="view-subtitle">Seleccione el módulo en el que desea trabajar.</p>
-
-                        <div class="carousel home-hero" role="region" aria-label="Carrusel de la institución">
-                            <div class="carousel-slide active">
-                                <img src="assets/i1.jpg" alt="Fachada de la I.E. José Carlos Mariátegui" class="home-hero__image">
-                                <div class="home-hero__copy"><h3>I.E. José Carlos Mariátegui</h3><p>Gestión de matrícula y asistencia docente</p></div>
+                        <div id="inicio-carousel" class="carousel slide carousel-fade home-hero home-hero--compact" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false" role="region" aria-label="Imágenes del colegio">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active"><img src="assets/i1.jpg" class="d-block w-100 home-hero__image" alt="Fachada de la I.E. José Carlos Mariátegui"></div>
+                                <div class="carousel-item"><img src="assets/ie2.jpg" class="d-block w-100 home-hero__image" alt="Comunidad educativa reunida en el patio de la institución"></div>
                             </div>
-                            <div class="carousel-slide">
-                                <img src="assets/ie2.jpg" alt="Comunidad educativa reunida en el patio de la institución" class="home-hero__image">
-                                <div class="home-hero__copy"><h3>Sistema de Matrícula</h3><p>Consulte los módulos desde un solo lugar</p></div>
-                            </div>
-                            <div class="carousel-controls">
-                                <button id="prevBtn" type="button" aria-label="Diapositiva anterior">&#10094;</button>
-                                <button id="nextBtn" type="button" aria-label="Diapositiva siguiente">&#10095;</button>
+                            <span class="home-hero__fecha" id="inicio-fecha"></span>
+                            <div class="home-hero__copy">
+                                <h3 id="inicio-saludo">Bienvenida</h3>
+                                <p>Panel general de la I.E. José Carlos Mariátegui — Conchán.</p>
                             </div>
                         </div>
 
-                        <h3 class="home-modules__title">Módulos del sistema</h3>
+                        <h3 class="inicio-seccion__titulo">Resumen institucional</h3>
+                        <div id="inicio-kpis" class="row g-3 inicio-kpis" aria-label="Indicadores del colegio"></div>
 
-                        <div class="home-modules" role="group" aria-label="Módulos del sistema">
-                            <button class="home-module" type="button" data-home-vista="matricula">
-                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" /></svg></span>
-                                <span class="home-module__text"><strong>Matrícula</strong><small>Estudiantes, apoderados y secciones</small></span>
-                                <span class="home-module__arrow" aria-hidden="true">›</span>
-                            </button>
-                            <button class="home-module" type="button" data-home-vista="docentes">
-                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg></span>
-                                <span class="home-module__text"><strong>Docentes</strong><small>Asistencia y horarios</small></span>
-                                <span class="home-module__arrow" aria-hidden="true">›</span>
-                            </button>
-                            <button class="home-module" type="button" data-home-vista="reportes">
-                                <span class="home-module__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 4v16h16M8 16v-5M13 16V7M18 16v-8" /></svg></span>
-                                <span class="home-module__text"><strong>Reportes</strong><small>Matrícula y asistencia</small></span>
-                                <span class="home-module__arrow" aria-hidden="true">›</span>
-                            </button>
+                        <h3 class="inicio-seccion__titulo">Indicadores y distribución</h3>
+                        <div class="row g-3 inicio-graficos">
+                            <div class="col-12 col-xl-7">
+                                <article class="card h-100 inicio-card">
+                                    <div class="card-body">
+                                        <h4 class="inicio-card__titulo">Estudiantes por aula</h4>
+                                        <p class="inicio-card__subtitulo">Comparativa con el aforo de 30 estudiantes por aula.</p>
+                                        <div class="resumen-dashboard__leyenda" aria-label="Leyenda del gráfico">
+                                            <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--estudiantes" aria-hidden="true"></span>Estudiantes</span>
+                                            <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--capacidad" aria-hidden="true"></span>Capacidad</span>
+                                        </div>
+                                        <div class="resumen-dashboard__grafico inicio-grafico-aulas">
+                                            <div class="resumen-dashboard__eje-y" aria-hidden="true">
+                                                <span>30</span><span>25</span><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span>
+                                            </div>
+                                            <div id="inicio-grafico-aulas" class="resumen-dashboard__secciones"></div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-5">
+                                <article class="card h-100 inicio-card">
+                                    <div class="card-body">
+                                        <h4 class="inicio-card__titulo">Distribución por género</h4>
+                                        <p class="inicio-card__subtitulo">Estudiantes matriculados según género registrado.</p>
+                                        <div class="inicio-dona-contenedor">
+                                            <div id="inicio-dona-genero" class="dashboard-dona" role="img" aria-label="Distribución de estudiantes por género"></div>
+                                            <ul id="inicio-leyenda-genero" class="dashboard-leyenda"></ul>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-5">
+                                <article class="card h-100 inicio-card">
+                                    <div class="card-body">
+                                        <h4 class="inicio-card__titulo">Estudiantes por grado</h4>
+                                        <p class="inicio-card__subtitulo">Distribución de la matrícula por grado escolar.</p>
+                                        <div id="inicio-barras-grado" class="inicio-barras"></div>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-7">
+                                <article class="card h-100 inicio-card">
+                                    <div class="card-body">
+                                        <h4 class="inicio-card__titulo">Asistencia docente</h4>
+                                        <p class="inicio-card__subtitulo">Estado general de los registros de asistencia disponibles.</p>
+                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                            <strong id="inicio-asistencia-porcentaje" class="inicio-asistencia__porcentaje">—</strong>
+                                            <span id="inicio-asistencia-detalle" class="inicio-card__subtitulo mb-0"></span>
+                                        </div>
+                                        <div id="inicio-asistencia-progreso" class="progress inicio-progreso" role="img" aria-label="Porcentaje de asistencia puntual">
+                                            <div id="inicio-asistencia-barra" class="progress-bar inicio-progreso__relleno"></div>
+                                        </div>
+                                        <ul id="inicio-asistencia-estados" class="inicio-estados"></ul>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+
+                        <div class="reportes-disponibles">
+                            <div class="reportes-disponibles__encabezado">
+                                <h3 class="reportes-disponibles__titulo">Módulos del sistema</h3>
+                                <span class="reportes-disponibles__linea" aria-hidden="true"></span>
+                            </div>
+                        </div>
+
+                        <div class="report-grid report-grid--modulos" role="group" aria-label="Módulos del sistema">
+                            <div class="card w-100 mb-3 report-card report-card--modulo" data-home-vista="matricula">
+                                <div class="card-body">
+                                    <div class="report-card__content">
+                                        <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" /></svg>
+                                        <span class="report-card__divider" aria-hidden="true"></span>
+                                        <div class="report-card__text"><h4 class="card-title report-card__title">Matrícula</h4><p class="card-text report-card__desc">Estudiantes, apoderados y secciones</p></div>
+                                    </div>
+                                    <button type="button" class="btn-solid theme-primary" data-home-vista="matricula">Ir al módulo</button>
+                                </div>
+                            </div>
+                            <div class="card w-100 mb-3 report-card report-card--modulo" data-home-vista="docentes">
+                                <div class="card-body">
+                                    <div class="report-card__content">
+                                        <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18" /></svg>
+                                        <span class="report-card__divider" aria-hidden="true"></span>
+                                        <div class="report-card__text"><h4 class="card-title report-card__title">Docentes</h4><p class="card-text report-card__desc">Asistencia y horarios</p></div>
+                                    </div>
+                                    <button type="button" class="btn-solid theme-primary" data-home-vista="docentes">Ir al módulo</button>
+                                </div>
+                            </div>
+                            <div class="card w-100 mb-3 report-card report-card--modulo" data-home-vista="reportes">
+                                <div class="card-body">
+                                    <div class="report-card__content">
+                                        <svg class="icono report-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4v16h16M8 16v-5M13 16V7M18 16v-8" /></svg>
+                                        <span class="report-card__divider" aria-hidden="true"></span>
+                                        <div class="report-card__text"><h4 class="card-title report-card__title">Reportes</h4><p class="card-text report-card__desc">Matrícula y asistencia</p></div>
+                                    </div>
+                                    <button type="button" class="btn-solid theme-primary" data-home-vista="reportes">Ir al módulo</button>
+                                </div>
+                            </div>
                         </div>
 
                         <button id="home-logout" class="home-logout" type="button">Cerrar sesión</button>
