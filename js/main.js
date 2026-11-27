@@ -911,6 +911,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         mostrarAsistencias();
+        actualizarDashboardReportes();
         var estabaEditando = registroAnterior !== null;
         restablecerFormularioAsistencia();
         mostrarMensaje(
@@ -1014,25 +1015,27 @@ document.addEventListener("DOMContentLoaded", function() {
     botonBuscarDocenteHorario.addEventListener("click", function() {
         consultarHorarioPorDocente();
     });
-    var pestañasRegistro = document.querySelectorAll(".docentes-tabs .docentes-tab");
-    var panelesRegistro = document.querySelectorAll(".docentes-tab-panel");
-    pestañasRegistro.forEach(function(pestaña) {
-        pestaña.addEventListener("click", function() {
-            var nombrePanel = pestaña.getAttribute("data-tab");
-            pestañasRegistro.forEach(function(otra) {
-                var activa = otra === pestaña;
-                otra.classList.toggle("activo", activa);
-                otra.setAttribute("aria-selected", activa ? "true" : "false");
-            });
-            panelesRegistro.forEach(function(panel) {
-                if (panel.getAttribute("data-panel") === nombrePanel) {
-                    panel.classList.remove("oculto", "show");
-                    void panel.offsetWidth;
-                    panel.classList.add("show");
-                } else {
-                    panel.classList.add("oculto");
-                    panel.classList.remove("show");
-                }
+    document.querySelectorAll(".docentes-tabs-contenedor").forEach(function(contenedor) {
+        var pestañasRegistro = contenedor.querySelectorAll(".docentes-tabs .docentes-tab");
+        var panelesRegistro = contenedor.querySelectorAll(".docentes-tab-panel");
+        pestañasRegistro.forEach(function(pestaña) {
+            pestaña.addEventListener("click", function() {
+                var nombrePanel = pestaña.getAttribute("data-tab");
+                pestañasRegistro.forEach(function(otra) {
+                    var activa = otra === pestaña;
+                    otra.classList.toggle("activo", activa);
+                    otra.setAttribute("aria-selected", activa ? "true" : "false");
+                });
+                panelesRegistro.forEach(function(panel) {
+                    if (panel.getAttribute("data-panel") === nombrePanel) {
+                        panel.classList.remove("oculto", "show");
+                        void panel.offsetWidth;
+                        panel.classList.add("show");
+                    } else {
+                        panel.classList.add("oculto");
+                        panel.classList.remove("show");
+                    }
+                });
             });
         });
     });
@@ -1077,6 +1080,18 @@ document.addEventListener("DOMContentLoaded", function() {
             var dialogo = document.querySelector(boton.getAttribute("data-bs-target"));
             if (dialogo === dialogoAsistencia) {
                 restablecerFormularioAsistencia();
+            }
+            if (dialogo && dialogo.id === "dialog-registrar-estudiante") {
+                limpiarEdicionEstudiante();
+                ocultarAlertaMatricula(alertaEstudiante);
+            }
+            if (dialogo && dialogo.id === "dialog-registrar-apoderado") {
+                limpiarEdicionApoderado();
+                ocultarAlertaMatricula(alertaApoderado);
+            }
+            if (dialogo && dialogo.id === "dialog-registrar-asociacion") {
+                limpiarEdicionAsociacion();
+                ocultarAlertaMatricula(alertaAsociacion);
             }
             abrirDialogo(dialogo);
         });
@@ -1379,62 +1394,117 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         ];
         var contenedorCifras = document.getElementById("resumen-dashboard-cifras");
-        contenedorCifras.replaceChildren();
+        if (contenedorCifras) {
+            contenedorCifras.replaceChildren();
+            cifras.forEach(function(cifra) {
+                var tarjeta = document.createElement("div");
+                tarjeta.className = "resumen-dashboard__cifra";
+
+                var icono = document.createElement("div");
+                icono.className = "resumen-dashboard__cifra-icono";
+                icono.innerHTML = cifra.icono;
+
+                var divisor = document.createElement("span");
+                divisor.className = "resumen-dashboard__cifra-divisor";
+                divisor.setAttribute("aria-hidden", "true");
+
+                var info = document.createElement("div");
+                info.className = "resumen-dashboard__cifra-info";
+
+                var valor = document.createElement("strong");
+                valor.textContent = cifra.valor;
+                var texto = document.createElement("span");
+                texto.textContent = cifra.texto;
+                info.append(valor, texto);
+
+                tarjeta.append(icono, divisor, info);
+                contenedorCifras.appendChild(tarjeta);
+            });
+        }
+
+        var contenedorSecciones = document.getElementById("resumen-dashboard-secciones");
+        if (contenedorSecciones) {
+            contenedorSecciones.replaceChildren();
+            conteos.forEach(function(item) {
+                var columna = document.createElement("div");
+                columna.className = "resumen-dashboard__seccion";
+                var descripcionBarra = item.etiqueta + ": " + item.cantidad + " de " + aforo + " estudiantes";
+                columna.setAttribute("role", "img");
+                columna.setAttribute("aria-label", descripcionBarra);
+
+                var valor = document.createElement("span");
+                valor.className = "resumen-dashboard__valor";
+                valor.textContent = item.cantidad;
+
+                var barra = document.createElement("div");
+                barra.className = "resumen-dashboard__barra";
+                barra.setAttribute("aria-hidden", "true");
+
+                var relleno = document.createElement("div");
+                relleno.className = "resumen-dashboard__relleno";
+                var porcentaje = Math.min((item.cantidad / aforo) * 100, 100);
+                relleno.style.height = porcentaje + "%";
+                barra.appendChild(relleno);
+
+                var etiqueta = document.createElement("span");
+                etiqueta.className = "resumen-dashboard__etiqueta";
+                etiqueta.textContent = item.etiqueta;
+                etiqueta.setAttribute("aria-hidden", "true");
+
+                columna.append(valor, barra, etiqueta);
+                contenedorSecciones.appendChild(columna);
+            });
+        }
+        actualizarDashboardReportes();
+    }
+
+    function actualizarDashboardReportes() {
+        var contenedor = document.getElementById("resumen-reportes-cifras");
+        if (!contenedor) {
+            return;
+        }
+        var pendientesSiagie = matriculas.filter(function(estudiante) { return !estudiante.sincronizadoSiagie; }).length;
+        var cifras = [
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M16 13H8M16 17H8M10 9H8" /></svg>',
+                valor: "3",
+                texto: "Reportes disponibles"
+            },
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>',
+                valor: String(matriculas.length),
+                texto: "Estudiantes en matrícula"
+            },
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 7v5h-5M4 17v-5h5" /><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2" /></svg>',
+                valor: String(pendientesSiagie),
+                texto: "Pendientes de envío SIAGIE"
+            },
+            {
+                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M9 16l2 2 4-4" /></svg>',
+                valor: String(asistencias.length),
+                texto: "Asistencias registradas"
+            }
+        ];
+        contenedor.replaceChildren();
         cifras.forEach(function(cifra) {
             var tarjeta = document.createElement("div");
             tarjeta.className = "resumen-dashboard__cifra";
-
             var icono = document.createElement("div");
             icono.className = "resumen-dashboard__cifra-icono";
             icono.innerHTML = cifra.icono;
-
             var divisor = document.createElement("span");
             divisor.className = "resumen-dashboard__cifra-divisor";
             divisor.setAttribute("aria-hidden", "true");
-
             var info = document.createElement("div");
             info.className = "resumen-dashboard__cifra-info";
-
             var valor = document.createElement("strong");
             valor.textContent = cifra.valor;
             var texto = document.createElement("span");
             texto.textContent = cifra.texto;
             info.append(valor, texto);
-
             tarjeta.append(icono, divisor, info);
-            contenedorCifras.appendChild(tarjeta);
-        });
-
-        var contenedorSecciones = document.getElementById("resumen-dashboard-secciones");
-        contenedorSecciones.replaceChildren();
-        conteos.forEach(function(item) {
-            var columna = document.createElement("div");
-            columna.className = "resumen-dashboard__seccion";
-            var descripcionBarra = item.etiqueta + ": " + item.cantidad + " de " + aforo + " estudiantes";
-            columna.setAttribute("role", "img");
-            columna.setAttribute("aria-label", descripcionBarra);
-
-            var valor = document.createElement("span");
-            valor.className = "resumen-dashboard__valor";
-            valor.textContent = item.cantidad;
-
-            var barra = document.createElement("div");
-            barra.className = "resumen-dashboard__barra";
-            barra.setAttribute("aria-hidden", "true");
-
-            var relleno = document.createElement("div");
-            relleno.className = "resumen-dashboard__relleno";
-            var porcentaje = Math.min((item.cantidad / aforo) * 100, 100);
-            relleno.style.height = porcentaje + "%";
-            barra.appendChild(relleno);
-
-            var etiqueta = document.createElement("span");
-            etiqueta.className = "resumen-dashboard__etiqueta";
-            etiqueta.textContent = item.etiqueta;
-            etiqueta.setAttribute("aria-hidden", "true");
-
-            columna.append(valor, barra, etiqueta);
-            contenedorSecciones.appendChild(columna);
+            contenedor.appendChild(tarjeta);
         });
     }
 
@@ -1810,16 +1880,33 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
+    function paresAlertaMatricula(elemento) {
+        var pares = {
+            "alerta": "alerta-estudiante-dialogo",
+            "alerta-estudiante-dialogo": "alerta",
+            "alerta-apoderado": "alerta-apoderado-dialogo",
+            "alerta-apoderado-dialogo": "alerta-apoderado",
+            "alerta-asociacion": "alerta-asociacion-dialogo",
+            "alerta-asociacion-dialogo": "alerta-asociacion"
+        };
+        var par = pares[elemento.id] ? document.getElementById(pares[elemento.id]) : null;
+        return par ? [elemento, par] : [elemento];
+    }
+
     function mostrarAlertaMatricula(elemento, mensaje, tipo) {
-        elemento.textContent = mensaje;
-        elemento.classList.remove("oculto", "error", "exito");
-        elemento.classList.add(tipo);
+        paresAlertaMatricula(elemento).forEach(function(alerta) {
+            alerta.textContent = mensaje;
+            alerta.classList.remove("oculto", "error", "exito");
+            alerta.classList.add(tipo);
+        });
     }
 
     function ocultarAlertaMatricula(elemento) {
-        elemento.classList.add("oculto");
-        elemento.classList.remove("error", "exito");
-        elemento.textContent = "";
+        paresAlertaMatricula(elemento).forEach(function(alerta) {
+            alerta.classList.add("oculto");
+            alerta.classList.remove("error", "exito");
+            alerta.textContent = "";
+        });
     }
 
     function limitarEntradaNumerica(elemento, maximo) {
@@ -2063,7 +2150,10 @@ document.addEventListener("DOMContentLoaded", function() {
         selectSeccion.value = estudiante.seccion || "";
         document.getElementById("guardar-estudiante").textContent = "Guardar cambios";
         document.getElementById("cancelar-edicion-estudiante").classList.remove("oculto");
-        formMatricula.scrollIntoView({ behavior: "smooth", block: "start" });
+        var dialogoEstudiante = document.getElementById("dialog-registrar-estudiante");
+        var tituloEstudiante = document.getElementById("dialog-registrar-estudiante-label");
+        if (tituloEstudiante) { tituloEstudiante.textContent = "Editar estudiante"; }
+        abrirDialogo(dialogoEstudiante);
     }
 
     function limpiarEdicionEstudiante() {
@@ -2072,6 +2162,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("estudiante-id").value = siguienteId(matriculas, "E");
         document.getElementById("guardar-estudiante").textContent = "Guardar matrícula";
         document.getElementById("cancelar-edicion-estudiante").classList.add("oculto");
+        var tituloEstudiante = document.getElementById("dialog-registrar-estudiante-label");
+        if (tituloEstudiante) { tituloEstudiante.textContent = "Registrar estudiante"; }
     }
 
     function iniciarEdicionApoderado(apoderado) {
@@ -2086,7 +2178,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("ap-procedencia").value = apoderado.procedencia;
         document.getElementById("guardar-apoderado").textContent = "Guardar cambios";
         document.getElementById("cancelar-edicion-apoderado").classList.remove("oculto");
-        formApoderado.scrollIntoView({ behavior: "smooth", block: "start" });
+        var dialogoApoderado = document.getElementById("dialog-registrar-apoderado");
+        var tituloApoderado = document.getElementById("dialog-registrar-apoderado-label");
+        if (tituloApoderado) { tituloApoderado.textContent = "Editar apoderado"; }
+        abrirDialogo(dialogoApoderado);
     }
 
     function limpiarEdicionApoderado() {
@@ -2095,6 +2190,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("ap-id").value = siguienteId(apoderados, "P");
         document.getElementById("guardar-apoderado").textContent = "Guardar apoderado";
         document.getElementById("cancelar-edicion-apoderado").classList.add("oculto");
+        var tituloApoderado = document.getElementById("dialog-registrar-apoderado-label");
+        if (tituloApoderado) { tituloApoderado.textContent = "Registrar apoderado"; }
     }
 
     function iniciarEdicionAsociacion(asociacion) {
@@ -2109,7 +2206,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("asociacion-observacion").value = asociacion.observacion || "";
         document.getElementById("guardar-asociacion").textContent = "Guardar cambios";
         document.getElementById("cancelar-edicion-asociacion").classList.remove("oculto");
-        formAsociacion.scrollIntoView({ behavior: "smooth", block: "start" });
+        var dialogoAsociacion = document.getElementById("dialog-registrar-asociacion");
+        var tituloAsociacion = document.getElementById("dialog-registrar-asociacion-label");
+        if (tituloAsociacion) { tituloAsociacion.textContent = "Editar asociación"; }
+        abrirDialogo(dialogoAsociacion);
     }
 
     function limpiarEdicionAsociacion() {
@@ -2118,6 +2218,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("asociacion-fecha").value = fechaLocal(new Date());
         document.getElementById("guardar-asociacion").textContent = "Asociar estudiante";
         document.getElementById("cancelar-edicion-asociacion").classList.add("oculto");
+        var tituloAsociacion = document.getElementById("dialog-registrar-asociacion-label");
+        if (tituloAsociacion) { tituloAsociacion.textContent = "Nueva asociación"; }
         renderizarOpcionesAsociacion();
     }
 
@@ -2249,6 +2351,7 @@ document.addEventListener("DOMContentLoaded", function() {
         actualizarDashboard();
         actualizarListasMatricula();
         limpiarEdicionEstudiante();
+        cerrarDialogo(document.getElementById("dialog-registrar-estudiante"));
         mostrarAlertaMatricula(alertaEstudiante, idActual ? "Cambios del estudiante guardados." : "Estudiante matriculado correctamente.", "exito");
     });
 
@@ -2278,6 +2381,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         actualizarListasMatricula();
         limpiarEdicionApoderado();
+        cerrarDialogo(document.getElementById("dialog-registrar-apoderado"));
         mostrarAlertaMatricula(alertaApoderado, idActual ? "Cambios del apoderado guardados." : "Apoderado registrado correctamente.", "exito");
     });
 
@@ -2309,6 +2413,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         actualizarListasMatricula();
         limpiarEdicionAsociacion();
+        cerrarDialogo(document.getElementById("dialog-registrar-asociacion"));
         mostrarAlertaMatricula(alertaAsociacion, estabaEditando ? "Asociación actualizada." : "Estudiante y apoderado asociados correctamente.", "exito");
     });
 
@@ -2393,9 +2498,38 @@ document.addEventListener("DOMContentLoaded", function() {
         );
     });
 
-    document.getElementById("cancelar-edicion-estudiante").addEventListener("click", limpiarEdicionEstudiante);
-    document.getElementById("cancelar-edicion-apoderado").addEventListener("click", limpiarEdicionApoderado);
-    document.getElementById("cancelar-edicion-asociacion").addEventListener("click", limpiarEdicionAsociacion);
+    document.getElementById("cancelar-edicion-estudiante").addEventListener("click", function() {
+        limpiarEdicionEstudiante();
+        cerrarDialogo(document.getElementById("dialog-registrar-estudiante"));
+    });
+    document.getElementById("cancelar-edicion-apoderado").addEventListener("click", function() {
+        limpiarEdicionApoderado();
+        cerrarDialogo(document.getElementById("dialog-registrar-apoderado"));
+    });
+    document.getElementById("cancelar-edicion-asociacion").addEventListener("click", function() {
+        limpiarEdicionAsociacion();
+        cerrarDialogo(document.getElementById("dialog-registrar-asociacion"));
+    });
+
+    ["dialog-registrar-estudiante", "dialog-registrar-apoderado", "dialog-registrar-asociacion"].forEach(function(idDialogo) {
+        var dialogoMatricula = document.getElementById(idDialogo);
+        if (dialogoMatricula) {
+            dialogoMatricula.addEventListener("close", function() {
+                if (idDialogo === "dialog-registrar-estudiante") {
+                    limpiarEdicionEstudiante();
+                    ocultarAlertaMatricula(alertaEstudiante);
+                }
+                if (idDialogo === "dialog-registrar-apoderado") {
+                    limpiarEdicionApoderado();
+                    ocultarAlertaMatricula(alertaApoderado);
+                }
+                if (idDialogo === "dialog-registrar-asociacion") {
+                    limpiarEdicionAsociacion();
+                    ocultarAlertaMatricula(alertaAsociacion);
+                }
+            });
+        }
+    });
     document.getElementById("buscar-estudiante-tabla").addEventListener("click", renderizarEstudiantes);
     document.getElementById("filtro-grado").addEventListener("change", renderizarEstudiantes);
     document.getElementById("filtro-sexo-estudiante").addEventListener("change", renderizarEstudiantes);

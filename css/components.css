@@ -643,6 +643,36 @@ h3 {
   gap: 20px;
 }
 
+.matricula-shell .docentes-tabs-paneles.matricula-tabs-paneles {
+  height: auto;
+  min-height: 400px;
+  overflow: visible;
+}
+
+.matricula-cabecera__acciones {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.docentes-pane-cuerpo.matricula-module {
+  padding: 16px;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.dialog-body.matricula-module {
+  background: var(--color-surface);
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.matricula-filtros--dos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .matricula-module .registros {
   min-width: 0;
 }
@@ -1416,6 +1446,16 @@ legend {
   margin: 0;
   font-weight: 700;
   font-size: var(--font-size-secondary);
+}
+
+.resumen-dashboard__panel-subtitulo {
+  margin: 4px 0 0;
+  color: var(--color-muted-text, var(--color-text));
+  font-size: var(--font-size-min);
+}
+
+.resumen-dashboard--reportes .resumen-dashboard__cifras {
+  margin-bottom: 0;
 }
 
 .reportes-disponibles {
