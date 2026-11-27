@@ -113,10 +113,6 @@
                                 </select>
                             </div>
                         </div>
-                        <button id="theme-toggle" class="btn-theme" type="button" aria-pressed="false" aria-label="Activar modo oscuro" title="Activar modo oscuro">
-                            <svg class="icono icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
-                            <svg class="icono icon-sun oculto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
-                        </button>
                     </div>
                 </header>
 
@@ -169,98 +165,102 @@
 
                     <!-- VIEW: MATRÍCULA -->
                     <section id="view-matricula" class="view oculto" aria-label="Matrícula">
-                        <div class="matricula-module">
-                            <form id="matricula-form">
-                               <fieldset>
-                                    <legend>Datos del Estudiante</legend>
-                                    <div class="input-group">
-                                        <label for="nombres">Nombres:</label>
-                                        <input type="text" id="nombres" required pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo se permiten letras">
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="apellidos">Apellidos:</label>
-                                        <input type="text" id="apellidos" required pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo se permiten letras">
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="dni">DNI (8 dígitos):</label>
-                                        <input type="text" id="dni" required pattern="[0-9]{8}" maxlength="8" inputmode="numeric" autocomplete="off" title="Ingrese 8 dígitos numéricos">
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="genero">Género:</label>
-                                        <select id="genero" required>
-                                            <option value="">Seleccione...</option>
-                                            <option value="Masculino">Masculino</option>
-                                            <option value="Femenino">Femenino</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="grado">Grado (secundaria):</label>
-                                        <select id="grado" required>
-                                            <option value="">Seleccione...</option>
-                                            <option value="1">1º de secundaria</option>
-                                            <option value="2">2º de secundaria</option>
-                                            <option value="3">3º de secundaria</option>
-                                            <option value="4">4º de secundaria</option>
-                                            <option value="5">5º de secundaria</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group">
-                                        <label for="seccion">Sección:</label>
-                                        <select id="seccion" required disabled>
-                                            <option value="">Primero seleccione el grado</option>
-                                            <option value="A">A</option>
-                                            <option value="B">B (Solo 2º de secundaria)</option>
-                                        </select>
-                                    </div>
-                                </fieldset>
-                                <button type="submit" class="btn-primario">Guardar Matrícula</button>
-                            </form>
-                            <div id="alerta" class="oculto"></div>
-
-                            <!-- NUEVO MÓDULO: REGISTRO DE APODERADOS Y ASOCIACIÓN -->
-                            <div class="matricula-module matricula-bloque">
-                                <h3 class="view-title matricula-subtitulo">Registro de Apoderados</h3>
-                                <form id="apoderado-form">
+                        <div class="matricula-contenido">
+                            <section class="matricula-module" aria-labelledby="estudiante-form-titulo">
+                                <h3 id="estudiante-form-titulo" class="view-title matricula-subtitulo">Registro de estudiante</h3>
+                                <form id="matricula-form">
                                     <fieldset>
-                                        <legend>Datos del Apoderado</legend>
-                                        <div class="input-group">
-                                            <label for="ap_nombres">Nombres del Apoderado:</label>
-                                            <input type="text" id="ap_nombres" required pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras">
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="ap_dni">DNI del Apoderado (8 dígitos):</label>
-                                            <input type="text" id="ap_dni" required pattern="\d{8}" maxlength="8" inputmode="numeric" autocomplete="off" title="Solo 8 números">
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="ap_telefono">Teléfono:</label>
-                                            <input type="tel" id="ap_telefono" required pattern="\d{9}" maxlength="9" inputmode="numeric" autocomplete="off" title="9 números">
-                                        </div>
-                                        <div class="input-group">
-                                            <label for="ap_estudiante">Asociar con Estudiante (DNI):</label>
-                                            <input type="text" id="ap_estudiante" required pattern="\d{8}" maxlength="8" inputmode="numeric" autocomplete="off" placeholder="Ingrese DNI del estudiante">
+                                        <legend>Datos del estudiante</legend>
+                                        <div class="matricula-form-grid">
+                                            <div class="input-group"><label for="estudiante-id">ID del estudiante:</label><input id="estudiante-id" type="text" value="Se asigna al guardar" readonly></div>
+                                            <div class="input-group"><label for="codigo-modular">Código modular de I.E. de procedencia (máximo 7 dígitos):</label><input id="codigo-modular" type="text" inputmode="numeric" maxlength="7" pattern="[0-9]{1,7}" required></div>
+                                            <div class="input-group"><label for="nombres">Nombres:</label><input type="text" id="nombres" autocomplete="given-name" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+" title="Ingrese solo letras"></div>
+                                            <div class="input-group"><label for="apellido-paterno">Apellido paterno:</label><input type="text" id="apellido-paterno" autocomplete="family-name" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+" title="Ingrese solo letras"></div>
+                                            <div class="input-group"><label for="apellido-materno">Apellido materno:</label><input type="text" id="apellido-materno" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+" title="Ingrese solo letras"></div>
+                                            <div class="input-group"><label for="dni">DNI (8 dígitos):</label><input type="text" id="dni" required pattern="[0-9]{8}" maxlength="8" inputmode="numeric" autocomplete="off"></div>
+                                            <div class="input-group"><span class="matricula-label">Consulta de identidad</span><button id="buscar-reniec-estudiante" class="btn-secundario matricula-reniec" type="button"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>Simular búsqueda RENIEC</button></div>
+                                            <div class="input-group"><label for="fecha-nacimiento">Fecha de nacimiento:</label><input id="fecha-nacimiento" type="date" required></div>
+                                            <div class="input-group"><label for="edad-estudiante">Edad calculada:</label><input id="edad-estudiante" type="text" value="—" readonly aria-live="polite"></div>
+                                            <div class="input-group"><label for="genero">Sexo:</label><select id="genero" required><option value="">Seleccione...</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option><option value="Otro">Otro</option></select></div>
+                                            <div class="input-group"><label for="historial-enfermedades">Historial de enfermedades:</label><textarea id="historial-enfermedades" rows="3" placeholder="Indique enfermedades relevantes o escriba “Ninguna”" required></textarea></div>
+                                            <div class="input-group"><label for="celular-estudiante">Celular:</label><input id="celular-estudiante" type="tel" inputmode="numeric" maxlength="9" pattern="[0-9]{9}" required></div>
+                                            <div class="input-group"><label for="procedencia-estudiante">Lugar de procedencia:</label><input id="procedencia-estudiante" type="text" required></div>
+                                            <div class="input-group"><label for="grado">Grado (secundaria):</label><select id="grado" required><option value="">Seleccione...</option><option value="1">1º de secundaria</option><option value="2">2º de secundaria</option><option value="3">3º de secundaria</option><option value="4">4º de secundaria</option><option value="5">5º de secundaria</option></select></div>
+                                            <div class="input-group"><label for="seccion">Sección:</label><select id="seccion" required><option value="">Seleccione...</option><option value="A">A</option><option value="B">B</option></select></div>
                                         </div>
                                     </fieldset>
-                                    <button type="submit" class="btn-primario">Registrar Apoderado</button>
+                                    <div class="matricula-form__actions"><button id="guardar-estudiante" type="submit" class="btn-primario">Guardar matrícula</button><button id="cancelar-edicion-estudiante" class="btn-secundario oculto" type="button">Cancelar edición</button></div>
                                 </form>
-                                <div id="alerta-apoderado" class="alerta-matricula oculto"></div>
-                            </div>
+                                <p id="alerta" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
+                            </section>
 
-                            <!-- NUEVA TABLA DE RELACIÓN -->
-                            <div class="matricula-module matricula-bloque">
-                                <h3 class="view-title matricula-subtitulo">Lista de Apoderados y Estudiantes Asociados</h3>
-                                <table class="tabla-registros">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Apoderado</th>
-                                            <th scope="col">DNI Apoderado</th>
-                                            <th scope="col">DNI Estudiante Asociado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabla-relaciones">
-                                        <tr><td colspan="3" class="tabla-registros__vacio">No hay registros aún.</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <section class="matricula-module matricula-bloque" aria-labelledby="lista-estudiantes-titulo">
+                                <div class="matricula-lista__encabezado">
+                                    <h3 id="lista-estudiantes-titulo" class="view-title matricula-subtitulo">Estudiantes matriculados</h3>
+                                    <button id="sincronizar-siagie" class="btn-secundario matricula-siagie" type="button" aria-label="Simular sincronización de estudiantes pendientes con SIAGIE"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 7v5h-5M4 17v-5h5" /><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2" /></svg>Simular envío a SIAGIE</button>
+                                </div>
+                                <div class="matricula-filtros">
+                                    <div class="input-group"><label for="filtro-estudiante">Buscar por nombre o DNI:</label><input id="filtro-estudiante" type="search" placeholder="Nombre o DNI"></div>
+                                    <div class="input-group"><label for="filtro-grado">Filtrar por grado:</label><select id="filtro-grado"><option value="">Todos los grados</option><option value="1">1º de secundaria</option><option value="2">2º de secundaria</option><option value="3">3º de secundaria</option><option value="4">4º de secundaria</option><option value="5">5º de secundaria</option></select></div>
+                                    <div class="input-group"><label for="filtro-sexo-estudiante">Filtrar por sexo:</label><select id="filtro-sexo-estudiante"><option value="">Todos</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option><option value="Otro">Otro</option></select></div>
+                                </div>
+                                <div class="registros"><table class="tabla-registros matricula-tabla"><thead><tr><th scope="col">ID</th><th scope="col">Estudiante / DNI</th><th scope="col">Grado / sección</th><th scope="col">Edad</th><th scope="col">SIAGIE</th><th scope="col">Acciones</th></tr></thead><tbody id="tabla-estudiantes"></tbody></table></div>
+                            </section>
+
+                            <section class="matricula-module matricula-bloque" aria-labelledby="apoderado-form-titulo">
+                                <h3 id="apoderado-form-titulo" class="view-title matricula-subtitulo">Registro de apoderado</h3>
+                                <form id="apoderado-form">
+                                    <fieldset>
+                                        <legend>Datos del apoderado</legend>
+                                        <div class="matricula-form-grid">
+                                            <div class="input-group"><label for="ap-id">ID del apoderado:</label><input id="ap-id" type="text" value="Se asigna al guardar" readonly></div>
+                                            <div class="input-group"><label for="ap_nombres">Nombres:</label><input type="text" id="ap_nombres" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+" autocomplete="given-name"></div>
+                                            <div class="input-group"><label for="ap-apellido-paterno">Apellido paterno:</label><input type="text" id="ap-apellido-paterno" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+" autocomplete="family-name"></div>
+                                            <div class="input-group"><label for="ap-apellido-materno">Apellido materno:</label><input type="text" id="ap-apellido-materno" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+"></div>
+                                            <div class="input-group"><label for="ap_dni">DNI (8 dígitos):</label><input type="text" id="ap_dni" required pattern="[0-9]{8}" maxlength="8" inputmode="numeric" autocomplete="off"></div>
+                                            <div class="input-group"><span class="matricula-label">Consulta de identidad</span><button id="buscar-reniec-apoderado" class="btn-secundario matricula-reniec" type="button"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>Simular búsqueda RENIEC</button></div>
+                                            <div class="input-group"><label for="ap-sexo">Sexo:</label><select id="ap-sexo" required><option value="">Seleccione...</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option><option value="Otro">Otro</option></select></div>
+                                            <div class="input-group"><label for="ap_telefono">Celular:</label><input type="tel" id="ap_telefono" required pattern="[0-9]{9}" maxlength="9" inputmode="numeric" autocomplete="tel"></div>
+                                            <div class="input-group"><label for="ap-procedencia">Lugar de procedencia:</label><input type="text" id="ap-procedencia" required></div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="matricula-form__actions"><button id="guardar-apoderado" type="submit" class="btn-primario">Guardar apoderado</button><button id="cancelar-edicion-apoderado" class="btn-secundario oculto" type="button">Cancelar edición</button></div>
+                                </form>
+                                <p id="alerta-apoderado" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
+                            </section>
+
+                            <section class="matricula-module matricula-bloque" aria-labelledby="lista-apoderados-titulo">
+                                <h3 id="lista-apoderados-titulo" class="view-title matricula-subtitulo">Apoderados registrados</h3>
+                                <div class="matricula-filtros">
+                                    <div class="input-group"><label for="filtro-apoderado">Buscar por nombre o DNI:</label><input id="filtro-apoderado" type="search" placeholder="Nombre o DNI"></div>
+                                    <div class="input-group"><label for="filtro-sexo-apoderado">Filtrar por sexo:</label><select id="filtro-sexo-apoderado"><option value="">Todos</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option><option value="Otro">Otro</option></select></div>
+                                </div>
+                                <div class="registros"><table class="tabla-registros matricula-tabla"><thead><tr><th scope="col">ID</th><th scope="col">Apoderado / DNI</th><th scope="col">Sexo</th><th scope="col">Celular</th><th scope="col">Procedencia</th><th scope="col">Acciones</th></tr></thead><tbody id="tabla-apoderados"></tbody></table></div>
+                            </section>
+
+                            <section class="matricula-module matricula-bloque" aria-labelledby="asociacion-titulo">
+                                <h3 id="asociacion-titulo" class="view-title matricula-subtitulo">Asociar estudiante y apoderado</h3>
+                                <form id="asociacion-form">
+                                    <fieldset>
+                                        <legend>Datos de la asociación</legend>
+                                        <div class="matricula-form-grid">
+                                            <div class="input-group"><label for="buscar-estudiante-asociacion">Filtrar estudiante por nombre o DNI:</label><input id="buscar-estudiante-asociacion" type="search" placeholder="Escriba nombre o DNI"></div>
+                                            <div class="input-group"><label for="asociacion-estudiante">Estudiante:</label><select id="asociacion-estudiante" required><option value="">Seleccione un estudiante...</option></select></div>
+                                            <div class="input-group"><label for="buscar-apoderado-asociacion">Filtrar apoderado por nombre o DNI:</label><input id="buscar-apoderado-asociacion" type="search" placeholder="Escriba nombre o DNI"></div>
+                                            <div class="input-group"><label for="asociacion-apoderado">Apoderado:</label><select id="asociacion-apoderado" required><option value="">Seleccione un apoderado...</option></select></div>
+                                            <div class="input-group"><label for="asociacion-parentesco">Parentesco:</label><select id="asociacion-parentesco" required><option value="">Seleccione...</option><option>Madre</option><option>Padre</option><option>Abuela</option><option>Abuelo</option><option>Tutor/a</option><option>Otro familiar</option><option>Otro</option></select></div>
+                                            <div class="input-group"><label for="asociacion-fecha">Fecha de asignación:</label><input id="asociacion-fecha" type="date" required></div>
+                                            <div class="input-group"><label for="asociacion-observacion">Observación:</label><textarea id="asociacion-observacion" rows="3" placeholder="Opcional"></textarea></div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="matricula-form__actions"><button id="guardar-asociacion" type="submit" class="btn-primario">Asociar estudiante</button><button id="cancelar-edicion-asociacion" class="btn-secundario oculto" type="button">Cancelar edición</button></div>
+                                </form>
+                                <p id="alerta-asociacion" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
+                                <div class="matricula-filtros matricula-bloque">
+                                    <div class="input-group"><label for="filtro-asociacion">Filtrar asociaciones por nombre o DNI:</label><input id="filtro-asociacion" type="search" placeholder="Estudiante, apoderado o DNI"></div>
+                                </div>
+                                <div class="registros"><table class="tabla-registros matricula-tabla"><thead><tr><th scope="col">Estudiante</th><th scope="col">Apoderado</th><th scope="col">Parentesco</th><th scope="col">Fecha</th><th scope="col">Observación</th><th scope="col">Acciones</th></tr></thead><tbody id="tabla-relaciones"></tbody></table></div>
+                            </section>
                         </div>
                     </section>
 
@@ -578,6 +578,68 @@
             </div>
         </div>
     </section>
+
+    <svg class="accessibility-filters" aria-hidden="true" focusable="false">
+        <filter id="filter-protanopia">
+            <feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0" />
+        </filter>
+        <filter id="filter-deuteranopia">
+            <feColorMatrix type="matrix" values="0.625 0.375 0 0 0 0.700 0.300 0 0 0 0 0.300 0.700 0 0 0 0 0 1 0" />
+        </filter>
+        <filter id="filter-tritanopia">
+            <feColorMatrix type="matrix" values="0.950 0.050 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0" />
+        </filter>
+    </svg>
+    <div class="accessibility-widget">
+        <section id="accessibility-panel" class="accessibility-panel oculto" aria-labelledby="accessibility-title">
+            <div class="accessibility-panel__header">
+                <h2 id="accessibility-title">Accesibilidad</h2>
+                <button id="accessibility-close" class="accessibility-panel__close" type="button" aria-label="Cerrar panel de accesibilidad">×</button>
+            </div>
+            <div class="accessibility-controls">
+                <div class="accessibility-control">
+                    <label for="accessibility-zoom">Zoom de la página</label>
+                    <div class="accessibility-control__range">
+                        <input id="accessibility-zoom" type="range" min="100" max="200" step="10" value="100" aria-describedby="accessibility-zoom-value">
+                        <output id="accessibility-zoom-value" for="accessibility-zoom">100%</output>
+                    </div>
+                </div>
+                <div class="accessibility-control">
+                    <label for="accessibility-color-vision">Ajuste visual por tipo de daltonismo</label>
+                    <select id="accessibility-color-vision">
+                        <option value="none">Colores originales</option>
+                        <option value="protanopia">Rojo (protanopía)</option>
+                        <option value="deuteranopia">Verde (deuteranopía)</option>
+                        <option value="tritanopia">Azul (tritanopía)</option>
+                    </select>
+                </div>
+                <div class="accessibility-control">
+                    <label for="accessibility-contrast">Contraste</label>
+                    <div class="accessibility-control__range">
+                        <input id="accessibility-contrast" type="range" min="100" max="200" step="10" value="100" aria-describedby="accessibility-contrast-value">
+                        <output id="accessibility-contrast-value" for="accessibility-contrast">100%</output>
+                    </div>
+                </div>
+                <div class="accessibility-control">
+                    <label for="accessibility-saturation">Saturación</label>
+                    <div class="accessibility-control__range">
+                        <input id="accessibility-saturation" type="range" min="0" max="200" step="10" value="100" aria-describedby="accessibility-saturation-value">
+                        <output id="accessibility-saturation-value" for="accessibility-saturation">100%</output>
+                    </div>
+                </div>
+            </div>
+            <p class="accessibility-panel__note">Los ajustes de color son aproximados; los datos conservan sus etiquetas y textos.</p>
+            <button id="theme-toggle" class="btn-theme accessibility-theme" type="button" aria-pressed="false" aria-label="Activar modo oscuro" title="Activar modo oscuro">
+                <svg class="icono icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+                <svg class="icono icon-sun oculto" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+                <span id="theme-toggle-label">Activar modo oscuro</span>
+            </button>
+            <button id="accessibility-reset" class="accessibility-panel__reset" type="button">Restablecer ajustes</button>
+        </section>
+        <button id="accessibility-toggle" class="accessibility-toggle" type="button" aria-expanded="false" aria-controls="accessibility-panel" aria-label="Abrir opciones de accesibilidad">
+            <svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="4.5" r="2" /><path d="M12 8v5m0-3-7-2m7 2 7-2m-7 5-5 7m5-7 5 7" /></svg>
+        </button>
+    </div>
 
     <dialog id="confirmar-salida" class="logout-dialog" aria-labelledby="confirmar-salida-titulo" aria-describedby="confirmar-salida-texto">
         <h2 id="confirmar-salida-titulo">¿Desea salir?</h2>

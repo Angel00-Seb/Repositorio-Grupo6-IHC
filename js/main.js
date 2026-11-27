@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var etiqueta = oscuro ? "Activar modo claro" : "Activar modo oscuro";
         themeToggle.setAttribute("aria-label", etiqueta);
         themeToggle.setAttribute("title", etiqueta);
+        document.getElementById("theme-toggle-label").textContent = etiqueta;
         iconMoon.classList.toggle("oculto", oscuro);
         iconSun.classList.toggle("oculto", !oscuro);
     }
@@ -37,6 +38,109 @@ document.addEventListener("DOMContentLoaded", function() {
     themeToggle.addEventListener("click", function() {
         var oscuro = document.documentElement.getAttribute("data-theme") === "dark";
         aplicarTema(!oscuro);
+    });
+
+    // --- PANEL DE ACCESIBILIDAD ---
+    var accessibilityToggle = document.getElementById("accessibility-toggle");
+    var accessibilityPanel = document.getElementById("accessibility-panel");
+    var accessibilityZoom = document.getElementById("accessibility-zoom");
+    var accessibilityVision = document.getElementById("accessibility-color-vision");
+    var accessibilityContrast = document.getElementById("accessibility-contrast");
+    var accessibilitySaturation = document.getElementById("accessibility-saturation");
+    var accessibilityZoomValue = document.getElementById("accessibility-zoom-value");
+    var accessibilityContrastValue = document.getElementById("accessibility-contrast-value");
+    var accessibilitySaturationValue = document.getElementById("accessibility-saturation-value");
+    var accessibilityColorFilters = {
+        none: "none",
+        protanopia: 'url("#filter-protanopia")',
+        deuteranopia: 'url("#filter-deuteranopia")',
+        tritanopia: 'url("#filter-tritanopia")'
+    };
+
+    function aplicarFiltrosAccesibilidad() {
+        var filtros = [];
+        var filtroColor = accessibilityColorFilters[accessibilityVision.value];
+        var contraste = Number(accessibilityContrast.value) / 100;
+        var saturacion = Number(accessibilitySaturation.value) / 100;
+
+        if (filtroColor !== "none") {
+            filtros.push(filtroColor);
+        }
+        if (contraste !== 1) {
+            filtros.push("contrast(" + contraste + ")");
+        }
+        if (saturacion !== 1) {
+            filtros.push("saturate(" + saturacion + ")");
+        }
+
+        document.documentElement.style.setProperty(
+            "--accessibility-filter",
+            filtros.length ? filtros.join(" ") : "none"
+        );
+    }
+
+    function cerrarPanelAccesibilidad(devolverFoco) {
+        accessibilityPanel.classList.add("oculto");
+        accessibilityToggle.setAttribute("aria-expanded", "false");
+        accessibilityToggle.setAttribute("aria-label", "Abrir opciones de accesibilidad");
+        if (devolverFoco) {
+            accessibilityToggle.focus();
+        }
+    }
+
+    accessibilityToggle.addEventListener("click", function() {
+        var abrir = accessibilityPanel.classList.contains("oculto");
+        accessibilityPanel.classList.toggle("oculto", !abrir);
+        accessibilityToggle.setAttribute("aria-expanded", abrir ? "true" : "false");
+        accessibilityToggle.setAttribute("aria-label", abrir ? "Cerrar opciones de accesibilidad" : "Abrir opciones de accesibilidad");
+        if (abrir) {
+            accessibilityZoom.focus();
+        }
+    });
+
+    document.getElementById("accessibility-close").addEventListener("click", function() {
+        cerrarPanelAccesibilidad(true);
+    });
+
+    accessibilityPanel.addEventListener("keydown", function(evento) {
+        if (evento.key === "Escape") {
+            cerrarPanelAccesibilidad(true);
+        }
+    });
+
+    accessibilityZoom.addEventListener("input", function() {
+        var zoom = Number(accessibilityZoom.value);
+        document.documentElement.style.setProperty("--accessibility-zoom", String(zoom / 100));
+        accessibilityZoomValue.value = zoom + "%";
+    });
+
+    accessibilityVision.addEventListener("change", function() {
+        aplicarFiltrosAccesibilidad();
+    });
+
+    accessibilityContrast.addEventListener("input", function() {
+        var contraste = Number(accessibilityContrast.value);
+        accessibilityContrastValue.value = contraste + "%";
+        aplicarFiltrosAccesibilidad();
+    });
+
+    accessibilitySaturation.addEventListener("input", function() {
+        var saturacion = Number(accessibilitySaturation.value);
+        accessibilitySaturationValue.value = saturacion + "%";
+        aplicarFiltrosAccesibilidad();
+    });
+
+    document.getElementById("accessibility-reset").addEventListener("click", function() {
+        accessibilityZoom.value = "100";
+        document.documentElement.style.setProperty("--accessibility-zoom", "1");
+        accessibilityZoomValue.value = "100%";
+        accessibilityVision.value = "none";
+        accessibilityContrast.value = "100";
+        accessibilityContrastValue.value = "100%";
+        accessibilitySaturation.value = "100";
+        accessibilitySaturationValue.value = "100%";
+        aplicarFiltrosAccesibilidad();
+        aplicarTema(false);
     });
 
     // --- LOGIN ---

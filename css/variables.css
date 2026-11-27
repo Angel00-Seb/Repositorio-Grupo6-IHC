@@ -52,6 +52,10 @@
   --radius-lg: 12px;
   --shadow-card: 0 10px 25px rgba(27, 33, 29, 0.12);
   --shadow-soft: 0 4px 10px rgba(27, 33, 29, 0.08);
+
+  /* Ajustes visuales aplicados a las vistas, no al panel de controles */
+  --accessibility-zoom: 1;
+  --accessibility-filter: none;
 }
 
 /* ============================================================
