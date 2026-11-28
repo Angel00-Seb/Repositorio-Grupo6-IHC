@@ -31,6 +31,12 @@
   --color-ink: #1B211D; /* fondo oscuro fijo, no cambia con el tema */
   --color-kpi-verde: var(--color-pine); /* verde pino: franja y contorno del KPI */
 
+  /* Relleno de barras y segmentos de la rueda: colores del KPI aclarados */
+  --color-grafico-verde-claro: color-mix(in srgb, var(--color-kpi-verde) 12%, var(--color-surface));
+  --color-grafico-verde: color-mix(in srgb, var(--color-kpi-verde) 80%, var(--color-surface));
+  --color-grafico-naranja-claro: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  --color-grafico-naranja: color-mix(in srgb, var(--color-accent) 80%, var(--color-surface));
+
   /* Tipografía */
   --font-heading: "Open Sans", sans-serif;
   --font-body: "Atkinson Hyperlegible", sans-serif;

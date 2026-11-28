@@ -1414,11 +1414,15 @@ document.addEventListener("DOMContentLoaded", function() {
             var cantidad = matriculas.filter(function(estudiante) {
                 return Number.parseInt(estudiante.grado, 10) === Number.parseInt(objetivo.grado, 10) && estudiante.seccion === objetivo.seccion;
             }).length;
-            return { etiqueta: objetivo.etiqueta, cantidad: cantidad };
+            return { etiqueta: objetivo.etiqueta, cantidad: cantidad, seccion: objetivo.seccion };
         });
 
         return { aforo: aforo, secciones: seccionesObjetivo, conteos: conteos };
     }
+
+    // TEMPORAL (solo para revisar los colores): mínimo de estudiantes por aula
+    // en los gráficos de barras. Eliminar cuando se termine la verificación.
+    var DEMO_MINIMO_AULA = 20;
 
     function renderizarGraficoAulas(idContenedor, conteos, aforo) {
         var contenedorSecciones = document.getElementById(idContenedor);
@@ -1427,15 +1431,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         contenedorSecciones.replaceChildren();
         conteos.forEach(function(item) {
+            var cantidad = Math.max(item.cantidad, DEMO_MINIMO_AULA); // TEMPORAL demo
             var columna = document.createElement("div");
-            columna.className = "resumen-dashboard__seccion";
-            var descripcionBarra = item.etiqueta + ": " + item.cantidad + " de " + aforo + " estudiantes";
+            columna.className = "resumen-dashboard__seccion" + (item.seccion === "B" ? " resumen-dashboard__seccion--naranja" : "");
+            var descripcionBarra = item.etiqueta + ": " + cantidad + " de " + aforo + " estudiantes";
             columna.setAttribute("role", "img");
             columna.setAttribute("aria-label", descripcionBarra);
 
             var valor = document.createElement("span");
             valor.className = "resumen-dashboard__valor";
-            valor.textContent = item.cantidad;
+            valor.textContent = cantidad;
 
             var barra = document.createElement("div");
             barra.className = "resumen-dashboard__barra";
@@ -1443,7 +1448,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             var relleno = document.createElement("div");
             relleno.className = "resumen-dashboard__relleno";
-            var porcentaje = Math.min((item.cantidad / aforo) * 100, 100);
+            var porcentaje = Math.min((cantidad / aforo) * 100, 100);
             relleno.style.height = porcentaje + "%";
             barra.appendChild(relleno);
 
@@ -1465,22 +1470,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var cifras = [
             {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>',
+                clave: "heading",
+                icono: '<i class="bi bi-person-lines-fill bi-icono" aria-hidden="true"></i>',
                 valor: String(matriculas.length),
                 texto: "Estudiantes matriculados"
             },
             {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>',
+                clave: "accent",
+                icono: '<i class="bi bi-easel bi-icono" aria-hidden="true"></i>',
                 valor: String(docentes.length),
                 texto: "Docentes registrados"
             },
             {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 3h18v18H3z" /><path d="M9 3v18" /><path d="M15 12h2" /></svg>',
+                clave: "heading",
+                icono: '<i class="bi bi-grid bi-icono" aria-hidden="true"></i>',
                 valor: String(seccionesObjetivo.length),
                 texto: "Aulas disponibles"
             },
             {
-                icono: '<svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 21h18" /><path d="M5 21V7l8-4 8 4v14" /><path d="M9 10a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v11H9z" /></svg>',
+                clave: "accent",
+                icono: '<i class="bi bi-building bi-icono" aria-hidden="true"></i>',
                 valor: String(aforo * seccionesObjetivo.length),
                 texto: "Capacidad institucional"
             }
@@ -1489,28 +1498,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (contenedorCifras) {
             contenedorCifras.replaceChildren();
             cifras.forEach(function(cifra) {
-                var tarjeta = document.createElement("div");
-                tarjeta.className = "resumen-dashboard__cifra";
-
-                var icono = document.createElement("div");
-                icono.className = "resumen-dashboard__cifra-icono";
-                icono.innerHTML = cifra.icono;
-
-                var divisor = document.createElement("span");
-                divisor.className = "resumen-dashboard__cifra-divisor";
-                divisor.setAttribute("aria-hidden", "true");
-
-                var info = document.createElement("div");
-                info.className = "resumen-dashboard__cifra-info";
-
-                var valor = document.createElement("strong");
-                valor.textContent = cifra.valor;
-                var texto = document.createElement("span");
-                texto.textContent = cifra.texto;
-                info.append(valor, texto);
-
-                tarjeta.append(icono, divisor, info);
-                contenedorCifras.appendChild(tarjeta);
+                contenedorCifras.appendChild(crearTarjetaKpi(cifra, "col-12 col-sm-6 col-lg-3"));
             });
         }
 
@@ -1569,10 +1557,10 @@ document.addEventListener("DOMContentLoaded", function() {
         actualizarDashboardInicio();
     }
 
-    // --- INICIO: dashboard del colegio ---
-    function crearTarjetaKpiInicio(datos) {
+    // --- TARJETAS KPI: Inicio y Matrícula comparten la misma estructura ---
+    function crearTarjetaKpi(datos, columnaClase) {
         var columna = document.createElement("div");
-        columna.className = "col-12 col-sm-6 col-lg-4";
+        columna.className = columnaClase || "col-12 col-sm-6 col-lg-4";
 
         var tarjeta = document.createElement("article");
         tarjeta.className = "card h-100 inicio-kpi inicio-kpi--" + datos.clave;
@@ -1606,6 +1594,10 @@ document.addEventListener("DOMContentLoaded", function() {
         tarjeta.appendChild(cuerpo);
         columna.appendChild(tarjeta);
         return columna;
+    }
+
+    function crearTarjetaKpiInicio(datos) {
+        return crearTarjetaKpi(datos);
     }
 
     function actualizarKpisInicio() {
@@ -1654,8 +1646,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var total = matriculas.length;
         var partes = [
-            { etiqueta: "Femenino", cantidad: matriculas.filter(function(item) { return item.genero === "Femenino"; }).length, color: "var(--color-chart-ocean)" },
-            { etiqueta: "Masculino", cantidad: matriculas.filter(function(item) { return item.genero === "Masculino"; }).length, color: "var(--color-chart-magenta)" },
+            { etiqueta: "Femenino", cantidad: matriculas.filter(function(item) { return item.genero === "Femenino"; }).length, color: "var(--color-grafico-naranja)" },
+            { etiqueta: "Masculino", cantidad: matriculas.filter(function(item) { return item.genero === "Masculino"; }).length, color: "var(--color-grafico-verde)" },
             { etiqueta: "Sin registrar", cantidad: matriculas.filter(function(item) { return item.genero !== "Femenino" && item.genero !== "Masculino"; }).length, color: "var(--color-chart-yellow)" }
         ].filter(function(parte) { return parte.cantidad > 0; });
 
@@ -1708,19 +1700,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var datosAulas = obtenerConteoAulasDashboard();
         var aforo = datosAulas.aforo;
-        var total = matriculas.length;
+        // TEMPORAL demo: el total también se calcula con el mínimo para que los
+        // porcentajes sigan sumando 100%.
+        var total = datosAulas.conteos.reduce(function(suma, item) {
+            return suma + Math.max(item.cantidad, DEMO_MINIMO_AULA);
+        }, 0);
         contenedor.replaceChildren();
 
         datosAulas.conteos.forEach(function(item) {
-            var porcentaje = total ? Math.round((item.cantidad / total) * 100) : 0;
+            var cantidad = Math.max(item.cantidad, DEMO_MINIMO_AULA); // TEMPORAL demo
+            var porcentaje = total ? Math.round((cantidad / total) * 100) : 0;
             var columna = document.createElement("div");
-            columna.className = "resumen-dashboard__seccion";
+            columna.className = "resumen-dashboard__seccion" + (item.seccion === "B" ? " resumen-dashboard__seccion--naranja" : "");
             columna.setAttribute("role", "img");
-            columna.setAttribute("aria-label", item.etiqueta + ": " + item.cantidad + " de " + aforo + " estudiantes, " + porcentaje + "% del total");
+            columna.setAttribute("aria-label", item.etiqueta + ": " + cantidad + " de " + aforo + " estudiantes, " + porcentaje + "% del total");
 
             var valor = document.createElement("span");
             valor.className = "resumen-dashboard__valor";
-            valor.textContent = item.cantidad + " (" + porcentaje + "%)";
+            valor.textContent = porcentaje + "%";
 
             var barra = document.createElement("div");
             barra.className = "resumen-dashboard__barra";
@@ -1728,7 +1725,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             var relleno = document.createElement("div");
             relleno.className = "resumen-dashboard__relleno";
-            relleno.style.height = Math.min((item.cantidad / aforo) * 100, 100) + "%";
+            relleno.style.height = Math.min((cantidad / aforo) * 100, 100) + "%";
             barra.appendChild(relleno);
 
             var etiqueta = document.createElement("span");
@@ -2157,8 +2154,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var apoderadoEnEdicion = null;
     var asociacionEnEdicion = null;
     var fechaHoy = fechaLocal(new Date());
-    document.getElementById("estudiante-id").value = siguienteId(matriculas, "E");
-    document.getElementById("ap-id").value = siguienteId(apoderados, "P");
     document.getElementById("asociacion-fecha").value = fechaHoy;
     campoFechaNacimiento.max = fechaHoy;
 
@@ -2299,7 +2294,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!filtrados.length) {
             var vacio = document.createElement("tr");
             var celdaVacia = textoCelda(vacio, "No hay estudiantes que coincidan con los filtros.");
-            celdaVacia.colSpan = 7;
+            celdaVacia.colSpan = 11;
             celdaVacia.className = "tabla-registros__vacio";
             tablaEstudiantes.appendChild(vacio);
             return;
@@ -2309,8 +2304,12 @@ document.addEventListener("DOMContentLoaded", function() {
             textoCelda(fila, estudiante.id);
             textoCelda(fila, nombreCompleto(estudiante));
             textoCelda(fila, estudiante.dni);
-            textoCelda(fila, (codigoGrado(estudiante.grado) ? codigoGrado(estudiante.grado) + "º" : "—") + " / " + (estudiante.seccion || "—"));
+            textoCelda(fila, codigoGrado(estudiante.grado) ? codigoGrado(estudiante.grado) + "º" : "—");
+            textoCelda(fila, estudiante.seccion || "—");
             textoCelda(fila, estudiante.edad ? estudiante.edad + " años" : "—");
+            textoCelda(fila, estudiante.genero || "—");
+            textoCelda(fila, estudiante.celular || "—");
+            textoCelda(fila, estudiante.procedencia || "—");
             textoCelda(fila, estudiante.sincronizadoSiagie ? "Enviado" : "Pendiente");
             celdaAcciones(fila);
             agregarAccion(fila, "consultar", "Consultar " + estudiante.id, iconosAccion.consultar);
@@ -2354,32 +2353,70 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function renderizarOpcionesAsociacion() {
-        var filtroEstudiante = normalizar(document.getElementById("buscar-estudiante-asociacion").value.trim());
-        var filtroApoderado = normalizar(document.getElementById("buscar-apoderado-asociacion").value.trim());
-        var selectEstudiante = document.getElementById("asociacion-estudiante");
-        var selectApoderado = document.getElementById("asociacion-apoderado");
-        var estudianteSeleccionado = selectEstudiante.value;
-        var apoderadoSeleccionado = selectApoderado.value;
+    function ocultarSugerenciasAsociacion(idResultados, idCampo) {
+        var resultados = document.getElementById(idResultados);
+        resultados.textContent = "";
+        resultados.classList.add("oculto");
+        document.getElementById(idCampo).setAttribute("aria-expanded", "false");
+    }
 
-        selectEstudiante.replaceChildren(new Option("Seleccione un estudiante...", ""));
-        matriculas.filter(function(estudiante) {
-            return normalizar(nombreCompleto(estudiante) + " " + estudiante.dni).includes(filtroEstudiante);
-        }).forEach(function(estudiante) {
-            selectEstudiante.add(new Option(nombreCompleto(estudiante) + " · DNI " + estudiante.dni, estudiante.id));
-        });
-        selectApoderado.replaceChildren(new Option("Seleccione un apoderado...", ""));
-        apoderados.filter(function(apoderado) {
-            return normalizar(nombreCompleto(apoderado) + " " + apoderado.dni).includes(filtroApoderado);
-        }).forEach(function(apoderado) {
-            selectApoderado.add(new Option(nombreCompleto(apoderado) + " · DNI " + apoderado.dni, apoderado.id));
-        });
-        if (Array.from(selectEstudiante.options).some(function(opcion) { return opcion.value === estudianteSeleccionado; })) {
-            selectEstudiante.value = estudianteSeleccionado;
+    // Sugerencias en vivo: al escribir se muestran las coincidencias y al
+    // elegir una se guarda el ID en el campo oculto que lee el formulario.
+    function renderizarSugerenciasAsociacion(idCampo, idResultados, idSeleccion, registros, mensajeVacio) {
+        var campo = document.getElementById(idCampo);
+        var resultados = document.getElementById(idResultados);
+        var seleccion = document.getElementById(idSeleccion);
+        var termino = normalizar(campo.value.trim());
+        resultados.textContent = "";
+        seleccion.value = "";
+        if (!termino) {
+            ocultarSugerenciasAsociacion(idResultados, idCampo);
+            return;
         }
-        if (Array.from(selectApoderado.options).some(function(opcion) { return opcion.value === apoderadoSeleccionado; })) {
-            selectApoderado.value = apoderadoSeleccionado;
+
+        var coincidencias = registros.filter(function(registro) {
+            return normalizar(nombreCompleto(registro) + " " + registro.dni).includes(termino);
+        });
+
+        resultados.classList.remove("oculto");
+        campo.setAttribute("aria-expanded", "true");
+        if (!coincidencias.length) {
+            var sinResultados = document.createElement("li");
+            sinResultados.className = "docentes-busqueda__sin-resultados";
+            sinResultados.textContent = mensajeVacio;
+            resultados.appendChild(sinResultados);
+            return;
         }
+
+        coincidencias.forEach(function(registro) {
+            var nombre = nombreCompleto(registro);
+            var elemento = document.createElement("li");
+            elemento.setAttribute("role", "option");
+            var boton = document.createElement("button");
+            boton.type = "button";
+            boton.className = "docentes-busqueda__resultado";
+            boton.setAttribute("aria-label", nombre + ", DNI " + registro.dni);
+
+            var etiqueta = document.createElement("span");
+            etiqueta.textContent = nombre;
+            var detalle = document.createElement("small");
+            detalle.textContent = "DNI: " + registro.dni;
+            boton.appendChild(etiqueta);
+            boton.appendChild(detalle);
+            elemento.appendChild(boton);
+            resultados.appendChild(elemento);
+
+            boton.addEventListener("click", function() {
+                campo.value = nombre;
+                seleccion.value = registro.id;
+                ocultarSugerenciasAsociacion(idResultados, idCampo);
+            });
+        });
+    }
+
+    function renderizarOpcionesAsociacion() {
+        renderizarSugerenciasAsociacion("buscar-estudiante-asociacion", "resultados-estudiante-asociacion", "asociacion-estudiante", matriculas, "No se encontraron estudiantes");
+        renderizarSugerenciasAsociacion("buscar-apoderado-asociacion", "resultados-apoderado-asociacion", "asociacion-apoderado", apoderados, "No se encontraron apoderados");
     }
 
     function renderizarAsociaciones() {
@@ -2430,8 +2467,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function iniciarEdicionEstudiante(estudiante) {
         estudianteEnEdicion = estudiante.id;
-        document.getElementById("estudiante-id").value = estudiante.id;
-        document.getElementById("codigo-modular").value = estudiante.codigoModular || "";
         document.getElementById("nombres").value = estudiante.nombres || "";
         document.getElementById("apellido-paterno").value = estudiante.apellidoPaterno || "";
         document.getElementById("apellido-materno").value = estudiante.apellidoMaterno || "";
@@ -2446,7 +2481,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("guardar-estudiante").textContent = "Guardar cambios";
         document.getElementById("cancelar-edicion-estudiante").classList.remove("oculto");
         var dialogoEstudiante = document.getElementById("dialog-registrar-estudiante");
-        var tituloEstudiante = document.getElementById("dialog-registrar-estudiante-label");
+        var tituloEstudiante = document.getElementById("dialog-registrar-estudiante-texto");
         if (tituloEstudiante) { tituloEstudiante.textContent = "Editar estudiante"; }
         abrirDialogo(dialogoEstudiante);
     }
@@ -2454,16 +2489,14 @@ document.addEventListener("DOMContentLoaded", function() {
     function limpiarEdicionEstudiante() {
         estudianteEnEdicion = null;
         formMatricula.reset();
-        document.getElementById("estudiante-id").value = siguienteId(matriculas, "E");
-        document.getElementById("guardar-estudiante").textContent = "Guardar matrícula";
+        document.getElementById("guardar-estudiante").textContent = "Guardar";
         document.getElementById("cancelar-edicion-estudiante").classList.add("oculto");
-        var tituloEstudiante = document.getElementById("dialog-registrar-estudiante-label");
+        var tituloEstudiante = document.getElementById("dialog-registrar-estudiante-texto");
         if (tituloEstudiante) { tituloEstudiante.textContent = "Registrar estudiante"; }
     }
 
     function iniciarEdicionApoderado(apoderado) {
         apoderadoEnEdicion = apoderado.id;
-        document.getElementById("ap-id").value = apoderado.id;
         document.getElementById("ap_nombres").value = apoderado.nombres;
         document.getElementById("ap-apellido-paterno").value = apoderado.apellidoPaterno;
         document.getElementById("ap-apellido-materno").value = apoderado.apellidoMaterno;
@@ -2474,7 +2507,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("guardar-apoderado").textContent = "Guardar cambios";
         document.getElementById("cancelar-edicion-apoderado").classList.remove("oculto");
         var dialogoApoderado = document.getElementById("dialog-registrar-apoderado");
-        var tituloApoderado = document.getElementById("dialog-registrar-apoderado-label");
+        var tituloApoderado = document.getElementById("dialog-registrar-apoderado-texto");
         if (tituloApoderado) { tituloApoderado.textContent = "Editar apoderado"; }
         abrirDialogo(dialogoApoderado);
     }
@@ -2482,27 +2515,30 @@ document.addEventListener("DOMContentLoaded", function() {
     function limpiarEdicionApoderado() {
         apoderadoEnEdicion = null;
         formApoderado.reset();
-        document.getElementById("ap-id").value = siguienteId(apoderados, "P");
-        document.getElementById("guardar-apoderado").textContent = "Guardar apoderado";
+        document.getElementById("guardar-apoderado").textContent = "Guardar";
         document.getElementById("cancelar-edicion-apoderado").classList.add("oculto");
-        var tituloApoderado = document.getElementById("dialog-registrar-apoderado-label");
+        var tituloApoderado = document.getElementById("dialog-registrar-apoderado-texto");
         if (tituloApoderado) { tituloApoderado.textContent = "Registrar apoderado"; }
     }
 
     function iniciarEdicionAsociacion(asociacion) {
         asociacionEnEdicion = asociacion.id;
-        document.getElementById("buscar-estudiante-asociacion").value = "";
-        document.getElementById("buscar-apoderado-asociacion").value = "";
-        renderizarOpcionesAsociacion();
+        var estudianteAsociado = matriculas.find(function(item) { return item.id === asociacion.estudianteId; });
+        var apoderadoAsociado = apoderados.find(function(item) { return item.id === asociacion.apoderadoId; });
+        document.getElementById("buscar-estudiante-asociacion").value = estudianteAsociado ? nombreCompleto(estudianteAsociado) : "";
+        document.getElementById("buscar-apoderado-asociacion").value = apoderadoAsociado ? nombreCompleto(apoderadoAsociado) : "";
         document.getElementById("asociacion-estudiante").value = asociacion.estudianteId;
         document.getElementById("asociacion-apoderado").value = asociacion.apoderadoId;
+        ocultarSugerenciasAsociacion("resultados-estudiante-asociacion", "buscar-estudiante-asociacion");
+        ocultarSugerenciasAsociacion("resultados-apoderado-asociacion", "buscar-apoderado-asociacion");
         document.getElementById("asociacion-parentesco").value = asociacion.parentesco;
         document.getElementById("asociacion-fecha").value = asociacion.fecha;
         document.getElementById("asociacion-observacion").value = asociacion.observacion || "";
+        actualizarCampoRelacion();
         document.getElementById("guardar-asociacion").textContent = "Guardar cambios";
         document.getElementById("cancelar-edicion-asociacion").classList.remove("oculto");
         var dialogoAsociacion = document.getElementById("dialog-registrar-asociacion");
-        var tituloAsociacion = document.getElementById("dialog-registrar-asociacion-label");
+        var tituloAsociacion = document.getElementById("dialog-registrar-asociacion-texto");
         if (tituloAsociacion) { tituloAsociacion.textContent = "Editar asociación"; }
         abrirDialogo(dialogoAsociacion);
     }
@@ -2513,9 +2549,21 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("asociacion-fecha").value = fechaLocal(new Date());
         document.getElementById("guardar-asociacion").textContent = "Asociar estudiante";
         document.getElementById("cancelar-edicion-asociacion").classList.add("oculto");
-        var tituloAsociacion = document.getElementById("dialog-registrar-asociacion-label");
+        var tituloAsociacion = document.getElementById("dialog-registrar-asociacion-texto");
         if (tituloAsociacion) { tituloAsociacion.textContent = "Nueva asociación"; }
         renderizarOpcionesAsociacion();
+        actualizarCampoRelacion();
+    }
+
+    // El campo de detalle solo se habilita cuando el parentesco es "Otro".
+    function actualizarCampoRelacion() {
+        var parentesco = document.getElementById("asociacion-parentesco").value;
+        var campoRelacion = document.getElementById("asociacion-observacion");
+        var esOtro = parentesco === "Otro";
+        campoRelacion.disabled = !esOtro;
+        if (!esOtro) {
+            campoRelacion.value = "";
+        }
     }
 
     function consultarRegistro(titulo, registro, persona) {
@@ -2551,7 +2599,6 @@ document.addEventListener("DOMContentLoaded", function() {
     [document.getElementById("dni"), document.getElementById("ap_dni")].forEach(function(campo) {
         limitarEntradaNumerica(campo, 8);
     });
-    limitarEntradaNumerica(document.getElementById("codigo-modular"), 7);
     [document.getElementById("celular-estudiante"), document.getElementById("ap_telefono")].forEach(function(campo) {
         limitarEntradaNumerica(campo, 9);
     });
@@ -2598,6 +2645,7 @@ document.addEventListener("DOMContentLoaded", function() {
     formMatricula.addEventListener("submit", function(evento) {
         evento.preventDefault();
         var idActual = estudianteEnEdicion;
+        var registroAnterior = idActual ? matriculas.find(function(item) { return item.id === idActual; }) : null;
         var dni = document.getElementById("dni").value.trim();
         var edad = edadDesdeFecha(campoFechaNacimiento.value);
         var dniDuplicado = matriculas.some(function(estudiante) {
@@ -2619,7 +2667,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         var registro = {
             id: idActual || siguienteId(matriculas, "E"),
-            codigoModular: document.getElementById("codigo-modular").value.trim(),
+            codigoModular: registroAnterior ? registroAnterior.codigoModular || "" : "",
             nombres: document.getElementById("nombres").value.trim(),
             apellidoPaterno: document.getElementById("apellido-paterno").value.trim(),
             apellidoMaterno: document.getElementById("apellido-materno").value.trim(),
@@ -2632,7 +2680,7 @@ document.addEventListener("DOMContentLoaded", function() {
             procedencia: document.getElementById("procedencia-estudiante").value.trim(),
             grado: grado,
             seccion: seccion,
-            fecha: idActual ? (matriculas.find(function(item) { return item.id === idActual; }).fecha || fechaHoy.split("-").reverse().join("/")) : fechaHoy.split("-").reverse().join("/"),
+            fecha: registroAnterior ? (registroAnterior.fecha || fechaHoy.split("-").reverse().join("/")) : fechaHoy.split("-").reverse().join("/"),
             periodo: "2026 - I",
             sincronizadoSiagie: false
         };
@@ -2806,6 +2854,16 @@ document.addEventListener("DOMContentLoaded", function() {
         cerrarDialogo(document.getElementById("dialog-registrar-asociacion"));
     });
 
+    document.getElementById("guardar-estudiante").addEventListener("click", function() {
+        document.getElementById("matricula-form").requestSubmit();
+    });
+    document.getElementById("guardar-apoderado").addEventListener("click", function() {
+        document.getElementById("apoderado-form").requestSubmit();
+    });
+    document.getElementById("guardar-asociacion").addEventListener("click", function() {
+        document.getElementById("asociacion-form").requestSubmit();
+    });
+
     ["dialog-registrar-estudiante", "dialog-registrar-apoderado", "dialog-registrar-asociacion"].forEach(function(idDialogo) {
         var dialogoMatricula = document.getElementById(idDialogo);
         if (dialogoMatricula) {
@@ -2830,15 +2888,19 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("filtro-sexo-estudiante").addEventListener("change", renderizarEstudiantes);
     document.getElementById("buscar-apoderado-tabla").addEventListener("click", renderizarApoderados);
     document.getElementById("filtro-sexo-apoderado").addEventListener("change", renderizarApoderados);
-    document.getElementById("buscar-estudiante-asociacion-btn").addEventListener("click", renderizarOpcionesAsociacion);
-    document.getElementById("buscar-apoderado-asociacion-btn").addEventListener("click", renderizarOpcionesAsociacion);
+    document.getElementById("buscar-estudiante-asociacion").addEventListener("input", function() {
+        renderizarSugerenciasAsociacion("buscar-estudiante-asociacion", "resultados-estudiante-asociacion", "asociacion-estudiante", matriculas, "No se encontraron estudiantes");
+    });
+    document.getElementById("buscar-apoderado-asociacion").addEventListener("input", function() {
+        renderizarSugerenciasAsociacion("buscar-apoderado-asociacion", "resultados-apoderado-asociacion", "asociacion-apoderado", apoderados, "No se encontraron apoderados");
+    });
     document.getElementById("buscar-asociacion-tabla").addEventListener("click", renderizarAsociaciones);
+    document.getElementById("asociacion-parentesco").addEventListener("change", actualizarCampoRelacion);
+    actualizarCampoRelacion();
 
     [
         ["filtro-estudiante", "buscar-estudiante-tabla"],
         ["filtro-apoderado", "buscar-apoderado-tabla"],
-        ["buscar-estudiante-asociacion", "buscar-estudiante-asociacion-btn"],
-        ["buscar-apoderado-asociacion", "buscar-apoderado-asociacion-btn"],
         ["filtro-asociacion", "buscar-asociacion-tabla"]
     ].forEach(function(camposBusqueda) {
         document.getElementById(camposBusqueda[0]).addEventListener("keydown", function(evento) {

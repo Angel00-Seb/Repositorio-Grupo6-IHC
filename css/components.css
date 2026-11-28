@@ -896,10 +896,6 @@ p::first-letter,
   border-radius: 0;
 }
 
-.matricula-filtros--dos {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
 .matricula-module .registros {
   min-width: 0;
 }
@@ -941,9 +937,14 @@ p::first-letter,
   flex-direction: column;
 }
 
+/* Sin altura mínima: la etiqueta queda a 5 px del recuadro, igual que en
+   los filtros de búsqueda. */
 .matricula-form-grid .input-group > label {
-  min-height: 2.5em;
   line-height: 1.25;
+}
+
+.matricula-form__campo-completo {
+  grid-column: 1 / -1;
 }
 
 .matricula-module textarea {
@@ -963,18 +964,6 @@ p::first-letter,
   overflow-y: auto;
 }
 
-.matricula-form__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.matricula-form__actions > button {
-  flex: 1 1 220px;
-  min-height: 48px;
-}
-
 .matricula-lista__encabezado {
   display: flex;
   align-items: center;
@@ -989,19 +978,42 @@ p::first-letter,
 }
 
 .matricula-filtros {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Medidas fijas para que el buscador sea igual en las tres pestañas.
+     El ancho del buscador equivale al que tenía en Estudiantes menos 30 px. */
+  --matricula-ancho-buscar: 356px;
+  --matricula-ancho-filtro: 336px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-end;
   gap: 14px;
   margin-bottom: 12px;
 }
 
-.matricula-filtros--asociacion {
-  grid-template-columns: minmax(0, 1fr);
-}
-
+/* Bootstrap pone .input-group en flex; aquí la etiqueta debe ir siempre
+   encima del campo, incluso en la pestaña de Asociaciones. */
 .matricula-filtros .input-group {
+  display: block;
   min-width: 0;
   margin-bottom: 0;
+}
+
+/* El ancho va en .input-group, que es el elemento flex hijo de .matricula-filtros.
+   El div .matricula-search interior solo hereda ese ancho. */
+.matricula-filtros .input-group:first-child {
+  flex: 0 0 var(--matricula-ancho-buscar);
+}
+
+/* Buscador a la izquierda y filtros juntos a la derecha, en la misma fila. */
+.matricula-filtros .input-group:nth-child(n + 2) {
+  flex: 0 0 var(--matricula-ancho-filtro);
+}
+
+.matricula-filtros .input-group:nth-child(2) {
+  margin-left: auto;
+}
+
+.matricula-filtros select {
+  width: 100%;
 }
 
 .matricula-label {
@@ -1109,6 +1121,14 @@ p::first-letter,
   color: var(--color-heading);
 }
 
+/* Cada fila se mantiene en una sola línea y solo .registros se desplaza
+   horizontalmente, sin afectar al resto de la vista. */
+.tabla-registros.matricula-tabla th,
+.tabla-registros.matricula-tabla td {
+  padding-inline: 14px;
+  white-space: nowrap;
+}
+
 .matricula-acciones {
   min-width: 160px;
   white-space: nowrap;
@@ -1129,6 +1149,37 @@ p::first-letter,
 
 .matricula-accion:hover {
   background: var(--color-naranja-claro);
+}
+
+.matricula-accion[data-accion="consultar"] {
+  background: var(--color-heading);
+  border-color: var(--color-pine);
+  color: var(--color-on-dark);
+}
+
+.matricula-accion[data-accion="consultar"]:hover {
+  background: var(--color-pine);
+}
+
+.matricula-accion[data-accion="editar"] {
+  background: var(--color-accent);
+  border-color: var(--color-warning);
+  color: var(--color-on-accent);
+}
+
+.matricula-accion[data-accion="editar"]:hover {
+  background: var(--color-warning);
+  color: var(--color-on-dark);
+}
+
+.matricula-accion[data-accion="eliminar"] {
+  background: var(--color-error);
+  border-color: color-mix(in srgb, var(--color-error) 75%, var(--color-ink));
+  color: var(--color-on-dark);
+}
+
+.matricula-accion[data-accion="eliminar"]:hover {
+  background: color-mix(in srgb, var(--color-error) 75%, var(--color-ink));
 }
 
 .matricula-accion .icono {
@@ -1338,15 +1389,16 @@ p::first-letter,
 
 .matricula-module .matricula-reniec {
   width: auto;
-  height: 40px;
+  height: auto;
   min-width: 0;
-  min-height: 40px;
+  min-height: 0;
+  align-self: stretch;
   flex: 0 0 auto;
   gap: 4px;
   padding: 4px 8px;
-  border-color: #00765A;
-  background: #00765A;
-  color: #FFFFFF;
+  border-color: var(--color-info);
+  background: var(--color-info);
+  color: var(--color-on-dark);
   font-size: 14px;
 }
 
@@ -1356,9 +1408,9 @@ p::first-letter,
 }
 
 .matricula-module .matricula-reniec:hover {
-  border-color: #1E5A3C;
-  background: #1E5A3C;
-  color: #FFFFFF;
+  border-color: color-mix(in srgb, var(--color-info) 75%, var(--color-ink));
+  background: color-mix(in srgb, var(--color-info) 75%, var(--color-ink));
+  color: var(--color-on-dark);
 }
 
 .btn-secundario:hover,
@@ -1811,13 +1863,22 @@ legend {
   border-radius: 3px;
 }
 
-.resumen-dashboard__leyenda-color--estudiantes {
-  background: var(--color-chart-ocean);
+.resumen-dashboard__leyenda-color--estudiantes-a {
+  background: var(--color-grafico-verde);
 }
 
-.resumen-dashboard__leyenda-color--capacidad {
-  background: color-mix(in srgb, var(--color-muted) 25%, var(--color-surface));
-  border: 1px solid var(--color-muted);
+.resumen-dashboard__leyenda-color--capacidad-a {
+  background: var(--color-grafico-verde-claro);
+  border: 1px solid var(--color-grafico-verde);
+}
+
+.resumen-dashboard__leyenda-color--estudiantes-b {
+  background: var(--color-grafico-naranja);
+}
+
+.resumen-dashboard__leyenda-color--capacidad-b {
+  background: var(--color-grafico-naranja-claro);
+  border: 1px solid var(--color-accent);
 }
 
 .resumen-dashboard__grafico {
@@ -1892,40 +1953,28 @@ legend {
   max-width: 56px;
   height: 180px;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  background: color-mix(in srgb, var(--color-muted) 18%, var(--color-surface));
+  background: var(--color-barra-claro, color-mix(in srgb, var(--color-muted) 18%, var(--color-surface)));
   overflow: hidden;
+}
+
+/* Mismos cuatro colores de los KPI: el claro es el fondo de la barra y el
+   oscuro es el relleno. Sección A = verde, sección B = naranja. */
+.resumen-dashboard__seccion {
+  --color-barra-claro: var(--color-grafico-verde-claro);
+  --color-barra-oscuro: var(--color-grafico-verde);
+}
+
+.resumen-dashboard__seccion--naranja {
+  --color-barra-claro: var(--color-grafico-naranja-claro);
+  --color-barra-oscuro: var(--color-grafico-naranja);
 }
 
 .resumen-dashboard__relleno {
   width: 100%;
   min-height: 0;
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  background: var(--color-chart-ocean);
+  background: var(--color-barra-oscuro, var(--color-accent));
   transition: height 0.3s ease;
-}
-
-.resumen-dashboard__seccion:nth-child(6n + 1) .resumen-dashboard__relleno {
-  background: var(--color-chart-ocean);
-}
-
-.resumen-dashboard__seccion:nth-child(6n + 2) .resumen-dashboard__relleno {
-  background: var(--color-chart-yellow);
-}
-
-.resumen-dashboard__seccion:nth-child(6n + 3) .resumen-dashboard__relleno {
-  background: var(--color-chart-turquoise);
-}
-
-.resumen-dashboard__seccion:nth-child(6n + 4) .resumen-dashboard__relleno {
-  background: var(--color-chart-magenta);
-}
-
-.resumen-dashboard__seccion:nth-child(6n + 5) .resumen-dashboard__relleno {
-  background: var(--color-chart-vermilion);
-}
-
-.resumen-dashboard__seccion:nth-child(6n) .resumen-dashboard__relleno {
-  background: var(--color-chart-plum);
 }
 
 .resumen-dashboard__etiqueta {
@@ -2666,6 +2715,7 @@ legend {
   gap: 8px;
   margin: 0;
   color: var(--color-heading);
+  font-weight: 700;
 }
 
 .docentes-pane-icono {
@@ -2733,21 +2783,35 @@ legend {
   background: rgba(27, 33, 29, 0.6);
 }
 
+/* Cabecera y pie: franja más oscura que el cuerpo, con menos altura. */
+.dialog-header,
+.dialog-footer {
+  padding: 7px 20px;
+  background: var(--color-background);
+}
+
 .dialog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 20px;
   border-bottom: 1px solid var(--color-muted);
 }
 
 .dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
   color: var(--color-heading);
   font-family: var(--font-heading);
   font-size: var(--font-size-secondary);
   font-weight: 700;
+}
+
+.dialog-title__icono {
+  color: var(--color-heading);
+  font-size: 1.1em;
 }
 
 .dialog-body {
@@ -2759,6 +2823,5 @@ legend {
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 16px 20px;
   border-top: 1px solid var(--color-muted);
 }

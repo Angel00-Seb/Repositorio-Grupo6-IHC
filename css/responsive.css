@@ -146,9 +146,17 @@
     padding: 16px;
   }
 
-  .matricula-form-grid,
-  .matricula-filtros {
+  .matricula-form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .matricula-filtros {
+    flex-wrap: wrap;
+  }
+
+  .matricula-filtros .input-group {
+    flex: 1 1 100%;
+    margin-left: 0;
   }
 
   .matricula-form-grid {
@@ -228,10 +236,13 @@
     max-height: calc(100% - 16px);
   }
 
-  .dialog-body,
+  .dialog-body {
+    padding: 14px;
+  }
+
   .dialog-header,
   .dialog-footer {
-    padding: 14px;
+    padding: 7px 14px;
   }
 
   .docentes-form .btn-primario,

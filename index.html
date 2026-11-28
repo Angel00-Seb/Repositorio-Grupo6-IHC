@@ -253,12 +253,14 @@
                     <section id="view-matricula" class="view oculto" aria-label="Matrícula">
                         <section class="resumen-dashboard" aria-label="Resumen de matrícula">
                             <div class="resumen-dashboard__panel">
-                                <div id="resumen-dashboard-cifras" class="resumen-dashboard__cifras"></div>
+                                <div id="resumen-dashboard-cifras" class="row g-3 inicio-kpis mb-3" aria-label="Indicadores de matrícula"></div>
                                 <div class="resumen-dashboard__panel-encabezado">
                                     <h4 class="resumen-dashboard__panel-titulo">Distribución de Estudiantes por Aula</h4>
                                     <div class="resumen-dashboard__leyenda" aria-label="Leyenda del gráfico">
-                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--estudiantes" aria-hidden="true"></span>Estudiantes</span>
-                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--capacidad" aria-hidden="true"></span>Capacidad</span>
+                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--estudiantes-a" aria-hidden="true"></span>Estudiantes A</span>
+                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--capacidad-a" aria-hidden="true"></span>Capacidad A</span>
+                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--estudiantes-b" aria-hidden="true"></span>Estudiantes B</span>
+                                        <span class="resumen-dashboard__leyenda-item"><span class="resumen-dashboard__leyenda-color resumen-dashboard__leyenda-color--capacidad-b" aria-hidden="true"></span>Capacidad B</span>
                                     </div>
                                 </div>
                                 <div class="resumen-dashboard__grafico">
@@ -269,6 +271,11 @@
                                 </div>
                             </div>
                         </section>
+
+                        <div class="inicio-seccion__encabezado">
+                            <h3 class="inicio-seccion__titulo">Registros Disponibles</h3>
+                            <span class="inicio-seccion__linea" aria-hidden="true"></span>
+                        </div>
 
                         <div class="docentes-tabs-contenedor matricula-shell">
                             <div class="docentes-tabs" role="tablist" aria-label="Gestión de matrícula">
@@ -283,7 +290,7 @@
                                         <h3><span class="docentes-pane-icono" aria-hidden="true"><svg class="icono" viewBox="0 0 24 24" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg></span>Estudiantes matriculados</h3>
                                         <div class="matricula-cabecera__acciones">
                                             <button id="sincronizar-siagie" class="btn-secundario matricula-siagie" type="button" aria-label="Simular sincronización de estudiantes pendientes con SIAGIE"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 7v5h-5M4 17v-5h5" /><path d="M5.6 9a7 7 0 0 1 11.8-2L20 12M4 12l2.6 5a7 7 0 0 0 11.8-2" /></svg>Enviar a SIAGIE</button>
-                                            <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-estudiante">Registrar estudiante</button>
+                                            <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-estudiante" aria-label="Registrar estudiante">Registrar</button>
                                         </div>
                                     </div>
                                     <div class="docentes-pane-cuerpo matricula-module">
@@ -293,7 +300,7 @@
                                             <div class="input-group"><label for="filtro-sexo-estudiante">Filtrar por sexo:</label><select id="filtro-sexo-estudiante"><option value="">Todos</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option></select></div>
                                         </div>
                                         <p id="alerta" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
-                                        <div class="registros"><table class="tabla-registros matricula-tabla"><thead><tr><th scope="col">ID</th><th scope="col">Estudiante</th><th scope="col">DNI</th><th scope="col">Grado / sección</th><th scope="col">Edad</th><th scope="col">SIAGIE</th><th scope="col">Acciones</th></tr></thead><tbody id="tabla-estudiantes"></tbody></table></div>
+                                        <div class="registros"><table class="tabla-registros matricula-tabla"><thead><tr><th scope="col">ID</th><th scope="col">Estudiante</th><th scope="col">DNI</th><th scope="col">Grado</th><th scope="col">Sección</th><th scope="col">Edad</th><th scope="col">Género</th><th scope="col">Celular</th><th scope="col">Procedencia</th><th scope="col">SIAGIE</th><th scope="col">Acciones</th></tr></thead><tbody id="tabla-estudiantes"></tbody></table></div>
                                     </div>
                                 </div>
 
@@ -301,7 +308,7 @@
                                     <div class="docentes-pane-cabecera">
                                         <h3><span class="docentes-pane-icono" aria-hidden="true"><svg class="icono" viewBox="0 0 24 24" focusable="false"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg></span>Apoderados registrados</h3>
                                         <div class="matricula-cabecera__acciones">
-                                            <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-apoderado">Registrar apoderado</button>
+                                            <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-apoderado" aria-label="Registrar apoderado">Registrar</button>
                                         </div>
                                     </div>
                                     <div class="docentes-pane-cuerpo matricula-module">
@@ -323,7 +330,7 @@
                                     </div>
                                     <div class="docentes-pane-cuerpo matricula-module">
                                         <div class="matricula-filtros matricula-filtros--asociacion">
-                                            <div class="input-group"><label for="filtro-asociacion">Filtrar asociaciones por nombre o DNI:</label><div class="matricula-search"><input id="filtro-asociacion" type="search" placeholder="Estudiante, apoderado o DNI"><button id="buscar-asociacion-tabla" class="matricula-search__button" type="button" aria-label="Buscar asociación" title="Buscar asociación"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg></button></div></div>
+                                            <div class="input-group"><label for="filtro-asociacion">Buscar por nombre o DNI:</label><div class="matricula-search"><input id="filtro-asociacion" type="search" placeholder="Estudiante, apoderado o DNI"><button id="buscar-asociacion-tabla" class="matricula-search__button" type="button" aria-label="Buscar asociación" title="Buscar asociación"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg></button></div></div>
                                         </div>
                                         <p id="alerta-asociacion" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
                                         <div class="registros"><table class="tabla-registros matricula-tabla"><thead><tr><th scope="col">Estudiante</th><th scope="col">DNI estudiante</th><th scope="col">Apoderado</th><th scope="col">DNI apoderado</th><th scope="col">Parentesco</th><th scope="col">Fecha</th><th scope="col">Observación</th><th scope="col">Acciones</th></tr></thead><tbody id="tabla-relaciones"></tbody></table></div>
@@ -334,14 +341,12 @@
 
                         <dialog class="dialog matricula-dialog" id="dialog-registrar-estudiante" aria-labelledby="dialog-registrar-estudiante-label">
                             <div class="dialog-header">
-                                <h1 class="dialog-title" id="dialog-registrar-estudiante-label">Registrar estudiante</h1>
+                                <h1 class="dialog-title" id="dialog-registrar-estudiante-label"><i class="bi bi-person-plus dialog-title__icono" aria-hidden="true"></i><span id="dialog-registrar-estudiante-texto">Registrar estudiante</span></h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Cerrar"></button>
                             </div>
                             <div class="dialog-body matricula-module">
                                 <form id="matricula-form" novalidate>
                                     <div class="matricula-form-grid">
-                                        <div class="input-group"><label for="estudiante-id">ID:</label><input type="text" id="estudiante-id" readonly></div>
-                                        <div class="input-group"><label for="codigo-modular">Código modular (7 dígitos):</label><input type="text" id="codigo-modular" required pattern="[0-9]{7}" maxlength="7" inputmode="numeric"></div>
                                         <div class="input-group"><label for="nombres">Nombres:</label><input type="text" id="nombres" required></div>
                                         <div class="input-group"><label for="apellido-paterno">Apellido paterno:</label><input type="text" id="apellido-paterno" required></div>
                                         <div class="input-group"><label for="apellido-materno">Apellido materno:</label><input type="text" id="apellido-materno" required></div>
@@ -352,23 +357,25 @@
                                         <div class="input-group"><label for="seccion">Sección:</label><select id="seccion" required><option value="">Seleccione...</option><option value="A">A</option><option value="B">B</option></select></div>
                                         <div class="input-group"><label for="celular-estudiante">Celular (9 dígitos):</label><input type="text" id="celular-estudiante" required pattern="[0-9]{9}" maxlength="9" inputmode="numeric"></div>
                                         <div class="input-group"><label for="procedencia-estudiante">Lugar de procedencia:</label><input type="text" id="procedencia-estudiante" required></div>
-                                        <div class="input-group"><label for="historial-enfermedades">Historial de enfermedades:</label><textarea id="historial-enfermedades" rows="3" placeholder="Escriba alergias, enfermedades o 'Ninguna'"></textarea></div>
+                                        <div class="input-group matricula-form__campo-completo"><label for="historial-enfermedades">Historial de enfermedades:</label><textarea id="historial-enfermedades" rows="3" placeholder="Escriba alergias, enfermedades o 'Ninguna'"></textarea></div>
                                     </div>
-                                    <div class="matricula-form__actions"><button id="guardar-estudiante" type="submit" class="btn-primario">Guardar matrícula</button><button id="cancelar-edicion-estudiante" class="btn-secundario oculto" type="button">Cancelar edición</button></div>
+                                    <button id="cancelar-edicion-estudiante" class="btn-secundario oculto" type="button">Cancelar edición</button>
                                 </form>
                                 <p id="alerta-estudiante-dialogo" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="dialog-footer">
+                                <button id="guardar-estudiante" type="button" class="btn-solid theme-primary">Guardar</button>
                             </div>
                         </dialog>
 
                         <dialog class="dialog matricula-dialog" id="dialog-registrar-apoderado" aria-labelledby="dialog-registrar-apoderado-label">
                             <div class="dialog-header">
-                                <h1 class="dialog-title" id="dialog-registrar-apoderado-label">Registrar apoderado</h1>
+                                <h1 class="dialog-title" id="dialog-registrar-apoderado-label"><i class="bi bi-person-vcard dialog-title__icono" aria-hidden="true"></i><span id="dialog-registrar-apoderado-texto">Registrar apoderado</span></h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Cerrar"></button>
                             </div>
                             <div class="dialog-body matricula-module">
                                 <form id="apoderado-form" novalidate>
                                     <div class="matricula-form-grid">
-                                        <div class="input-group"><label for="ap-id">ID:</label><input type="text" id="ap-id" readonly></div>
                                         <div class="input-group"><label for="ap_nombres">Nombres:</label><input type="text" id="ap_nombres" required></div>
                                         <div class="input-group"><label for="ap-apellido-paterno">Apellido paterno:</label><input type="text" id="ap-apellido-paterno" required></div>
                                         <div class="input-group"><label for="ap-apellido-materno">Apellido materno:</label><input type="text" id="ap-apellido-materno" required></div>
@@ -377,31 +384,35 @@
                                         <div class="input-group"><label for="ap_telefono">Celular (9 dígitos):</label><input type="text" id="ap_telefono" required pattern="[0-9]{9}" maxlength="9" inputmode="numeric"></div>
                                         <div class="input-group"><label for="ap-procedencia">Lugar de procedencia:</label><input type="text" id="ap-procedencia" required></div>
                                     </div>
-                                    <div class="matricula-form__actions"><button id="guardar-apoderado" type="submit" class="btn-primario">Guardar apoderado</button><button id="cancelar-edicion-apoderado" class="btn-secundario oculto" type="button">Cancelar edición</button></div>
+                                    <button id="cancelar-edicion-apoderado" class="btn-secundario oculto" type="button">Cancelar edición</button>
                                 </form>
                                 <p id="alerta-apoderado-dialogo" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="dialog-footer">
+                                <button id="guardar-apoderado" type="button" class="btn-solid theme-primary">Guardar</button>
                             </div>
                         </dialog>
 
                         <dialog class="dialog matricula-dialog" id="dialog-registrar-asociacion" aria-labelledby="dialog-registrar-asociacion-label">
                             <div class="dialog-header">
-                                <h1 class="dialog-title" id="dialog-registrar-asociacion-label">Nueva asociación</h1>
+                                <h1 class="dialog-title" id="dialog-registrar-asociacion-label"><i class="bi bi-link-45deg dialog-title__icono" aria-hidden="true"></i><span id="dialog-registrar-asociacion-texto">Nueva asociación</span></h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Cerrar"></button>
                             </div>
                             <div class="dialog-body matricula-module">
                                 <form id="asociacion-form" novalidate>
                                     <div class="matricula-form-grid">
-                                        <div class="input-group"><label for="buscar-estudiante-asociacion">Buscar por nombre o DNI del estudiante:</label><div class="matricula-search"><input id="buscar-estudiante-asociacion" type="search" placeholder="Nombre o DNI"><button id="buscar-estudiante-asociacion-btn" class="matricula-search__button" type="button" aria-label="Buscar estudiante" title="Buscar estudiante"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg></button></div></div>
-                                        <div class="input-group"><label for="asociacion-estudiante">Estudiante seleccionado:</label><select id="asociacion-estudiante" required><option value="">Seleccione un estudiante...</option></select></div>
-                                        <div class="input-group"><label for="buscar-apoderado-asociacion">Buscar por nombre o DNI del apoderado:</label><div class="matricula-search"><input id="buscar-apoderado-asociacion" type="search" placeholder="Nombre o DNI"><button id="buscar-apoderado-asociacion-btn" class="matricula-search__button" type="button" aria-label="Buscar apoderado" title="Buscar apoderado"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg></button></div></div>
-                                        <div class="input-group"><label for="asociacion-apoderado">Apoderado seleccionado:</label><select id="asociacion-apoderado" required><option value="">Seleccione un apoderado...</option></select></div>
+                                        <div class="input-group"><label for="buscar-estudiante-asociacion">Buscar estudiante por nombre o DNI:</label><input type="search" id="buscar-estudiante-asociacion" autocomplete="off" placeholder="Escriba un nombre o DNI" role="combobox" aria-expanded="false" aria-controls="resultados-estudiante-asociacion" aria-autocomplete="list"><ul id="resultados-estudiante-asociacion" class="docentes-busqueda__resultados oculto" aria-label="Coincidencias de estudiantes" role="listbox"></ul><input type="hidden" id="asociacion-estudiante"></div>
+                                        <div class="input-group"><label for="buscar-apoderado-asociacion">Buscar apoderado por nombre o DNI:</label><input type="search" id="buscar-apoderado-asociacion" autocomplete="off" placeholder="Escriba un nombre o DNI" role="combobox" aria-expanded="false" aria-controls="resultados-apoderado-asociacion" aria-autocomplete="list"><ul id="resultados-apoderado-asociacion" class="docentes-busqueda__resultados oculto" aria-label="Coincidencias de apoderados" role="listbox"></ul><input type="hidden" id="asociacion-apoderado"></div>
                                         <div class="input-group"><label for="asociacion-parentesco">Parentesco:</label><select id="asociacion-parentesco" required><option value="">Seleccione...</option><option value="Madre">Madre</option><option value="Padre">Padre</option><option value="Tutor legal">Tutor legal</option><option value="Otro">Otro</option></select></div>
                                         <div class="input-group"><label for="asociacion-fecha">Fecha de asignación:</label><input type="date" id="asociacion-fecha" required></div>
-                                        <div class="input-group"><label for="asociacion-observacion">Observación (opcional):</label><textarea id="asociacion-observacion" rows="3" placeholder="Detalle adicional de la relación"></textarea></div>
+                                        <div class="input-group matricula-form__campo-completo"><label for="asociacion-observacion">Especifique la relación:</label><textarea id="asociacion-observacion" rows="3" placeholder="Detalle adicional de la relación" disabled></textarea></div>
                                     </div>
-                                    <div class="matricula-form__actions"><button id="guardar-asociacion" type="submit" class="btn-primario">Asociar estudiante</button><button id="cancelar-edicion-asociacion" class="btn-secundario oculto" type="button">Cancelar edición</button></div>
+                                    <button id="cancelar-edicion-asociacion" class="btn-secundario oculto" type="button">Cancelar edición</button>
                                 </form>
                                 <p id="alerta-asociacion-dialogo" class="alerta-matricula oculto" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="dialog-footer">
+                                <button id="guardar-asociacion" type="button" class="btn-solid theme-primary">Asociar estudiante</button>
                             </div>
                         </dialog>
                     </section>
