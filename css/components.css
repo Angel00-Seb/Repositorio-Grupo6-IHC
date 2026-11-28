@@ -1419,8 +1419,23 @@ p::first-letter,
   background: var(--color-background);
 }
 
+/* Acción de edición: solo lápiz, relleno naranja y borde naranja oscuro. */
 .docentes-editar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-color: color-mix(in srgb, var(--color-accent) 75%, var(--color-ink));
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   white-space: nowrap;
+}
+
+.docentes-editar:hover,
+.docentes-editar:focus-visible {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-ink));
+  background: color-mix(in srgb, var(--color-accent) 85%, var(--color-ink));
+  color: var(--color-on-accent);
 }
 
 .docentes-form textarea {
@@ -2449,25 +2464,36 @@ legend {
   background: var(--color-background);
 }
 
-/* --- MÓDULO DOCENTES: PESTAÑAS, SEPARADOR, MATRIZ Y DIÁLOGOS --- */
-.docentes-separador {
+/* --- MÓDULO DOCENTES: PESTAÑAS, MATRIZ Y DIÁLOGOS --- */
+.docentes-horarios__encabezado {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 24px 0 16px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.docentes-horarios__titulo {
+.docentes-horarios__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  color: var(--color-heading);
+  font-size: 1.75rem;
+  line-height: 1.75rem;
+}
+
+/* El selector incluye .docentes-listado para ganar por especificidad a
+   ".docentes-listado h3" (que de lo contrario deja margin-bottom: 16px y baja el texto). */
+.docentes-listado .docentes-horarios__titulo {
   margin: 0;
   color: var(--color-heading);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
   font-weight: 700;
+  line-height: 1.75rem;
   white-space: nowrap;
-}
-
-.docentes-separador__linea {
-  flex: 1 1 auto;
-  height: 2px;
-  background: var(--color-action);
 }
 
 .docentes-horarios__busqueda {
@@ -2509,67 +2535,80 @@ legend {
   margin: 0;
 }
 
+/* Misma tarjeta KPI que Matrícula, con el naranja de acento. */
 .horario-docente-cabecera {
-  margin: 0;
-  padding: 12px 16px;
-  border: 1px solid var(--color-warning);
-  border-left: 4px solid var(--color-warning);
-  border-radius: var(--radius);
-  background: var(--color-naranja-claro);
+  --inicio-kpi-color: var(--color-accent);
 }
 
-.horario-docente-identidad {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
+.horario-docente-contenido {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
-.horario-docente-icono {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  background: var(--color-action);
-  color: var(--color-on-dark);
-}
-
-.horario-docente-icono svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.horario-docente-nombre {
-  margin: 0;
-  color: var(--color-heading);
-  font-family: var(--font-heading);
+.horario-docente-cabecera .resumen-dashboard__cifra-info strong {
   font-size: var(--font-size-secondary);
-  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
-.horario-docente-cabecera > p {
-  margin: 4px 0;
+.horario-docente-detalles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 4px;
+  margin-top: 12px;
+}
+
+.horario-docente-detalles p {
+  margin: 0;
   color: var(--color-text);
   font-size: var(--font-size-min);
+  overflow-wrap: anywhere;
+}
+
+/* Diálogo de Asistencia: buscador con sugerencias y tarjeta de datos al lado. */
+/* Bootstrap pone .input-group en flex; aquí la etiqueta va encima del buscador. */
+.asistencia-docente-campo {
+  display: block;
+}
+
+.asistencia-docente-campo > label {
+  margin-bottom: 8px;
+}
+
+/* El buscador va arriba y la tarjeta ocupa todo el ancho del diálogo. */
+.asistencia-docente-busqueda {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.asistencia-docente-busqueda__campo {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.asistencia-docente-sugerencias {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+}
+
+.asistencia-docente-cabecera {
+  --inicio-kpi-color: var(--color-accent);
 }
 
 .docentes-tabla {
-  background: #FFFFFF;
+  background: var(--color-surface);
   color: var(--color-text);
 }
 
 .docentes-tabla thead th,
 .docentes-tabla tbody th {
-  background: var(--color-tabla-claro);
+  background: var(--color-naranja-claro);
   color: var(--color-heading);
 }
 
@@ -2602,15 +2641,18 @@ legend {
   background: #E4E3DE;
 }
 
-.horario-celda {
-  display: inline-block;
-  margin: 2px;
-  padding: 6px 10px;
-  border-radius: var(--radius);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  font-size: var(--font-size-min);
+.horario-matriz .horario-receso {
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* El color de aula se aplica a la celda completa, no a una etiqueta interna. */
+.horario-matriz td.horario-celda {
+  padding: 8px;
+  border-radius: 0;
+  font-size: var(--font-size-min);
+  font-weight: 400;
   white-space: nowrap;
 }
 
@@ -2688,9 +2730,10 @@ legend {
 }
 
 .docentes-tabs-paneles {
-  height: 400px;
+  height: 535px;
   padding: 16px;
-  overflow-x: auto;
+  /* El desplazamiento horizontal ocurre solo dentro de .registros (la tabla). */
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -2739,9 +2782,20 @@ legend {
   padding: 16px;
 }
 
+/* Una sola línea por registro; si no cabe, la barra aparece dentro de la tabla. */
+.docentes-pane-cuerpo .registros {
+  overflow-x: auto;
+}
+
+.docentes-pane-cuerpo .tabla-registros {
+  width: max-content;
+  min-width: 100%;
+}
+
 .docentes-pane-cuerpo .tabla-registros th,
 .docentes-pane-cuerpo .tabla-registros td {
   text-align: left;
+  white-space: nowrap;
 }
 
 .btn-solid.theme-secondary {

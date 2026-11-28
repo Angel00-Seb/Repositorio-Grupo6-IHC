@@ -420,31 +420,99 @@
 
                     <!-- ===== VIEW: CONTROL DE ASISTENCIA DOCENTE ===== -->
                     <section id="view-docentes" class="view oculto" aria-label="Control de asistencia docente" aria-hidden="true">
+                        <div class="docentes-listado docentes-horarios">
+                            <div class="docentes-horarios__encabezado">
+                                <i class="bi bi-calendar2-week docentes-horarios__icono" aria-hidden="true"></i>
+                                <h3 class="docentes-horarios__titulo">Consultar Horario Semanal</h3>
+                            </div>
+
+                            <div class="docentes-horarios__busqueda">
+                                <div class="docentes-horarios__busqueda-columna">
+                                    <form class="busqueda-form horario-docente-busqueda" role="search">
+                                        <div class="input-group">
+                                            <label class="input-group__label" for="buscar-docente-horario" id="etiqueta-buscar-docente-horario">Buscar docente</label>
+                                            <div class="horario-docente-busqueda__campo">
+                                                <input type="search" id="buscar-docente-horario" aria-labelledby="etiqueta-buscar-docente-horario" autocomplete="off" placeholder="Escriba el nombre del docente" role="combobox" aria-expanded="false" aria-controls="resultados-docente-horario" aria-autocomplete="list">
+                                                <ul id="resultados-docente-horario" class="docentes-busqueda__resultados horario-docente-sugerencias oculto" aria-label="Coincidencias de docentes" role="listbox"></ul>
+                                            </div>
+                                        </div>
+                                        <button id="buscar-docente-horario-btn" class="btn-primario btn-buscar" type="button">Buscar</button>
+                                    </form>
+                                </div>
+                                <div id="horario-docente-cabecera" class="card h-100 inicio-kpi horario-docente-cabecera" aria-live="polite">
+                                    <div class="card-body inicio-kpi__cifra">
+                                        <div class="resumen-dashboard__cifra-icono" aria-hidden="true"><i class="bi bi-person-badge bi-icono"></i></div>
+                                        <span class="resumen-dashboard__cifra-divisor" aria-hidden="true"></span>
+                                        <div class="horario-docente-contenido">
+                                            <div class="resumen-dashboard__cifra-info">
+                                                <strong id="horario-nombre-docente">Seleccione un docente</strong>
+                                            </div>
+                                            <div class="horario-docente-detalles">
+                                                <p><strong>DNI:</strong> <span id="horario-dni-docente">—</span></p>
+                                                <p><strong>Edad:</strong> <span id="horario-edad-docente">—</span></p>
+                                                <p><strong>Género:</strong> <span id="horario-genero-docente">—</span></p>
+                                                <p><strong>Especialidad:</strong> <span id="horario-especialidad-docente">—</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="mensaje-horario-docente" class="docentes-mensaje" role="status" aria-live="polite">Escriba el nombre del docente o elija una coincidencia para ver su horario semanal.</p>
+                            <div id="tabla-horario-docente-contenedor" class="registros oculto">
+                                <table class="tabla-registros docentes-tabla horario-matriz">
+                                    <caption id="titulo-horario-docente"></caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Bloque horario</th>
+                                            <th scope="col">Lunes</th>
+                                            <th scope="col">Martes</th>
+                                            <th scope="col">Miércoles</th>
+                                            <th scope="col">Jueves</th>
+                                            <th scope="col">Viernes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabla-horario-docente"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="inicio-seccion__encabezado">
+                            <h3 class="inicio-seccion__titulo">Registros Disponibles</h3>
+                            <span class="inicio-seccion__linea" aria-hidden="true"></span>
+                        </div>
+
                         <div class="docentes-tabs-contenedor">
                             <div class="docentes-tabs" role="tablist" aria-label="Registros de docentes">
-                                <button type="button" class="docentes-tab activo" id="tab-docente" role="tab" aria-selected="true" aria-controls="panel-tab-docente" data-tab="docente">Registrar Docente</button>
-                                <button type="button" class="docentes-tab" id="tab-asistencia" role="tab" aria-selected="false" aria-controls="panel-tab-asistencia" data-tab="asistencia">Registrar Asistencia</button>
+                                <button type="button" class="docentes-tab activo" id="tab-docente" role="tab" aria-selected="true" aria-controls="panel-tab-docente" data-tab="docente">Docentes</button>
+                                <button type="button" class="docentes-tab" id="tab-asistencia" role="tab" aria-selected="false" aria-controls="panel-tab-asistencia" data-tab="asistencia">Asistencia</button>
                             </div>
                             <div class="docentes-tabs-paneles">
                                 <div class="docentes-tab-panel fade show" id="panel-tab-docente" data-panel="docente" role="tabpanel" aria-labelledby="tab-docente">
                                     <div class="docentes-pane-cabecera" id="registrar-docente">
-                                        <h3><span class="docentes-pane-icono" aria-hidden="true"><svg class="icono" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v1" /></svg></span>Catálogo de docentes</h3>
-                                        <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-docente">Registrar Docente</button>
+                                        <h3><span class="docentes-pane-icono" aria-hidden="true"><svg class="icono" viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v1" /></svg></span>Listado de docentes</h3>
+                                        <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-docente" aria-label="Registrar docente">Registrar</button>
                                     </div>
-                                    <div class="docentes-pane-cuerpo">
+                                    <div class="docentes-pane-cuerpo matricula-module">
+                                        <div class="matricula-filtros">
+                                            <div class="input-group"><label for="filtro-docente">Buscar por nombre o DNI:</label><div class="matricula-search"><input id="filtro-docente" type="search" placeholder="Nombre o DNI"><button id="buscar-docente-tabla" class="matricula-search__button" type="button" aria-label="Buscar docente" title="Buscar docente"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg></button></div></div>
+                                        </div>
                                         <div class="registros">
                                             <table class="tabla-registros docentes-tabla">
                                                 <thead>
                                                     <tr>
+                                                        <th scope="col">ID</th>
+                                                        <th scope="col">Docente</th>
                                                         <th scope="col">DNI</th>
-                                                        <th scope="col">Nombres</th>
-                                                        <th scope="col">Apellidos</th>
+                                                        <th scope="col">Edad</th>
+                                                        <th scope="col">Género</th>
+                                                        <th scope="col">Celular</th>
+                                                        <th scope="col">Procedencia</th>
                                                         <th scope="col">Especialidad</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="lista-docentes">
                                                     <tr>
-                                                        <td colspan="4">Aún no hay docentes registrados.</td>
+                                                        <td colspan="8">Aún no hay docentes registrados.</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -455,9 +523,14 @@
                                 <div class="docentes-tab-panel fade oculto" id="panel-tab-asistencia" data-panel="asistencia" role="tabpanel" aria-labelledby="tab-asistencia">
                                     <div class="docentes-pane-cabecera" id="registrar-asistencia">
                                         <h3><span class="docentes-pane-icono" aria-hidden="true"><svg class="icono" viewBox="0 0 24 24" focusable="false"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4V3h6v1" /><path d="m9 13 2 2 4-4" /></svg></span>Asistencias registradas</h3>
-                                        <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-asistencia">Registrar Asistencia</button>
+                                        <button type="button" class="btn-solid theme-primary" data-bs-toggle="dialog" data-bs-target="#dialog-registrar-asistencia" aria-label="Registrar asistencia">Registrar</button>
                                     </div>
-                                    <div class="docentes-pane-cuerpo">
+                                    <div class="docentes-pane-cuerpo matricula-module">
+                                        <div class="matricula-filtros">
+                                            <div class="input-group"><label for="filtro-asistencia">Buscar por nombre o DNI:</label><div class="matricula-search"><input id="filtro-asistencia" type="search" placeholder="Nombre o DNI"><button id="buscar-asistencia-tabla" class="matricula-search__button" type="button" aria-label="Buscar asistencia" title="Buscar asistencia"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg></button></div></div>
+                                            <div class="input-group"><label for="filtro-mes-asistencia">Filtrar por mes:</label><select id="filtro-mes-asistencia"><option value="">Todos los meses</option><option value="Enero">Enero</option><option value="Febrero">Febrero</option><option value="Marzo">Marzo</option><option value="Abril">Abril</option><option value="Mayo">Mayo</option><option value="Junio">Junio</option><option value="Julio">Julio</option><option value="Agosto">Agosto</option><option value="Septiembre">Septiembre</option><option value="Octubre">Octubre</option><option value="Noviembre">Noviembre</option><option value="Diciembre">Diciembre</option></select></div>
+                                            <div class="input-group"><label for="filtro-estado-asistencia">Filtrar por estado:</label><select id="filtro-estado-asistencia"><option value="">Todos</option><option value="Asistencia">Asistencia</option><option value="Tardanza">Tardanza</option><option value="Falta justificada">Falta justificada</option><option value="Falta injustificada">Falta injustificada</option></select></div>
+                                        </div>
                                         <div class="registros">
                                             <table class="tabla-registros docentes-tabla">
                                                 <thead>
@@ -484,55 +557,6 @@
                             </div>
                         </div>
 
-                        <div class="docentes-separador">
-                            <h3 class="docentes-horarios__titulo">Consultar Horario Semanal</h3>
-                            <div class="docentes-separador__linea" aria-hidden="true"></div>
-                        </div>
-
-                        <div class="docentes-listado docentes-horarios">
-                            <div class="docentes-horarios__busqueda">
-                                <div class="docentes-horarios__busqueda-columna">
-                                    <form class="busqueda-form horario-docente-busqueda" role="search">
-                                        <div class="input-group">
-                                            <label class="input-group__label" for="buscar-docente-horario" id="etiqueta-buscar-docente-horario">Buscar docente</label>
-                                            <div class="horario-docente-busqueda__campo">
-                                                <input type="search" id="buscar-docente-horario" aria-labelledby="etiqueta-buscar-docente-horario" autocomplete="off" placeholder="Escriba el nombre del docente" role="combobox" aria-expanded="false" aria-controls="resultados-docente-horario" aria-autocomplete="list">
-                                                <ul id="resultados-docente-horario" class="docentes-busqueda__resultados horario-docente-sugerencias oculto" aria-label="Coincidencias de docentes" role="listbox"></ul>
-                                            </div>
-                                        </div>
-                                        <button id="buscar-docente-horario-btn" class="btn-primario btn-buscar" type="button">Buscar</button>
-                                    </form>
-                                </div>
-                                <div id="horario-docente-cabecera" class="horario-docente-cabecera" aria-live="polite">
-                                    <div class="horario-docente-identidad">
-                                        <span class="horario-docente-icono" aria-hidden="true">
-                                            <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v1" /></svg>
-                                        </span>
-                                        <p id="horario-nombre-docente" class="horario-docente-nombre">Seleccione un docente</p>
-                                    </div>
-                                    <p><strong>DNI:</strong> <span id="horario-dni-docente">—</span></p>
-                                    <p><strong>Especialidad:</strong> <span id="horario-especialidad-docente">—</span></p>
-                                </div>
-                            </div>
-                            <p id="mensaje-horario-docente" class="docentes-mensaje" role="status" aria-live="polite">Escriba el nombre del docente o elija una coincidencia para ver su horario semanal.</p>
-                            <div id="tabla-horario-docente-contenedor" class="registros oculto">
-                                <table class="tabla-registros docentes-tabla horario-matriz">
-                                    <caption id="titulo-horario-docente"></caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Bloque horario</th>
-                                            <th scope="col">Lunes</th>
-                                            <th scope="col">Martes</th>
-                                            <th scope="col">Miércoles</th>
-                                            <th scope="col">Jueves</th>
-                                            <th scope="col">Viernes</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tabla-horario-docente"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
                         <dialog class="dialog" id="dialog-registrar-docente" aria-labelledby="dialog-registrar-docente-label">
                             <div class="dialog-header">
                                 <h1 class="dialog-title" id="dialog-registrar-docente-label">Registrar Docente</h1>
@@ -541,16 +565,28 @@
                             <div class="dialog-body">
                                 <form id="form-docente" class="docentes-form" novalidate>
                                     <div class="input-group">
+                                        <label for="nombre-docente">Docente:</label>
+                                        <input type="text" id="nombre-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="name" required>
+                                    </div>
+                                    <div class="input-group">
                                         <label for="dni-docente">DNI (8 dígitos):</label>
                                         <input type="text" id="dni-docente" pattern="[0-9]{8}" inputmode="numeric" autocomplete="off" required>
                                     </div>
                                     <div class="input-group">
-                                        <label for="nombre-docente">Nombres:</label>
-                                        <input type="text" id="nombre-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="given-name" required>
+                                        <label for="edad-docente">Edad:</label>
+                                        <input type="number" id="edad-docente" min="18" max="100" inputmode="numeric" required>
                                     </div>
                                     <div class="input-group">
-                                        <label for="apellido-docente">Apellidos:</label>
-                                        <input type="text" id="apellido-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" autocomplete="family-name" required>
+                                        <label for="genero-docente">Género:</label>
+                                        <select id="genero-docente" required><option value="">Seleccione...</option><option value="Femenino">Femenino</option><option value="Masculino">Masculino</option></select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="celular-docente">Celular:</label>
+                                        <input type="tel" id="celular-docente" pattern="[0-9]{9}" inputmode="numeric" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="procedencia-docente">Procedencia:</label>
+                                        <input type="text" id="procedencia-docente" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+" required>
                                     </div>
                                     <div class="input-group">
                                         <label for="especialidad-docente">Especialidad:</label>
@@ -560,8 +596,7 @@
                                 </form>
                             </div>
                             <div class="dialog-footer">
-                                <button type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Cerrar</button>
-                                <button type="button" class="btn-solid theme-primary" id="guardar-docente-dialog">Guardar docente</button>
+                                <button type="button" class="btn-solid theme-primary" id="guardar-docente-dialog">Guardar</button>
                             </div>
                         </dialog>
 
@@ -572,20 +607,32 @@
                             </div>
                             <div class="dialog-body">
                                 <form id="form-asistencia" class="docentes-form" novalidate>
-                                    <div class="input-group docentes-busqueda docentes-campo-completo">
-                                        <label for="buscar-docente">Buscar docente por nombre o DNI:</label>
-                                        <div class="docentes-busqueda__controles">
-                                            <input type="search" id="buscar-docente" autocomplete="off" placeholder="Escriba un nombre o DNI">
-                                            <button id="buscar-docente-btn" class="btn-primario" type="button">Buscar docente</button>
+                                    <div class="input-group docentes-campo-completo asistencia-docente-campo">
+                                        <label class="input-group__label" for="buscar-docente" id="etiqueta-buscar-docente">Buscar docente por nombre o DNI:</label>
+                                        <div class="asistencia-docente-busqueda">
+                                            <div class="asistencia-docente-busqueda__campo">
+                                                <input type="search" id="buscar-docente" aria-labelledby="etiqueta-buscar-docente" autocomplete="off" placeholder="Escriba un nombre o DNI" role="combobox" aria-expanded="false" aria-controls="resultados-busqueda-docente" aria-autocomplete="list">
+                                                <ul id="resultados-busqueda-docente" class="docentes-busqueda__resultados asistencia-docente-sugerencias oculto" aria-label="Coincidencias de docentes" role="listbox"></ul>
+                                            </div>
+                                            <div class="card h-100 inicio-kpi horario-docente-cabecera asistencia-docente-cabecera" aria-live="polite">
+                                                <div class="card-body inicio-kpi__cifra">
+                                                    <div class="resumen-dashboard__cifra-icono" aria-hidden="true"><i class="bi bi-person-badge bi-icono"></i></div>
+                                                    <span class="resumen-dashboard__cifra-divisor" aria-hidden="true"></span>
+                                                    <div class="horario-docente-contenido">
+                                                        <div class="resumen-dashboard__cifra-info">
+                                                            <strong id="asistencia-nombre-docente">Seleccione un docente</strong>
+                                                        </div>
+                                                        <div class="horario-docente-detalles">
+                                                            <p><strong>DNI:</strong> <span id="asistencia-dni-docente">—</span></p>
+                                                            <p><strong>Edad:</strong> <span id="asistencia-edad-docente">—</span></p>
+                                                            <p><strong>Género:</strong> <span id="asistencia-genero-docente">—</span></p>
+                                                            <p><strong>Especialidad:</strong> <span id="asistencia-especialidad-docente">—</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <ul id="resultados-busqueda-docente" class="docentes-busqueda__resultados oculto" aria-label="Resultados de búsqueda" aria-live="polite"></ul>
-                                    </div>
-                                    <div class="input-group docentes-campo-completo">
                                         <input type="hidden" id="docente-asistencia">
-                                        <div class="docentes-docente-seleccionado-fila">
-                                            <span class="input-group__label">Docente seleccionado:</span>
-                                            <p id="docente-asistencia-seleccionado" class="docentes-docente-seleccionado" role="status" aria-live="polite">No hay docente seleccionado</p>
-                                        </div>
                                     </div>
                                     <div class="input-group">
                                         <label for="fecha-asistencia">Fecha:</label>
@@ -636,8 +683,7 @@
                                 </form>
                             </div>
                             <div class="dialog-footer">
-                                <button type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Cerrar</button>
-                                <button type="button" class="btn-solid theme-primary" id="guardar-asistencia-dialog">Registrar asistencia</button>
+                                <button type="button" class="btn-solid theme-primary" id="guardar-asistencia-dialog">Guardar</button>
                             </div>
                         </dialog>
                     </section>

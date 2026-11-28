@@ -208,13 +208,19 @@ document.addEventListener("DOMContentLoaded", function() {
     // --- CONTROL DE ASISTENCIA DOCENTE ---
     var formularioDocente = document.getElementById("form-docente");
     var dniDocente = document.getElementById("dni-docente");
+    var edadDocente = document.getElementById("edad-docente");
+    var generoDocente = document.getElementById("genero-docente");
+    var celularDocente = document.getElementById("celular-docente");
     var listaDocentes = document.getElementById("lista-docentes");
     var listaAsistencias = document.getElementById("lista-asistencias");
     var buscarDocente = document.getElementById("buscar-docente");
-    var botonBuscarDocente = document.getElementById("buscar-docente-btn");
     var resultadosBusquedaDocente = document.getElementById("resultados-busqueda-docente");
     var seleccionDocente = document.getElementById("docente-asistencia");
-    var docenteAsistenciaSeleccionado = document.getElementById("docente-asistencia-seleccionado");
+    var asistenciaNombreDocente = document.getElementById("asistencia-nombre-docente");
+    var asistenciaDniDocente = document.getElementById("asistencia-dni-docente");
+    var asistenciaEdadDocente = document.getElementById("asistencia-edad-docente");
+    var asistenciaGeneroDocente = document.getElementById("asistencia-genero-docente");
+    var asistenciaEspecialidadDocente = document.getElementById("asistencia-especialidad-docente");
     var fechaAsistencia = document.getElementById("fecha-asistencia");
     var horaAsistencia = document.getElementById("hora-asistencia");
     var periodoAsistencia = document.getElementById("periodo-asistencia");
@@ -232,6 +238,12 @@ document.addEventListener("DOMContentLoaded", function() {
     var botonCancelarEdicionAsistencia = document.getElementById("cancelar-edicion-asistencia");
     var mensajeDocente = document.getElementById("mensaje-docente");
     var mensajeAsistencia = document.getElementById("mensaje-asistencia");
+    var filtroDocenteTabla = document.getElementById("filtro-docente");
+    var botonBuscarDocenteTabla = document.getElementById("buscar-docente-tabla");
+    var filtroAsistenciaTabla = document.getElementById("filtro-asistencia");
+    var botonBuscarAsistenciaTabla = document.getElementById("buscar-asistencia-tabla");
+    var filtroMesAsistenciaTabla = document.getElementById("filtro-mes-asistencia");
+    var filtroEstadoAsistenciaTabla = document.getElementById("filtro-estado-asistencia");
     var botonSeleccionarArchivo = document.getElementById("seleccionar-archivo-justificacion");
     var buscarDocenteHorario = document.getElementById("buscar-docente-horario");
     var botonBuscarDocenteHorario = document.getElementById("buscar-docente-horario-btn");
@@ -242,11 +254,13 @@ document.addEventListener("DOMContentLoaded", function() {
     var tablaHorarioDocente = document.getElementById("tabla-horario-docente");
     var nombreDocenteHorario = document.getElementById("horario-nombre-docente");
     var dniDocenteHorario = document.getElementById("horario-dni-docente");
+    var edadDocenteHorario = document.getElementById("horario-edad-docente");
+    var generoDocenteHorario = document.getElementById("horario-genero-docente");
     var especialidadDocenteHorario = document.getElementById("horario-especialidad-docente");
     var camposTextoDocente = [
-        { elemento: document.getElementById("nombre-docente"), etiqueta: "Nombres" },
-        { elemento: document.getElementById("apellido-docente"), etiqueta: "Apellidos" },
-        { elemento: document.getElementById("especialidad-docente"), etiqueta: "Especialidad" }
+        { elemento: document.getElementById("nombre-docente"), etiqueta: "Docente" },
+        { elemento: document.getElementById("especialidad-docente"), etiqueta: "Especialidad" },
+        { elemento: document.getElementById("procedencia-docente"), etiqueta: "Procedencia" }
     ];
     var patronTextoDocente = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/;
     var errorTextoDocenteVisible = false;
@@ -275,12 +289,12 @@ document.addEventListener("DOMContentLoaded", function() {
         "5-A": "horario-celda--aula-6"
     };
     var asignaturasHorario = [
-        { asignatura: "Comunicación", docente: "Ana María Torres", dni: "70000001", area: "Comunicación" },
-        { asignatura: "Matemática", docente: "Carlos Mendoza", dni: "70000002", area: "Matemática" },
-        { asignatura: "Ciencia y Tecnología", docente: "Rosa Sánchez", dni: "70000003", area: "Ciencia y Tecnología" },
-        { asignatura: "Ciencias Sociales", docente: "Luis Paredes", dni: "70000004", area: "Ciencias Sociales" },
-        { asignatura: "Inglés", docente: "Marta Ríos", dni: "70000005", area: "Inglés" },
-        { asignatura: "Educación Física", docente: "Jorge Salazar", dni: "70000006", area: "Educación Física" }
+        { asignatura: "Comunicación", docente: "Ana María Torres", dni: "70000001", area: "Comunicación", edad: 43, genero: "Femenino" },
+        { asignatura: "Matemática", docente: "Carlos Mendoza", dni: "70000002", area: "Matemática", edad: 39, genero: "Masculino" },
+        { asignatura: "Ciencia y Tecnología", docente: "Rosa Sánchez", dni: "70000003", area: "Ciencia y Tecnología", edad: 47, genero: "Femenino" },
+        { asignatura: "Ciencias Sociales", docente: "Luis Paredes", dni: "70000004", area: "Ciencias Sociales", edad: 41, genero: "Masculino" },
+        { asignatura: "Inglés", docente: "Marta Ríos", dni: "70000005", area: "Inglés", edad: 36, genero: "Femenino" },
+        { asignatura: "Educación Física", docente: "Jorge Salazar", dni: "70000006", area: "Educación Física", edad: 45, genero: "Masculino" }
     ];
     var aulasHorario = [
         { grado: "1", seccion: "A", indice: 0 },
@@ -329,22 +343,72 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
+    function nombreDocente(registro) {
+        return [registro.nombres, registro.apellidos].filter(Boolean).join(" ");
+    }
+
+    function ocultarSugerenciasDocenteAsistencia() {
+        resultadosBusquedaDocente.textContent = "";
+        resultadosBusquedaDocente.classList.add("oculto");
+        buscarDocente.setAttribute("aria-expanded", "false");
+    }
+
+    function restablecerTarjetaDocenteAsistencia() {
+        asistenciaNombreDocente.textContent = "Seleccione un docente";
+        asistenciaDniDocente.textContent = "—";
+        asistenciaEdadDocente.textContent = "—";
+        asistenciaGeneroDocente.textContent = "—";
+        asistenciaEspecialidadDocente.textContent = "—";
+    }
+
+    function actualizarTarjetaDocenteAsistencia(docente) {
+        asistenciaNombreDocente.textContent = nombreDocente(docente);
+        asistenciaDniDocente.textContent = docente.dni || "—";
+        asistenciaEdadDocente.textContent = docente.edad ? docente.edad + " años" : "—";
+        asistenciaGeneroDocente.textContent = docente.genero || "—";
+        asistenciaEspecialidadDocente.textContent = docente.especialidad || "—";
+    }
+
+    function limpiarSeleccionDocenteAsistencia() {
+        seleccionDocente.value = "";
+        buscarDocente.value = "";
+        restablecerTarjetaDocenteAsistencia();
+        ocultarSugerenciasDocenteAsistencia();
+    }
+
     function mostrarDocentes() {
         listaDocentes.textContent = "";
 
-        if (docentes.length === 0) {
+        var termino = normalizar(filtroDocenteTabla.value.trim());
+        var filtrados = docentes.filter(function(docente) {
+            var texto = normalizar([docente.id, nombreDocente(docente), docente.dni].join(" "));
+            return texto.indexOf(termino) !== -1;
+        });
+
+        if (filtrados.length === 0) {
             var filaVacia = document.createElement("tr");
             var celdaVacia = document.createElement("td");
-            celdaVacia.colSpan = 4;
-            celdaVacia.textContent = "Aún no hay docentes registrados.";
+            celdaVacia.colSpan = 8;
+            celdaVacia.textContent = docentes.length === 0
+                ? "Aún no hay docentes registrados."
+                : "No hay docentes que coincidan con la búsqueda.";
             filaVacia.appendChild(celdaVacia);
             listaDocentes.appendChild(filaVacia);
             return;
         }
 
-        docentes.forEach(function(docente) {
+        filtrados.forEach(function(docente) {
             var fila = document.createElement("tr");
-            [docente.dni, docente.nombres, docente.apellidos, docente.especialidad].forEach(function(valor) {
+            [
+                docente.id,
+                nombreDocente(docente),
+                docente.dni,
+                docente.edad ? docente.edad + " años" : "—",
+                docente.genero || "—",
+                docente.celular || "—",
+                docente.procedencia || "—",
+                docente.especialidad
+            ].forEach(function(valor) {
                 var celda = document.createElement("td");
                 celda.textContent = valor;
                 fila.appendChild(celda);
@@ -390,6 +454,8 @@ document.addEventListener("DOMContentLoaded", function() {
     function restablecerPanelDocenteHorario() {
         nombreDocenteHorario.textContent = "Seleccione un docente";
         dniDocenteHorario.textContent = "—";
+        edadDocenteHorario.textContent = "—";
+        generoDocenteHorario.textContent = "—";
         especialidadDocenteHorario.textContent = "—";
     }
 
@@ -410,16 +476,36 @@ document.addEventListener("DOMContentLoaded", function() {
         tituloHorarioDocente.textContent = "Horario semanal de " + docenteHorario.docente;
         nombreDocenteHorario.textContent = docenteHorario.docente;
         dniDocenteHorario.textContent = docenteHorario.dni;
+        edadDocenteHorario.textContent = docenteHorario.edad ? docenteHorario.edad + " años" : "—";
+        generoDocenteHorario.textContent = docenteHorario.genero || "—";
         especialidadDocenteHorario.textContent = especialidadDelDocente(docenteHorario);
 
         horasHorario.forEach(function(bloque) {
             var fila = document.createElement("tr");
+
+            // La fila de receso se muestra en dos celdas: la hora y una sola
+            // celda que abarca de lunes a viernes con la palabra RECESO.
             if (bloque === bloqueReceso) {
                 fila.classList.add("horario-fila-receso");
+
+                var celdaHoraReceso = document.createElement("th");
+                celdaHoraReceso.scope = "row";
+                celdaHoraReceso.textContent = bloque;
+                fila.appendChild(celdaHoraReceso);
+
+                var celdaReceso = document.createElement("td");
+                celdaReceso.colSpan = diasHorario.length;
+                celdaReceso.className = "horario-receso";
+                celdaReceso.textContent = "RECESO";
+                fila.appendChild(celdaReceso);
+
+                tablaHorarioDocente.appendChild(fila);
+                return;
             }
+
             var celdaBloque = document.createElement("th");
             celdaBloque.scope = "row";
-            celdaBloque.textContent = bloque === bloqueReceso ? bloque + " · Receso" : bloque;
+            celdaBloque.textContent = bloque;
             fila.appendChild(celdaBloque);
 
             diasHorario.forEach(function(dia) {
@@ -432,15 +518,20 @@ document.addEventListener("DOMContentLoaded", function() {
                     celda.textContent = "—";
                     celda.classList.add("horario-celda-vacia");
                 } else {
-                    clasesCelda.forEach(function(clase) {
-                        var etiquetaClase = clase.grado + "° " + clase.seccion;
-                        var chip = document.createElement("span");
-                        chip.className = "horario-celda " + (coloresAula[clase.grado + "-" + clase.seccion] || "");
-                        chip.textContent = etiquetaClase;
-                        chip.title = clase.asignatura + " — " + dia + " " + bloque;
-                        chip.setAttribute("aria-label", etiquetaClase + ", " + clase.asignatura + ", " + dia + " " + bloque);
-                        celda.appendChild(chip);
+                    var etiquetas = clasesCelda.map(function(clase) {
+                        return clase.grado + "° " + clase.seccion;
                     });
+                    var asignaturas = clasesCelda.map(function(clase) {
+                        return clase.asignatura;
+                    });
+                    celda.textContent = etiquetas.join(" / ");
+                    celda.classList.add("horario-celda");
+                    var claseColor = coloresAula[clasesCelda[0].grado + "-" + clasesCelda[0].seccion];
+                    if (claseColor) {
+                        celda.classList.add(claseColor);
+                    }
+                    celda.title = asignaturas.join(" / ") + " — " + dia + " " + bloque;
+                    celda.setAttribute("aria-label", etiquetas.join(", ") + ", " + asignaturas.join(", ") + ", " + dia + " " + bloque);
                 }
                 fila.appendChild(celda);
             });
@@ -546,28 +637,26 @@ document.addEventListener("DOMContentLoaded", function() {
         return null;
     }
 
-    function buscarDocentesRegistrados() {
+    function mostrarSugerenciasDocenteAsistencia() {
         var termino = normalizar(buscarDocente.value.trim());
         resultadosBusquedaDocente.textContent = "";
         seleccionDocente.value = "";
-        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
+        restablecerTarjetaDocenteAsistencia();
+
         if (!termino) {
-            resultadosBusquedaDocente.classList.add("oculto");
+            ocultarSugerenciasDocenteAsistencia();
             return;
         }
 
-        var docentesFiltrados = docentes.filter(function(docente) {
-            var nombres = normalizar(docente.nombres);
-            var apellidos = normalizar(docente.apellidos);
-            var nombreCompleto = nombres + " " + apellidos;
-            return nombreCompleto.indexOf(termino) !== -1 ||
-                nombres.indexOf(termino) !== -1 ||
-                apellidos.indexOf(termino) !== -1 ||
-                docente.dni.indexOf(termino) !== -1;
+        var coincidencias = docentes.filter(function(docente) {
+            var texto = normalizar(nombreDocente(docente) + " " + docente.dni);
+            return texto.indexOf(termino) !== -1;
         });
 
         resultadosBusquedaDocente.classList.remove("oculto");
-        if (docentesFiltrados.length === 0) {
+        buscarDocente.setAttribute("aria-expanded", "true");
+
+        if (coincidencias.length === 0) {
             var sinResultados = document.createElement("li");
             sinResultados.className = "docentes-busqueda__sin-resultados";
             sinResultados.textContent = "No se encontraron docentes";
@@ -575,30 +664,29 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        docentesFiltrados.forEach(function(docente) {
+        coincidencias.forEach(function(docente) {
             var resultado = document.createElement("li");
+            resultado.setAttribute("role", "option");
             var botonResultado = document.createElement("button");
-            var nombreCompleto = docente.nombres + " " + docente.apellidos;
+            var nombreCompleto = nombreDocente(docente);
             botonResultado.type = "button";
             botonResultado.className = "docentes-busqueda__resultado";
             botonResultado.setAttribute("aria-label", nombreCompleto + ", DNI " + docente.dni + ", " + docente.especialidad);
 
             var nombre = document.createElement("span");
             nombre.textContent = nombreCompleto;
-            var detalleDni = document.createElement("small");
-            detalleDni.textContent = "DNI: " + docente.dni;
-            var detalleArea = document.createElement("small");
-            detalleArea.textContent = "Área o especialidad: " + docente.especialidad;
+            var detalle = document.createElement("small");
+            detalle.textContent = "DNI: " + docente.dni + " — " + docente.especialidad;
             botonResultado.appendChild(nombre);
-            botonResultado.appendChild(detalleDni);
-            botonResultado.appendChild(detalleArea);
+            botonResultado.appendChild(detalle);
             resultado.appendChild(botonResultado);
             resultadosBusquedaDocente.appendChild(resultado);
 
             botonResultado.addEventListener("click", function() {
                 seleccionDocente.value = docente.dni;
-                docenteAsistenciaSeleccionado.textContent = nombreCompleto + " — DNI " + docente.dni + " — " + docente.especialidad;
-                resultadosBusquedaDocente.classList.add("oculto");
+                buscarDocente.value = nombreCompleto;
+                actualizarTarjetaDocenteAsistencia(docente);
+                ocultarSugerenciasDocenteAsistencia();
             });
         });
     }
@@ -654,10 +742,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         var docentesDemo = [
-            { dni: "70000001", nombres: "Ana María", apellidos: "Torres", especialidad: "Comunicación" },
-            { dni: "70000002", nombres: "Carlos", apellidos: "Mendoza", especialidad: "Matemática" },
-            { dni: "70000003", nombres: "Rosa", apellidos: "Sánchez", especialidad: "Ciencia y Tecnología" },
-            { dni: "70000004", nombres: "Luis", apellidos: "Paredes", especialidad: "Ciencias Sociales" }
+            { id: "D0001", dni: "70000001", nombres: "Ana María Torres", apellidos: "", edad: 43, genero: "Femenino", celular: "987654301", procedencia: "Lima", especialidad: "Comunicación" },
+            { id: "D0002", dni: "70000002", nombres: "Carlos Mendoza", apellidos: "", edad: 39, genero: "Masculino", celular: "987654302", procedencia: "Arequipa", especialidad: "Matemática" },
+            { id: "D0003", dni: "70000003", nombres: "Rosa Sánchez", apellidos: "", edad: 47, genero: "Femenino", celular: "987654303", procedencia: "Cusco", especialidad: "Ciencia y Tecnología" },
+            { id: "D0004", dni: "70000004", nombres: "Luis Paredes", apellidos: "", edad: 41, genero: "Masculino", celular: "987654304", procedencia: "Trujillo", especialidad: "Ciencias Sociales" }
         ];
         var estadosDemo = [
             ["Asistencia", "Tardanza", "Asistencia", "Asistencia", "Asistencia"],
@@ -670,7 +758,7 @@ document.addEventListener("DOMContentLoaded", function() {
             docentes.push(Object.assign({}, docente));
             estadosDemo[indiceDocente].forEach(function(estado, indiceDia) {
                 asistencias.push({
-                    docente: docente.nombres + " " + docente.apellidos,
+                    docente: nombreDocente(docente),
                     dni: docente.dni,
                     fecha: fechas[indiceDia],
                     horaIngreso: "07:00",
@@ -690,18 +778,33 @@ document.addEventListener("DOMContentLoaded", function() {
     function mostrarAsistencias() {
         listaAsistencias.textContent = "";
 
-        if (asistencias.length === 0) {
+        var termino = normalizar(filtroAsistenciaTabla.value.trim());
+        var mes = filtroMesAsistenciaTabla.value;
+        var estado = filtroEstadoAsistenciaTabla.value;
+        var registradas = asistencias.map(function(asistencia, indice) {
+            return { asistencia: asistencia, indice: indice };
+        }).filter(function(item) {
+            var texto = normalizar(item.asistencia.docente + " " + item.asistencia.dni);
+            var coincideMes = !mes || nombreMes(item.asistencia.fecha) === mes;
+            var coincideEstado = !estado || item.asistencia.estado === estado;
+            return texto.indexOf(termino) !== -1 && coincideMes && coincideEstado;
+        });
+
+        if (registradas.length === 0) {
             var filaVacia = document.createElement("tr");
             var celdaVacia = document.createElement("td");
             celdaVacia.colSpan = 8;
-            celdaVacia.textContent = "Aún no hay asistencias registradas.";
+            celdaVacia.textContent = asistencias.length === 0
+                ? "Aún no hay asistencias registradas."
+                : "No hay asistencias que coincidan con los filtros.";
             filaVacia.appendChild(celdaVacia);
             listaAsistencias.appendChild(filaVacia);
             return;
         }
 
-        for (var i = asistencias.length - 1; i >= 0; i--) {
-            var asistencia = asistencias[i];
+        for (var i = registradas.length - 1; i >= 0; i--) {
+            var asistencia = registradas[i].asistencia;
+            var indiceOriginal = registradas[i].indice;
             var fila = document.createElement("tr");
             [
                 asistencia.docente,
@@ -742,12 +845,15 @@ document.addEventListener("DOMContentLoaded", function() {
             botonEditar.type = "button";
             botonEditar.className = "docentes-editar";
             botonEditar.setAttribute("aria-label", "Editar asistencia de " + asistencia.docente);
-            botonEditar.textContent = "✎ Editar";
+            var iconoEditar = document.createElement("i");
+            iconoEditar.className = "bi bi-pencil";
+            iconoEditar.setAttribute("aria-hidden", "true");
+            botonEditar.appendChild(iconoEditar);
             (function(indice) {
                 botonEditar.addEventListener("click", function() {
                     iniciarEdicionAsistencia(indice);
                 });
-            })(i);
+            })(indiceOriginal);
             celdaAcciones.appendChild(botonEditar);
             fila.appendChild(celdaAcciones);
             listaAsistencias.appendChild(fila);
@@ -775,17 +881,12 @@ document.addEventListener("DOMContentLoaded", function() {
         urlArchivoOriginalEnEdicion = "";
         formularioAsistencia.reset();
         buscarDocente.disabled = false;
-        botonBuscarDocente.disabled = false;
         fechaAsistencia.disabled = false;
-        botonGuardarAsistencia.textContent = "Registrar asistencia";
+        botonGuardarAsistencia.textContent = "Guardar";
         botonCancelarEdicionAsistencia.classList.add("oculto");
         establecerFechaHoraPredeterminada();
         actualizarCampoJustificacion();
-        buscarDocente.value = "";
-        seleccionDocente.value = "";
-        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
-        resultadosBusquedaDocente.textContent = "";
-        resultadosBusquedaDocente.classList.add("oculto");
+        limpiarSeleccionDocenteAsistencia();
     }
 
     function iniciarEdicionAsistencia(indice) {
@@ -799,11 +900,18 @@ document.addEventListener("DOMContentLoaded", function() {
         urlArchivoOriginalEnEdicion = asistencia.archivoUrl || "";
         formularioAsistencia.reset();
         buscarDocente.disabled = true;
-        botonBuscarDocente.disabled = true;
         fechaAsistencia.disabled = true;
+        var docente = buscarDocentePorDni(asistencia.dni);
         seleccionDocente.value = asistencia.dni;
-        docenteAsistenciaSeleccionado.textContent =
-            asistencia.docente + " — DNI " + asistencia.dni;
+        buscarDocente.value = asistencia.docente;
+        if (docente) {
+            actualizarTarjetaDocenteAsistencia(docente);
+        } else {
+            restablecerTarjetaDocenteAsistencia();
+            asistenciaNombreDocente.textContent = asistencia.docente;
+            asistenciaDniDocente.textContent = asistencia.dni;
+        }
+        ocultarSugerenciasDocenteAsistencia();
         fechaAsistencia.value = asistencia.fecha;
         horaAsistencia.value = asistencia.horaIngreso;
         periodoAsistencia.value = asistencia.periodoIngreso;
@@ -815,7 +923,7 @@ document.addEventListener("DOMContentLoaded", function() {
         nombreArchivoJustificacion.textContent = archivoOriginalEnEdicion
             ? "Archivo actual: " + archivoOriginalEnEdicion.name
             : "";
-        botonGuardarAsistencia.textContent = "Guardar cambios";
+        botonGuardarAsistencia.textContent = "Guardar";
         botonCancelarEdicionAsistencia.classList.remove("oculto");
         limpiarMensaje(mensajeAsistencia);
         abrirDialogo(dialogoAsistencia);
@@ -880,7 +988,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         var registro = {
-            docente: registroAnterior ? registroAnterior.docente : docente.nombres + " " + docente.apellidos,
+            docente: registroAnterior ? registroAnterior.docente : nombreDocente(docente),
             dni: registroAnterior ? registroAnterior.dni : docente.dni,
             fecha: registroAnterior ? registroAnterior.fecha : fecha,
             horaIngreso: ingreso,
@@ -930,36 +1038,52 @@ document.addEventListener("DOMContentLoaded", function() {
         config.elemento.addEventListener("input", validarTextoDocenteEnEntrada);
     });
 
+    celularDocente.addEventListener("input", function() {
+        celularDocente.value = celularDocente.value.replace(/\D/g, "").slice(0, 9);
+    });
+
     formularioDocente.addEventListener("submit", function(event) {
         event.preventDefault();
         limpiarMensaje(mensajeDocente);
 
         var dni = dniDocente.value.trim();
-        var nombres = camposTextoDocente[0].elemento.value.trim();
-        var apellidos = camposTextoDocente[1].elemento.value.trim();
-        var especialidad = camposTextoDocente[2].elemento.value.trim();
+        var docente = camposTextoDocente[0].elemento.value.trim();
+        var especialidad = camposTextoDocente[1].elemento.value.trim();
+        var procedencia = camposTextoDocente[2].elemento.value.trim();
+        var edadTexto = edadDocente.value.trim();
+        var edad = Number(edadTexto);
+        var genero = generoDocente.value;
+        var celular = celularDocente.value.trim();
 
         if (!/^\d{8}$/.test(dni)) {
             mostrarMensaje(mensajeDocente, "El DNI debe tener exactamente 8 dígitos numéricos. Complete los 8 dígitos.", "error");
             return;
         }
-        if (!nombres || !apellidos || !especialidad) {
-            mostrarMensaje(mensajeDocente, "Complete los nombres, apellidos y especialidad para registrar al docente.", "error");
+        if (!docente || !especialidad || !procedencia || !genero || !edadTexto || !celular) {
+            mostrarMensaje(mensajeDocente, "Complete el docente, la edad, el género, el celular, la procedencia y la especialidad.", "error");
             return;
         }
-        if (!patronTextoDocente.test(nombres)) {
+        if (!patronTextoDocente.test(docente)) {
             camposTextoDocente[0].elemento.setAttribute("aria-invalid", "true");
-            mostrarMensaje(mensajeDocente, "Nombres solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
-            return;
-        }
-        if (!patronTextoDocente.test(apellidos)) {
-            camposTextoDocente[1].elemento.setAttribute("aria-invalid", "true");
-            mostrarMensaje(mensajeDocente, "Apellidos solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
+            mostrarMensaje(mensajeDocente, "Docente solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
             return;
         }
         if (!patronTextoDocente.test(especialidad)) {
-            camposTextoDocente[2].elemento.setAttribute("aria-invalid", "true");
+            camposTextoDocente[1].elemento.setAttribute("aria-invalid", "true");
             mostrarMensaje(mensajeDocente, "Especialidad solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
+            return;
+        }
+        if (!patronTextoDocente.test(procedencia)) {
+            camposTextoDocente[2].elemento.setAttribute("aria-invalid", "true");
+            mostrarMensaje(mensajeDocente, "Procedencia solo permite letras, tildes, ñ y espacios; no incluya números ni otros caracteres.", "error");
+            return;
+        }
+        if (!Number.isInteger(edad) || edad < 18 || edad > 100) {
+            mostrarMensaje(mensajeDocente, "La edad debe ser un número entero entre 18 y 100 años.", "error");
+            return;
+        }
+        if (!/^\d{9}$/.test(celular)) {
+            mostrarMensaje(mensajeDocente, "El celular debe tener exactamente 9 dígitos numéricos.", "error");
             return;
         }
         if (buscarDocentePorDni(dni)) {
@@ -968,9 +1092,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         docentes.push({
+            id: siguienteId(docentes, "D"),
             dni: dni,
-            nombres: nombres,
-            apellidos: apellidos,
+            nombres: docente,
+            apellidos: "",
+            edad: edad,
+            genero: genero,
+            celular: celular,
+            procedencia: procedencia,
             especialidad: especialidad
         });
         mostrarDocentes();
@@ -979,24 +1108,28 @@ document.addEventListener("DOMContentLoaded", function() {
             config.elemento.removeAttribute("aria-invalid");
         });
         errorTextoDocenteVisible = false;
-        buscarDocente.value = "";
-        seleccionDocente.value = "";
-        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
-        resultadosBusquedaDocente.textContent = "";
-        resultadosBusquedaDocente.classList.add("oculto");
+        limpiarSeleccionDocenteAsistencia();
         mostrarMensaje(mensajeDocente, "Docente registrado correctamente.", "exito");
     });
 
-    botonBuscarDocente.addEventListener("click", buscarDocentesRegistrados);
     buscarDocente.addEventListener("input", function() {
-        resultadosBusquedaDocente.textContent = "";
-        resultadosBusquedaDocente.classList.add("oculto");
-        seleccionDocente.value = "";
-        docenteAsistenciaSeleccionado.textContent = "No hay docente seleccionado";
+        mostrarSugerenciasDocenteAsistencia();
     });
+
+    // Filtros de las tablas del contenedor de pestañas (misma estructura que Matrícula).
+    botonBuscarDocenteTabla.addEventListener("click", mostrarDocentes);
+    filtroDocenteTabla.addEventListener("input", mostrarDocentes);
+    botonBuscarAsistenciaTabla.addEventListener("click", mostrarAsistencias);
+    filtroAsistenciaTabla.addEventListener("input", mostrarAsistencias);
+    filtroMesAsistenciaTabla.addEventListener("change", mostrarAsistencias);
+    filtroEstadoAsistenciaTabla.addEventListener("change", mostrarAsistencias);
     buscarDocente.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
+            var primeraCoincidencia = resultadosBusquedaDocente.querySelector(".docentes-busqueda__resultado");
+            if (primeraCoincidencia && !resultadosBusquedaDocente.classList.contains("oculto")) {
+                primeraCoincidencia.click();
+            }
         }
     });
     estadoAsistencia.addEventListener("change", actualizarCampoJustificacion);
@@ -1050,6 +1183,9 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("click", function(event) {
         if (!event.target.closest(".horario-docente-busqueda__campo")) {
             ocultarSugerenciasDocenteHorario();
+        }
+        if (!event.target.closest(".asistencia-docente-busqueda__campo")) {
+            ocultarSugerenciasDocenteAsistencia();
         }
     });
     formularioAsistencia.addEventListener("submit", registrarAsistencia);
